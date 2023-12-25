@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
         //destVec += moveVec * speed * Time.deltaTime * (wDown ? 0.3f : 1f); //walk mode switch
         //transform.position = Vector3.Lerp(transform.position, destVec, agilityPwr * Time.deltaTime);
         //none lerp
-        transform.position = moveVec * speed * Time.deltaTime * (wDown ? 0.3f : 1f);
+        transform.position += moveVec * speed * Time.deltaTime * (wDown ? 0.3f : 1f);
         //anim.SetBool("isRunning", moveVec != Vector3.zero);
         //anim.SetBool("isWalking", wDown);
     }
