@@ -4,124 +4,98 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //public variables
-    public float speed = 8.0f;
-    public float jumpPwr = 5.0f;
-    public float agilityPwr = 5.0f;
-    public float rotationSpeed = 10.0f;
+    //game object elements
+    Transform tr;
+    CharacterController controller;
+    Vector3 moveDirection;
 
-    //moving variables
-    float hAxis;
-    float vAxis;
-    float mouseX;
-    Vector3 moveVec;
-    private Vector3 destVec;
-    private Vector3 storedVec;
+    //physical param variables
+    public float jumpSpeed = 10f;
+    public float gravity = 20f;
+    public float movSpeed = 20f;
+    public float rotSpeed = 400f;
+    public float walkSpeedPercentage = 0.35f;
 
-    //action shift variables
-    bool wDown; //walk mode
-    bool jDown; //jump mode
-    bool dDown; //dodge mode
-    bool isJumping;
-    bool isDodging;
+    //movement param variables
+    private float inputV;
+    private float inputH;
+    private float rotateX;
+    private bool inputWalk;
+    private bool inputJump;
+    private bool inputDodge;
 
-    //interaction variables
-    Rigidbody rigid;
-    Animator anim;
+    /*
+    Input Axis V(front and back)
+    Input Axis H(left and right)
+    Input of Walking Switch
+    Input of Jumping Switch
+    Input of Dodging Switch
+    Input Axis X of POV(Y in camera)
+    */
 
-    // Start is called before the first frame update
+    //character status
+    bool isJumping = false;
+    bool isDodging = false;
+
     void Start()
     {
-        rigid = GetComponent<Rigidbody>();
-        //anim = GetComponentInChildren<Animator>();
-    }
-
-    // Update is called once per frame
+        tr = GetComponent<Transform>();
+        controller = GetComponent<CharacterController>();
+        Application.targetFrameRate = 60;
+    } 
     void FixedUpdate()
-    {
-        Move();
-        Jump();
-        Dodge();
-    }
-    void Update()
     {
         GetInput();
         Rotate();
+
+        Move();
+        Jump();
     }
 
     void GetInput()
     {
-        hAxis = Input.GetAxisRaw("Horizontal");
-        vAxis = Input.GetAxisRaw("Vertical");
-        wDown = Input.GetButton("Walk");
-        jDown = Input.GetButtonDown("Jump");
-        dDown = Input.GetButtonDown("Dodge");
-        mouseX = Input.GetAxis("Mouse X");
+        //method which is used in getting input
+        inputH = Input.GetAxis("Horizontal");
+        inputV = Input.GetAxis("Vertical");
+        rotateX = Input.GetAxis("Mouse X");
+        inputWalk = Input.GetButton("Walk");
+        inputJump = Input.GetButton("Jump");
+        //inputDodge = Input.GetButton("Dodge");
     }
 
     void Move()
     {
-        //moveVec = new Vector3(hAxis, 0, vAxis).normalized;
+        if (controller.isGrounded)
+        {
+            // On the ground, apply regular movement and jump if needed
+            moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
 
-        Vector3 inputVec = new Vector3(hAxis, 0, vAxis).normalized;
-
-        moveVec = transform.TransformDirection(inputVec);
-        if (!isJumping && !isDodging){
-            storedVec = moveVec;
+            if (inputJump)
+            {
+                moveDirection.y = jumpSpeed;
+                isJumping = true;
+            }
         }
-        else{
-            moveVec = storedVec;
-        }
+        else
+        {
+            // In the air, apply falling and allow directional input
+            moveDirection.x = inputH * movSpeed * (inputWalk ? 0.3f : 1f);
+            moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
-        //added lerp smoothing
-        //destVec += moveVec * speed * Time.deltaTime * (wDown ? 0.3f : 1f); //walk mode switch
-        //transform.position = Vector3.Lerp(transform.position, destVec, agilityPwr * Time.deltaTime);
-        //none lerp
-        transform.position += moveVec * speed * Time.deltaTime * (wDown ? 0.3f : 1f);
-        //anim.SetBool("isRunning", moveVec != Vector3.zero);
-        //anim.SetBool("isWalking", wDown);
+            // Apply additional gravity to simulate a more natural fall
+            moveDirection.y -= gravity * Time.deltaTime;
+        }
+        moveDirection = tr.TransformDirection(moveDirection);
+        controller.Move(moveDirection * Time.deltaTime);
     }
 
     void Rotate()
     {
-        transform.Rotate(Vector3.up * mouseX * rotationSpeed);
+        tr.Rotate((Vector3.up * rotateX * rotSpeed * Time.deltaTime));
     }
 
     void Jump()
     {
-        if (jDown && !isJumping && !isDodging){
-            //jDown && moveVec == Vector3.zero && 
-            rigid.AddForce((Vector3.up + storedVec * 0.5f) * jumpPwr, ForceMode.Impulse);
-            //anim.SetBool("isJumping", true);
-            //anim.SetTrigger("doJumping");
-            isJumping = true;
-        }
-    }
 
-    void Dodge()
-    {
-        if (dDown && (moveVec != Vector3.zero) && !isJumping){ 
-            moveVec = storedVec;
-            speed *= 2;
-            //anim.SetTrigger("doDodging");
-            isDodging = true;
-
-            Invoke("DodgeOut", 0.35f);
-        }
-    }
-
-    void DodgeOut()
-    {
-        speed *= 0.5f;
-        isDodging = false;
-    }
-
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "Ground"){
-            isJumping = false;
-            //anim.SetBool("isJumping", false);
-        }
     }
 }
