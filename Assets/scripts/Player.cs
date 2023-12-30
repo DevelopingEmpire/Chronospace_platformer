@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     public float movSpeed = 20f;
     public float rotSpeed = 400f;
     public float walkSpeedPercentage = 0.35f;
+    public GameObject spawnPoint;
+    public GameObject goalPoint;
 
     //movement param variables
     private float inputV;
@@ -36,25 +38,34 @@ public class Player : MonoBehaviour
     //character status
     bool isJumping = false;
     bool isDodging = false;
+    Vector3 resetCoordinate = Vector3.zero;
+    Vector3 completeCoordinate = Vector3.zero;
 
     void Start()
     {
+        //self component import
         tr = GetComponent<Transform>();
         controller = GetComponent<CharacterController>();
+
+        //set framerate
         Application.targetFrameRate = 60;
-    } 
+
+        //set reset and complete pos ref
+        spawnPoint = GameObject.Find("Spawnpoint_1P");
+        resetCoordinate = spawnPoint.transform.position;
+        goalPoint = GameObject.Find("Goalpoint_1P");
+        completeCoordinate = goalPoint.transform.position;
+    }
     void FixedUpdate()
     {
         GetInput();
         Rotate();
 
         Move();
-        Jump();
     }
 
-    void GetInput()
+    void GetInput() //method which is used in getting input
     {
-        //method which is used in getting input
         inputH = Input.GetAxis("Horizontal");
         inputV = Input.GetAxis("Vertical");
         rotateX = Input.GetAxis("Mouse X");
@@ -63,7 +74,7 @@ public class Player : MonoBehaviour
         //inputDodge = Input.GetButton("Dodge");
     }
 
-    void Move()
+    void Move()  //integrated jump and moving control
     {
         if (controller.isGrounded)
         {
@@ -94,8 +105,14 @@ public class Player : MonoBehaviour
         tr.Rotate((Vector3.up * rotateX * rotSpeed * Time.deltaTime));
     }
 
-    void Jump()
+    void OnControllerColliderHit(ControllerColliderHit hit)
     {
-
+        if (hit.gameObject.CompareTag("ResetTrigger"))
+        {
+            // Move the player to the reset position
+            controller.enabled = false;
+            transform.position = resetCoordinate;
+            controller.enabled = true;
+        }
     }
 }
