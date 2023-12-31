@@ -7,30 +7,27 @@ public class RadialProgress : MonoBehaviour
 {
     public Text ProgressIndicator;
     public Image LoadingBar;
+    
+    public GameObject Player;// 플레이어의 오브젝트 가져옴
+    PlayerTimer playerTimer; // 거기 붙은 스크립트 (컴포넌트) 
 
-    public float timeLimit; // 시간제한 
-    public float speed; // 1초에 몇 닳는 지 ( 기본 1 )
-    float currentValue; // 현재 남은 시간 
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        currentValue = timeLimit;
+        playerTimer = Player.GetComponent<PlayerTimer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentValue > 0)
+        if (playerTimer.isAlive == false)
         {
-            currentValue -= speed * Time.deltaTime; 
-            ProgressIndicator.text = ((int)currentValue).ToString();
+            ProgressIndicator.text = "Stop";
         }
         else
         {
-            ProgressIndicator.text = "Done";
+            ProgressIndicator.text = ((int)playerTimer.currentValue+1).ToString(); // 9부터 0으로 나오므로 +1 해줌 
+            LoadingBar.fillAmount = playerTimer.currentValue / playerTimer.timeLimit;
         }
-
-        LoadingBar.fillAmount = currentValue / timeLimit;
+        
     }
 }

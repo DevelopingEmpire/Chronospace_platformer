@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     bool isDodging = false;
     Vector3 resetCoordinate = Vector3.zero;
     Vector3 completeCoordinate = Vector3.zero;
+    
 
     void Start()
     {
@@ -58,10 +59,14 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
-        GetInput();
-        Rotate();
+        if(GetComponentInChildren<PlayerTimer>().isAlive)
+        {
+            GetInput();
+            Rotate();
 
-        Move();
+            Move();
+        }
+        
     }
 
     void GetInput() //method which is used in getting input
