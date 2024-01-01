@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
         tr.Rotate((Vector3.up * rotateX * rotSpeed * Time.deltaTime));
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
+    void OnControllerColliderHit(ControllerColliderHit hit) //will be removed
     {
         if (hit.gameObject.CompareTag("ResetTrigger"))
         {
