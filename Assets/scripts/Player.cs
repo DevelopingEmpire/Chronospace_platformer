@@ -5,9 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     //game object elements
-    Transform tr;
-    CharacterController controller;
-    Vector3 moveDirection;
+    public Transform transformSelf;
+    public CharacterController controller;
 
     //physical param variables
     public float jumpSpeed = 10f;
@@ -15,10 +14,10 @@ public class Player : MonoBehaviour
     public float movSpeed = 20f;
     public float rotSpeed = 400f;
     public float walkSpeedPercentage = 0.35f;
-    public GameObject spawnPoint;
-    public GameObject goalPoint;
 
     //movement param variables
+    Vector3 moveDirection;
+    Vector3 savedDirection;
     private float inputV;
     private float inputH;
     private float rotateX;
@@ -38,23 +37,15 @@ public class Player : MonoBehaviour
     //character status
     bool isJumping = false;
     bool isDodging = false;
-    Vector3 resetCoordinate = Vector3.zero;
-    Vector3 completeCoordinate = Vector3.zero;
 
     void Start()
     {
         //self component import
-        tr = GetComponent<Transform>();
-        controller = GetComponent<CharacterController>();
+        //transformSelf = GetComponent<Transform>();
+        //controller = GetComponent<CharacterController>();
 
         //set framerate
         Application.targetFrameRate = 60;
-
-        //set reset and complete pos ref
-        spawnPoint = GameObject.Find("Spawnpoint_1P");
-        resetCoordinate = spawnPoint.transform.position;
-        goalPoint = GameObject.Find("Goalpoint_1P");
-        completeCoordinate = goalPoint.transform.position;
     }
     void FixedUpdate()
     {
@@ -62,6 +53,7 @@ public class Player : MonoBehaviour
         Rotate();
 
         Move();
+        Dodge();
     }
 
     void GetInput() //method which is used in getting input
@@ -71,7 +63,7 @@ public class Player : MonoBehaviour
         rotateX = Input.GetAxis("Mouse X");
         inputWalk = Input.GetButton("Walk");
         inputJump = Input.GetButton("Jump");
-        //inputDodge = Input.GetButton("Dodge");
+        inputDodge = Input.GetButton("Dodge");
     }
 
     void Move()  //integrated jump and moving control
@@ -80,6 +72,8 @@ public class Player : MonoBehaviour
         {
             // On the ground, apply regular movement and jump if needed
             moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
+            isJumping = false;
+            savedDirection = moveDirection;
 
             if (inputJump)
             {
@@ -96,23 +90,31 @@ public class Player : MonoBehaviour
             // Apply additional gravity to simulate a more natural fall
             moveDirection.y -= gravity * Time.deltaTime;
         }
-        moveDirection = tr.TransformDirection(moveDirection);
+        moveDirection = transformSelf.TransformDirection(moveDirection);
         controller.Move(moveDirection * Time.deltaTime);
     }
 
     void Rotate()
     {
-        tr.Rotate((Vector3.up * rotateX * rotSpeed * Time.deltaTime));
+        transformSelf.Rotate((Vector3.up * rotateX * rotSpeed * Time.deltaTime));
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit) //will be removed
+    void Dodge()
     {
-        if (hit.gameObject.CompareTag("ResetTrigger"))
+        if (inputDodge && (moveDirection != Vector3.zero) && !isJumping && !isDodging)
         {
-            // Move the player to the reset position
-            controller.enabled = false;
-            transform.position = resetCoordinate;
-            controller.enabled = true;
+            moveDirection = savedDirection;
+            movSpeed *= 2;
+            //anim.SetTrigger("doDodging");
+            isDodging = true;
+
+            Invoke("DodgeOut", 0.35f);
         }
+    }
+
+    void DodgeOut()
+    {
+        movSpeed *= 0.5f;
+        isDodging = false;
     }
 }
