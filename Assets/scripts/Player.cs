@@ -40,6 +40,9 @@ public class Player : MonoBehaviour
 
     public bool isAlive = true;
 
+    //주변 템
+    GameObject nearObject;
+
     void Start()
     {
         //self component import
@@ -118,5 +121,17 @@ public class Player : MonoBehaviour
     {
         movSpeed *= 0.5f;
         isDodging = false;
+    }
+
+    //아이템 입수 관련 콜라이더
+
+    private void OnTriggerStay(Collider other)
+    {
+        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        
     }
 }
