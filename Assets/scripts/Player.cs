@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
     bool isJumping = false;
     bool isDodging = false;
 
+    public bool isAlive = true;
+
     void Start()
     {
         //self component import
@@ -49,9 +51,9 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (!isAlive) return;
         GetInput();
         Rotate();
-
         Move();
         Dodge();
     }
