@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
 
+
     void Start()
     {
         //self component import
@@ -99,12 +100,12 @@ public class Player : MonoBehaviour
         inputWalk = Input.GetButton("Walk");
         inputJump = Input.GetButton("Jump");
         inputDodge = Input.GetButton("Dodge");
-        inputInteraction = Input.GetButtonDown("Interaction");
+        inputInteraction = Input.GetButtonDown("Interaction"); //e
         inputSelect1 = Input.GetButtonDown("Swap1");
         inputSelect2 = Input.GetButtonDown("Swap2");
         inputSelect3 = Input.GetButtonDown("Swap3");
-        inputUseItem1 = Input.GetButtonDown("Effect1");
-        inputUseItem2 = Input.GetButtonDown("Effect2");
+        inputUseItem1 = Input.GetButtonDown("Effect1"); //r
+        inputUseItem2 = Input.GetButtonDown("Effect2"); // f
     }
 
     void Move()  //integrated jump and moving control
@@ -214,14 +215,15 @@ public class Player : MonoBehaviour
 
     void UseItem()
     {
+
         if (inputUseItem1)
         {
             //event activation 1
-            useItem1.Invoke();
+            useItem1.Invoke(); //r
         }
         else if (inputUseItem2)
         {
-            useItem2.Invoke();
+            useItem2.Invoke(); //f
         }
     }
 
@@ -231,7 +233,7 @@ public class Player : MonoBehaviour
     {
         if (other.tag == "Item")
             nearObject = other.gameObject;
-            Debug.Log(nearObject.name);  // 출력 잘된다! 
+            //Debug.Log(nearObject.name);  // 출력 잘된다! 
     }
 
     private void OnTriggerExit(Collider other)

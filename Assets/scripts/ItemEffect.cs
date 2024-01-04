@@ -24,6 +24,9 @@ public class ItemEffect : MonoBehaviour
 
     private Player targetScript;
 
+
+    public GameObject throwGravityItem; // 던질 중력탬  
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,10 +68,23 @@ public class ItemEffect : MonoBehaviour
         }
     }
 
-    //Function of Items list
-    public void Blank ()
+    // 중력 반전 능력 
+    public void AntiGravity()
     {
-        //do nothing
+        //Time.timeScale = timeScaleMultiplier; // 중력 조절 코드 
+        GameObject instantGravityItem = Instantiate(throwGravityItem, 
+            targetPlayer.GetComponent<Transform>().position,
+            targetPlayer.GetComponent<Transform>().rotation);
+
+        //instantGravityItem.GetComponent<GravityItem>();
+
+        Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+        Debug.Log("AntiGravity On.");
+    }
+    public void AntiGravity_End()
+    {
+        //Time.timeScale = 1.0f;
+        Debug.Log("AntiGravity Off.");
     }
 
     public void Tweaktime ()
@@ -80,5 +96,11 @@ public class ItemEffect : MonoBehaviour
     public void Tweaktime_End()
     {
         Time.timeScale = 1.0f;
+    }
+
+    //Function of Items list
+    public void Blank()
+    {
+        //do nothing
     }
 }
