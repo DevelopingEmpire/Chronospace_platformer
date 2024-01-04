@@ -49,7 +49,7 @@ public class GravityItem : MonoBehaviour
             {
                 //Debug.Log(hitObj);
                 if (hitObj.rigidbody == null) continue; // 리지드 없으면 넘어가 
-                hitObj.rigidbody.AddForce(Vector3.up * 10f); //위로 2 힘 받음 (중력반전 )
+                hitObj.rigidbody.AddForce(Vector3.up * 10f); //위로 10 힘 받음 (중력반전 )
             }
             yield return null;
         }
