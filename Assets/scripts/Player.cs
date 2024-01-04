@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     public float movSpeed = 20f;
     public float rotSpeed = 400f;
     public float walkSpeedPercentage = 0.35f;
+    public float timeCrit;
 
     //movement param variables
     Vector3 moveDirection;
@@ -24,13 +26,6 @@ public class Player : MonoBehaviour
     private bool inputWalk;
     private bool inputJump;
     private bool inputDodge;
-    
-    bool idown; // interaction키 down. 아이템 줍는 입력 e 
-    public GameObject[] Items; 
-    public bool[] hasItems; // 아이템 가졌는지
-    bool sdown1; // 템 스왑 1
-    bool sdown2; // 템 스왑 2
-    bool sdown3; // 템 스왑 3
 
     /*
     Input Axis V(front and back)
@@ -40,6 +35,20 @@ public class Player : MonoBehaviour
     Input of Dodging Switch
     Input Axis X of POV(Y in camera)
     */
+
+    //item inputs    
+    bool inputInteraction; // interaction키 down. 아이템 줍는 입력 e 
+    public GameObject[] Items; 
+    public bool[] hasItems; // 아이템 가졌는지
+    public int itemIndex = -1; // 기본으로 어느것도 선택되지 않도록 
+    private bool inputSelect1; // 템 스왑 1
+    private bool inputSelect2; // 템 스왑 2
+    private bool inputSelect3; // 템 스왑 3
+    private bool inputUseItem1;
+    private bool inputUseItem2;
+
+    public UnityEvent useItem1;
+    public UnityEvent useItem2;
 
     //character status
     bool isJumping = false;
@@ -65,13 +74,21 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
+        timeCrit = Time.unscaledDeltaTime;
+
         if (!isAlive) return;
+        //시야조정
         GetInput();
         Rotate();
+
+        //이동
         Move();
         Dodge();
+
+        //아이템 입수+사용
         Interaction();
         Swap();
+        UseItem();
     }
 
     void GetInput() //method which is used in getting input
@@ -82,10 +99,12 @@ public class Player : MonoBehaviour
         inputWalk = Input.GetButton("Walk");
         inputJump = Input.GetButton("Jump");
         inputDodge = Input.GetButton("Dodge");
-        idown = Input.GetButtonDown("Interaction");
-        sdown1 = Input.GetButtonDown("Swap1");
-        sdown2 = Input.GetButtonDown("Swap2");
-        sdown3 = Input.GetButtonDown("Swap3");
+        inputInteraction = Input.GetButtonDown("Interaction");
+        inputSelect1 = Input.GetButtonDown("Swap1");
+        inputSelect2 = Input.GetButtonDown("Swap2");
+        inputSelect3 = Input.GetButtonDown("Swap3");
+        inputUseItem1 = Input.GetButtonDown("Effect1");
+        inputUseItem2 = Input.GetButtonDown("Effect2");
     }
 
     void Move()  //integrated jump and moving control
@@ -110,15 +129,15 @@ public class Player : MonoBehaviour
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
             // Apply additional gravity to simulate a more natural fall
-            moveDirection.y -= gravity * Time.deltaTime;
+            moveDirection.y -= gravity * timeCrit;
         }
         moveDirection = transformSelf.TransformDirection(moveDirection);
-        controller.Move(moveDirection * Time.deltaTime);
+        controller.Move(moveDirection * timeCrit);
     }
 
     void Rotate()
     {
-        transformSelf.Rotate((Vector3.up * rotateX * rotSpeed * Time.deltaTime));
+        transformSelf.Rotate((Vector3.up * rotateX * rotSpeed * timeCrit));
     }
 
     void Dodge()
@@ -143,19 +162,18 @@ public class Player : MonoBehaviour
     // 아이템 스왑 
     void Swap()
     {
-        if (sdown1 && (!hasItems[0] || equipItemIndex == 0)) // 0번 템을 안갖고 있거나 이미 장착중이면 
+        if (inputSelect1 && (!hasItems[0] || equipItemIndex == 0)) // 0번 템을 안갖고 있거나 이미 장착중이면 
             return; // 걍 무시하셈 
-        if (sdown2 && (!hasItems[1] || equipItemIndex == 1)) 
+        if (inputSelect2 && (!hasItems[1] || equipItemIndex == 1)) 
             return; // 걍 무시하셈 
-        if (sdown3 && (!hasItems[2] || equipItemIndex == 2))
+        if (inputSelect3 && (!hasItems[2] || equipItemIndex == 2))
             return; // 걍 무시하셈 
 
-        int itemIndex = -1; // 기본으로 어느것도 선택되지 않도록 
-        if(sdown1) itemIndex = 0;
-        if(sdown2) itemIndex = 1;
-        if(sdown3) itemIndex = 2;
+        if(inputSelect1) itemIndex = 0;
+        if(inputSelect2) itemIndex = 1;
+        if(inputSelect3) itemIndex = 2;
 
-        if ((sdown1 || sdown2 || sdown3) && !isJumping && !isDodging)
+        if ((inputSelect1 || inputSelect2 || inputSelect3) && !isJumping && !isDodging)
         {
             // 손에 이미 선택된 탬이 있을 땐 비활성화 
             if(equipItem != null)
@@ -182,16 +200,28 @@ public class Player : MonoBehaviour
     //interaction . 아이템 상호작용 키 
     void Interaction()
     {
-        if(idown && nearObject != null && !isJumping && !isDodging)
+        if(inputInteraction && nearObject != null && !isJumping && !isDodging)
         {
             if (nearObject.tag == "Item")
             {
                 Item item = nearObject.GetComponent<Item>();
                 int itemIndex = item.value; // gravity 0, time 1, wind 2 
                 hasItems[itemIndex] = true;
-
                 Destroy(nearObject);
             }
+        }
+    }
+
+    void UseItem()
+    {
+        if (inputUseItem1)
+        {
+            //event activation 1
+            useItem1.Invoke();
+        }
+        else if (inputUseItem2)
+        {
+            useItem2.Invoke();
         }
     }
 
@@ -201,15 +231,12 @@ public class Player : MonoBehaviour
     {
         if (other.tag == "Item")
             nearObject = other.gameObject;
-        //Debug.Log(nearObject.name);  // 출력 잘된다! 
-        
+            Debug.Log(nearObject.name);  // 출력 잘된다! 
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Item")
             nearObject = null;
-               
-           
     }
 }
