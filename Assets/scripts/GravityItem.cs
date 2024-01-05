@@ -21,10 +21,6 @@ public class GravityItem : MonoBehaviour
         StartCoroutine(Explosion()); // 시간차를 위해 코루틴 
     }
 
-    private void Update()
-    {
-        
-    }
 
     IEnumerator Explosion()
     {

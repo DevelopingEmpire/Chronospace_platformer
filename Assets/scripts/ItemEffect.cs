@@ -14,8 +14,8 @@ public class ItemEffect : MonoBehaviour
     public GameObject targetPlayer2;
 
     //아이템 적용 효과 목록
-    public UnityEvent[] itemEffectList1;
-    public UnityEvent[] itemEffectList2;
+    public UnityEvent[] itemEffectList1; //r
+    public UnityEvent[] itemEffectList2; //f
     //public float[] itemEffectDur1;
     //public float[] itemEffectDur2;
 
