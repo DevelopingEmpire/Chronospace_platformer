@@ -68,23 +68,15 @@ public class ItemEffect : MonoBehaviour
         }
     }
 
-    // 중력 반전 능력 
+    // 중력 템 던지기
     public void AntiGravity()
     {
-        //Time.timeScale = timeScaleMultiplier; // 중력 조절 코드 
+        // 중력탬 던짐
         GameObject instantGravityItem = Instantiate(throwGravityItem, 
             targetPlayer.GetComponent<Transform>().position,
             targetPlayer.GetComponent<Transform>().rotation);
 
-        //instantGravityItem.GetComponent<GravityItem>();
-
-        Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
-        Debug.Log("AntiGravity On.");
-    }
-    public void AntiGravity_End()
-    {
-        //Time.timeScale = 1.0f;
-        Debug.Log("AntiGravity Off.");
+        Debug.Log("AntiGravity 던짐 .");
     }
 
     public void Tweaktime ()

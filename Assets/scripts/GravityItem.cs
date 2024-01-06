@@ -12,44 +12,52 @@ public class GravityItem : MonoBehaviour
     //public GameObject effectObj; // 폭발 효과 
     public Rigidbody rb;
 
-    // 적용 당할 오브젝트
-    GameObject nearObject;
+    // 적용 당할 오브젝트의 itemVar
+    ItemGravityControl itemGravityControl; 
+    Player player;
 
-    // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(Explosion()); // 시간차를 위해 코루틴 
+        //3초 후 폭발 
+        Invoke("Explosion", 3f);
+        
     }
 
-
-    IEnumerator Explosion()
+    //IEnumerator Explosion()
+    void Explosion()
     {
-        yield return new WaitForSeconds(3f); // 3초 대기 
-
-        float time = 0.0f; // 진행시간 
-
         // 물리적인 속도들 모두 0으로 해줌 
         rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero; 
+        rb.angularVelocity = Vector3.zero;
         meshObj.SetActive(false); // 비활성화 
         //effectObj.SetActive(true); // 효과 보여주는거
 
         RaycastHit[] rayHits = Physics.SphereCastAll(transform.position,
-            15, Vector3.up, 0f, LayerMask.GetMask("Default"));
+            1, Vector3.up, 0f, LayerMask.GetMask("Default"));
 
-        while(time < 3.0f) // 3초간 동작 
+        foreach (RaycastHit hitObj in rayHits)
         {
-            time += Time.deltaTime;
 
-            foreach (RaycastHit hitObj in rayHits)
+            if (hitObj.collider.gameObject.tag == "Player")
             {
-                //Debug.Log(hitObj);
-                if (hitObj.rigidbody == null) continue; // 리지드 없으면 넘어가 
-                hitObj.rigidbody.AddForce(Vector3.up * 10f); //위로 10 힘 받음 (중력반전 )
+                hitObj.collider.GetComponent<Player>().AntiGravity();
+
             }
-            yield return null;
+            else
+            {
+                itemGravityControl = hitObj.collider.GetComponent<ItemGravityControl>();
+                // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
+                if (itemGravityControl != null)
+                {
+                    itemGravityControl.AntiGravity();
+                }
+            }
+
+
         }
-        
-        
+
+        // 아래 시간 임의로 넣음. 유의 
+        Destroy(transform.parent.gameObject, 1f); // 1초뒤 아이템 clone 삭제 
+
     }
 }

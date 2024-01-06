@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Player : MonoBehaviour
+public class Player : IGravityControl
 {
     //game object elements
     public Transform transformSelf;
-    public CharacterController controller;
+    //public CharacterController controller; // 이건  IGravityControl 에 있음 
 
     //physical param variables
     public float jumpSpeed = 10f;
-    public float gravity = 20f;
+    //public float gravity = 20f;  // 이건  IGravityControl 에 있음 
     public float movSpeed = 20f;
     public float rotSpeed = 400f;
     public float walkSpeedPercentage = 0.35f;
@@ -130,7 +130,7 @@ public class Player : MonoBehaviour
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
             // Apply additional gravity to simulate a more natural fall
-            moveDirection.y += gravity * timeCrit;
+            moveDirection.y += gravityStrength * timeCrit;
         }
         moveDirection = transformSelf.TransformDirection(moveDirection);
         controller.Move(moveDirection * timeCrit);
