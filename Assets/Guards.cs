@@ -1,15 +1,23 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Guards : MonoBehaviour
 {
     // The tag of the player object
     public string playerTag = "Player";
     public Vector3 initialPosition;
+
     public float travelDistance = 5f;
     public float sightRange = 10f;
     public float adressRange = 5f;
     public float rotationSpeed = 5f;
+
+    public GameObject projectileObj;
+    public float fireDelay = 1f;
+    private float fireTimer = 0f;
+    public Vector3 fireOffset;
+
     public float patrolDelay = 2f;
 
     // Reference to the NavMeshAgent component
@@ -40,12 +48,12 @@ public class Guards : MonoBehaviour
             {
                 targetPosition = (GameObject.FindGameObjectWithTag(playerTag).transform.position);
                 MoveTowardsTarget();
+                Fire();
             }
             else
             {
-                
+                Fire();
             }
-
         }
         else
         {
@@ -93,6 +101,20 @@ public class Guards : MonoBehaviour
         Vector3 directionToPlayer = (GameObject.FindGameObjectWithTag(playerTag).transform.position - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+    }
+
+    //Fire projectile into player
+    void Fire()
+    {
+        // Check if enough time has passed to fire a bullet
+        if (Time.time >= fireTimer)
+        {
+            GameObject projectileIns = Instantiate(projectileObj);
+            projectileIns.transform.position = transform.position + fireOffset;
+            projectileIns.SetActive(true);
+            // Reset the timer for the next bullet
+            fireTimer = Time.time + fireDelay;
+        }
     }
 
     // Patrol by setting a new random target within the travel distance
