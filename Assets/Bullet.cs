@@ -24,10 +24,30 @@ public class Bullet : MonoBehaviour
 
     void SetInitialDirectionToPlayer() //sets the direction of the bullet into player
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        initialDirection = (player.transform.position - transform.position).normalized;
-        initialDirection += Random.onUnitSphere * concentrationScale;
-        initialDirection.Normalize();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        if (players.Length > 0)
+        {
+            GameObject nearestPlayer = players[0];
+            float minDistance = Vector3.Distance(transform.position, nearestPlayer.transform.position);
+
+            // Find the nearest player
+            foreach (GameObject player in players)
+            {
+                float distance = Vector3.Distance(transform.position, player.transform.position);
+
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    nearestPlayer = player;
+                }
+            }
+
+            // Set the initial direction towards the nearest player
+            initialDirection = (nearestPlayer.transform.position - transform.position).normalized;
+            initialDirection += Random.onUnitSphere * concentrationScale;
+            initialDirection.Normalize();
+        }
     }
 
     void MoveBullet() //moves the bullet into player

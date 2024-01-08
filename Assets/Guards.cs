@@ -6,19 +6,19 @@ public class Guards : MonoBehaviour
 {
     // The tag of the player object
     public string playerTag = "Player";
+    public GameObject player1;
     public Vector3 initialPosition;
+    public float sightRange = 10f;
+    public float addressRange = 5f;
+    public float rotationSpeed = 5f;
 
     public float travelDistance = 5f;
-    public float sightRange = 10f;
-    public float adressRange = 5f;
-    public float rotationSpeed = 5f;
+    public float patrolDelay = 2f;
 
     public GameObject projectileObj;
     public float fireDelay = 1f;
     private float fireTimer = 0f;
     public Vector3 fireOffset;
-
-    public float patrolDelay = 2f;
 
     // Reference to the NavMeshAgent component
     private NavMeshAgent navMeshAgent;
@@ -73,16 +73,21 @@ public class Guards : MonoBehaviour
     // Check if the player is in sight
     bool PlayerInSight()
     {
-        RaycastHit hit;
-        Vector3 directionToPlayer = (GameObject.FindGameObjectWithTag(playerTag).transform.position - transform.position).normalized;
+        // Find all GameObjects with the player tag
+        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
 
-        // Perform a raycast to check if there are obstacles between the opponent and the player
-        if (Physics.Raycast(transform.position, directionToPlayer, out hit, sightRange))
+        foreach (GameObject player in players)
         {
-            if (hit.collider.CompareTag(playerTag))
+            Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+            // Perform a raycast to check if there are obstacles between the opponent and the player
+            if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, sightRange))
             {
-                // Player is in sight
-                return true;
+                if (hit.collider.CompareTag(playerTag))
+                {
+                    // Player is in sight
+                    return true;
+                }
             }
         }
 
@@ -92,15 +97,49 @@ public class Guards : MonoBehaviour
 
     bool PlayerInAdressRange()
     {
-        return (Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag(playerTag).transform.position) > adressRange) ? true : false;
+        // Find all GameObjects with the player tag
+        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+
+        foreach (GameObject player in players)
+        {
+            if (Vector3.Distance(transform.position, player.transform.position) < addressRange)
+            {
+                // Player is in address range
+                return true;
+            }
+        }
+
+        // No players in address range
+        return false;
     }
 
     // Stare at the player by rotating the opponent's direction
     void StareAtPlayer()
     {
-        Vector3 directionToPlayer = (GameObject.FindGameObjectWithTag(playerTag).transform.position - transform.position).normalized;
-        Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+
+        if (players.Length > 0)
+        {
+            GameObject nearestPlayer = players[0];
+            float minDistance = Vector3.Distance(transform.position, nearestPlayer.transform.position);
+
+            // Find the nearest player
+            foreach (GameObject player in players)
+            {
+                float distance = Vector3.Distance(transform.position, player.transform.position);
+
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    nearestPlayer = player;
+                }
+            }
+
+            // Rotate towards the nearest player
+            Vector3 directionToPlayer = (nearestPlayer.transform.position - transform.position).normalized;
+            Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        }
     }
 
     //Fire projectile into player
@@ -111,7 +150,6 @@ public class Guards : MonoBehaviour
         {
             GameObject projectileIns = Instantiate(projectileObj);
             projectileIns.transform.position = transform.position + fireOffset;
-            projectileIns.SetActive(true);
             // Reset the timer for the next bullet
             fireTimer = Time.time + fireDelay;
         }
