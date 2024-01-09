@@ -8,16 +8,32 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     float gravity = -9.81f;
     public CharacterController controller; // 컨트롤러
 
+    int isCoolTime = -1; // 너무 빈번하게 일어나서, 약간의 쿨타임
+
     public void AntiGravity() // 중력 반전 함수 
     {
-        gravity = 9.81f;
-        //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
-        Debug.Log("AntiGravity On.");
+        if (isCoolTime == -1)
+        {
+            isCoolTime = 1;
+            gravity = 9.81f;
+            //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+            StartCoroutine(coolTimer()); // 쿨타임 0.5초 코루틴 
+
+            Debug.Log("AntiGravity On.");
+        }
+        
     }
     public void AntiGravity_End()
     {
-        gravity = -9.81f; // 반전 해제 
-        Debug.Log("AntiGravity Off.");
+        //if (isCoolTime == -1)
+        //{
+            isCoolTime = 1;
+            gravity = -9.81f; // 반전 해제 
+            StartCoroutine(coolTimer()); // 쿨타임 0.5초 코루틴 
+
+            Debug.Log("AntiGravity Off.");
+        //}
+        
     }
 
 
@@ -35,4 +51,9 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
         controller.Move(gravityVector * Time.deltaTime);
     }
 
+    IEnumerator coolTimer()
+    {
+        yield return new WaitForSeconds(0.5f); // 0.3초 대기
+        isCoolTime = -1;
+    }
 }
