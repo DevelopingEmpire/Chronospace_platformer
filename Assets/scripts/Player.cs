@@ -152,7 +152,7 @@ public class Player : MonoBehaviour, IGravityControl
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
             // Apply additional gravity to simulate a more natural fall
-            moveDirection.y += gravity * timeCrit;
+            moveDirection.y += gravity * timeCrit * 2;
         }
         moveDirection = transformSelf.TransformDirection(moveDirection);
         controller.Move(moveDirection * timeCrit);
