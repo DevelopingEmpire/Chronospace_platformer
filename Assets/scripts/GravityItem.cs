@@ -8,9 +8,7 @@ public class GravityItem : MonoBehaviour
     public Type type;
     public int value;
 
-
     public GameObject meshObj;
-    public Camera playerCam;
     //public GameObject effectObj; // 폭발 효과 
     public Rigidbody rb;
     public BoxCollider colliderRange; // 탬 적용 범위 콜라이더 
@@ -23,12 +21,7 @@ public class GravityItem : MonoBehaviour
 
     private void Awake()
     {
-        //playerCam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>(); //보는 방향으로 던지기 위해
-        //Vector3 dir = playerCam.transform.localRotation * Vector3.forward; // 보는 방향
-        //dir *= 20;// 앞으로 슝~
-        //rb.velocity = transform.forward * 10; // 앞으로 슝~
-        //rb.AddForce(dir, ForceMode.Impulse);
-        rb.AddForce(transform.forward * 10, ForceMode.Impulse); // 앞으로 슝~
+        rb.AddForce(transform.forward*10, ForceMode.Impulse); // 앞으로 슝~
         StartCoroutine(Explosion());
     }
 

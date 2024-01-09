@@ -22,8 +22,7 @@ public class ItemEffect : MonoBehaviour
     //아이템 효과 관련 변수
     public float timeScaleMultiplier = 8.0f;
 
-    private Player targetScript;
-
+    public Transform itemPointTransform; // 탬 생성 위치
 
     public GameObject throwGravityItem; // 던질 중력탬  
 
@@ -71,11 +70,15 @@ public class ItemEffect : MonoBehaviour
     // 중력 템 던지기
     public void ThrowGravityItem()
     {
+        // 생성위치 가져오기 
+        //itemPointTransform = targetPlayer.transform.GetChild(0).GetChild(0);
+        // 인스펙터에서 연결함 
+
         // 중력탬 생성
-        GameObject instantGravityItem = Instantiate(throwGravityItem, 
-            targetPlayer.transform.position +new Vector3(0,0.5f,1f),
-            targetPlayer.transform.GetComponentInChildren<Transform>().rotation
-            ); // 카메라 각도 가져옴. 
+        GameObject instantGravityItem = Instantiate(throwGravityItem,
+            itemPointTransform.position + itemPointTransform.forward,
+            itemPointTransform.rotation
+            ); // 해당 위치 , 각도 
 
         Debug.Log("AntiGravity 던짐 .");
     }
