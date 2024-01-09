@@ -30,7 +30,7 @@ public class GravityItem : MonoBehaviour
     // 시간차를 위해 코루틴으로
     IEnumerator Explosion()
     {
-        yield return new WaitForSeconds(1f); // 1초 대기 
+        yield return new WaitForSeconds(0.5f); // 1초 길어서 줄임  
 
         // 물리적인 속도들 모두 0으로 해줌 
         rb.velocity = Vector3.zero;
