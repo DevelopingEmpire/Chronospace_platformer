@@ -201,6 +201,7 @@ MonoBehaviour:
   playerCam: {fileID: 0}
   rb: {fileID: 7507105716042323706}
   colliderRange: {fileID: 1093993489854197702}
+  meshRenderer: {fileID: 5919514510702078409}
 --- !u!65 &1093993489854197702
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -212,7 +213,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 3, y: 3, z: 3}
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &5200842809795117333
 BoxCollider:
@@ -234,7 +235,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6392574276357548969}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

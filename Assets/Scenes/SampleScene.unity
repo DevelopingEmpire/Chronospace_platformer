@@ -1644,7 +1644,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 78914fe132dab8d4abaa0f5de353beab, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 78914fe132dab8d4abaa0f5de353beab, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1656,7 +1656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 78914fe132dab8d4abaa0f5de353beab, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.738
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 78914fe132dab8d4abaa0f5de353beab, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1978,7 +1978,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.645, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1882548683}
   m_Father: {fileID: 2107057323}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3094,7 +3095,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2107057323}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1385956969
 MonoBehaviour:
@@ -3116,7 +3117,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1385956969}
         m_TargetAssemblyTypeName: ItemEffect, Assembly-CSharp
-        m_MethodName: AntiGravity
+        m_MethodName: ThrowGravityItem
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3241,6 +3242,7 @@ MonoBehaviour:
   projectileObj: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
   fireDelay: 1.2
   fireOffset: {x: 0, y: 1.11, z: 0}
+  controller: {fileID: 0}
 --- !u!143 &1386907265
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3407,11 +3409,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881643, guid: 836c19e6ec32c0f4d92496643de4ca98, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 836c19e6ec32c0f4d92496643de4ca98, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 836c19e6ec32c0f4d92496643de4ca98, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3790,16 +3792,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882548682}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.891}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1608710048}
   - {fileID: 2029126501}
   - {fileID: 724632967}
-  - {fileID: 1608710048}
-  m_Father: {fileID: 2107057323}
-  m_RootOrder: 1
+  m_Father: {fileID: 963194228}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1918915603
 GameObject:
@@ -4105,7 +4107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 3a59cf13e127a8f4bb7955d40647cb5f, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 3a59cf13e127a8f4bb7955d40647cb5f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4117,7 +4119,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 3a59cf13e127a8f4bb7955d40647cb5f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.724
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4991353596747881812, guid: 3a59cf13e127a8f4bb7955d40647cb5f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4391,7 +4393,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 963194228}
-  - {fileID: 1882548683}
   - {fileID: 1385956968}
   m_Father: {fileID: 0}
   m_RootOrder: 2

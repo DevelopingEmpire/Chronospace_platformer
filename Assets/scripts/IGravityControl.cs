@@ -5,7 +5,7 @@ using UnityEngine;
 interface IGravityControl
 {
     // 그냥 변수론 안됨. 프로퍼티 여야함 (?? 찾아보기)
-    public static float gravityStrength { get; set; } // 중력의 세기. 
+    public static float gravity { get; set; } // 중력의 세기. 
 
     public static CharacterController controller { get; set; } // 컨트롤러 
 

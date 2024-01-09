@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
-public class Guards : MonoBehaviour
+public class Guards : MonoBehaviour, IGravityControl
 {
     // The tag of the player object
     public string playerTag = "Player";
@@ -25,6 +25,24 @@ public class Guards : MonoBehaviour
     private Vector3 targetPosition;
     private int state = 0;
     private float nextPatrolTime;
+
+    /// <summary>
+    /// 중력 인터페이스 구현부 
+    float gravity = -9.81f;
+    public CharacterController controller; // 컨트롤러
+
+    public void AntiGravity() // 중력 반전 함수 
+    {
+        gravity = 9.81f;
+        //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+        Debug.Log("AntiGravity On.");
+    }
+    public void AntiGravity_End()
+    {
+        gravity = -9.81f; // 반전 해제 
+        Debug.Log("AntiGravity Off.");
+    }
+    /// </summary>
 
     // Start is called before the first frame update
     void Start()

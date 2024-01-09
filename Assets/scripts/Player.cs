@@ -65,18 +65,19 @@ public class Player : MonoBehaviour, IGravityControl
 
     /// <summary>
     /// 중력 인터페이스 구현부 
-    float gravityStrength = -9.81f;
+    float gravity = -9.81f;
     public CharacterController controller; // 컨트롤러
+
 
     public void AntiGravity() // 중력 반전 함수 
     {
-        gravityStrength = 9.81f;
+        gravity = 9.81f;
         //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
         Debug.Log("AntiGravity On.");
     }
     public void AntiGravity_End()
     {
-        gravityStrength = -9.81f; // 반전 해제 
+        gravity = -9.81f; // 반전 해제 
         Debug.Log("AntiGravity Off.");
     }
     /// </summary>
@@ -89,6 +90,10 @@ public class Player : MonoBehaviour, IGravityControl
 
         //set framerate
         Application.targetFrameRate = 60;
+
+        //커서 잠금
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
     void FixedUpdate()
     {
@@ -147,7 +152,7 @@ public class Player : MonoBehaviour, IGravityControl
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
             // Apply additional gravity to simulate a more natural fall
-            moveDirection.y += gravityStrength * timeCrit;
+            moveDirection.y += gravity * timeCrit;
         }
         moveDirection = transformSelf.TransformDirection(moveDirection);
         controller.Move(moveDirection * timeCrit);

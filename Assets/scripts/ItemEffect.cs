@@ -69,12 +69,13 @@ public class ItemEffect : MonoBehaviour
     }
 
     // 중력 템 던지기
-    public void AntiGravity()
+    public void ThrowGravityItem()
     {
         // 중력탬 생성
         GameObject instantGravityItem = Instantiate(throwGravityItem, 
-            targetPlayer.GetComponent<Transform>().position,
-            targetPlayer.GetComponent<Transform>().rotation);
+            targetPlayer.transform.position +new Vector3(0,0.5f,1f),
+            targetPlayer.transform.GetComponentInChildren<Transform>().rotation
+            ); // 카메라 각도 가져옴. 
 
         Debug.Log("AntiGravity 던짐 .");
     }
