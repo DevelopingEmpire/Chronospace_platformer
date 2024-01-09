@@ -17,19 +17,19 @@ public class GravityItem : MonoBehaviour
     ItemGravityControl itemGravityControl; 
     Player player;
 
-    void Start()
-    {
+    ///void Start()
+    //{
         //3초 후 폭발 
-        Invoke("Explosion", 3f);
+    //    Invoke("Explosion", 3f);
         
-    }
+    //}
 
     //IEnumerator Explosion()
     void Explosion()
     {
         // 물리적인 속도들 모두 0으로 해줌 
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        //rb.velocity = Vector3.zero;
+        //rb.angularVelocity = Vector3.zero;
         meshObj.SetActive(false); // 비활성화 
         //effectObj.SetActive(true); // 효과 보여주는거
 
@@ -61,4 +61,44 @@ public class GravityItem : MonoBehaviour
         Destroy(transform.parent.gameObject, 1f); // 1초뒤 아이템 clone 삭제 
 
     }
+
+    private void OnTriggerStay(Collider col)
+    {
+        // 플레이어면 
+        if (col.gameObject.transform.tag == "Player")
+        {
+            col.GetComponent<Player>().AntiGravity();
+
+        }
+
+        //아니면
+        itemGravityControl = col.GetComponent<ItemGravityControl>();
+
+        // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
+        if (itemGravityControl != null)
+        {
+            itemGravityControl.AntiGravity();
+        }
+    }
+
+    private void OnTriggerExit(Collider col)
+    {
+        // 플레이어면 
+        if (col.gameObject.transform.tag == "Player")
+        {
+            col.GetComponent<Player>().AntiGravity_End();
+
+        }
+
+        //아니면
+        itemGravityControl = col.GetComponent<ItemGravityControl>();
+
+        // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
+        if (itemGravityControl != null)
+        {
+            itemGravityControl.AntiGravity_End();
+        }
+    }
+
+
 }
