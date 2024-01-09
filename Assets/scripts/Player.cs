@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IGravityControl
 {
     //game object elements
     public Transform transformSelf;
-    public CharacterController controller;
+    //public CharacterController controller; // 이건  IGravityControl 에 있음 
 
     //physical param variables
     public float jumpSpeed = 10f;
-    public float gravity = 20f;
+    //public float gravity = 20f;  // 이건  IGravityControl 에 있음 
     public float movSpeed = 20f;
     public float rotSpeed = 400f;
     public float walkSpeedPercentage = 0.35f;
@@ -63,6 +63,23 @@ public class Player : MonoBehaviour
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
 
+    /// <summary>
+    /// 중력 인터페이스 구현부 
+    float gravityStrength = -9.81f;
+    public CharacterController controller; // 컨트롤러
+
+    public void AntiGravity() // 중력 반전 함수 
+    {
+        gravityStrength = 9.81f;
+        Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+        Debug.Log("AntiGravity On.");
+    }
+    public void AntiGravity_End()
+    {
+        gravityStrength = -9.81f; // 반전 해제 
+        Debug.Log("AntiGravity Off.");
+    }
+    /// </summary>
 
     void Start()
     {
@@ -130,7 +147,7 @@ public class Player : MonoBehaviour
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
             // Apply additional gravity to simulate a more natural fall
-            moveDirection.y += gravity * timeCrit;
+            moveDirection.y += gravityStrength * timeCrit;
         }
         moveDirection = transformSelf.TransformDirection(moveDirection);
         controller.Move(moveDirection * timeCrit);
