@@ -68,6 +68,21 @@ public class Player : MonoBehaviour, IGravityControl
     float gravityStrength = -9.81f;
     public CharacterController controller; // 컨트롤러
 
+    public float pushPower = 2.0f;
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        CharacterController hitController = hit.collider.GetComponent<CharacterController>();
+
+        // CharacterController가 부착된 오브젝트와 충돌했을 때
+        if (hitController != null)
+        {
+            // Square를 밀기
+            Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            hitController.Move(pushDirection * pushPower * Time.deltaTime);
+        }
+    }
+
     public void AntiGravity() // 중력 반전 함수 
     {
         gravityStrength = 9.81f;
