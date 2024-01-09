@@ -14,10 +14,12 @@ public class GravityItem : MonoBehaviour
     public BoxCollider colliderRange; // 탬 적용 범위 콜라이더 
     public MeshRenderer meshRenderer; // 템 범위 mesh 
 
-
     // 적용 당할 오브젝트의 itemGravityControl
-    IGravityControl iGravityControl; 
-    //Player player;
+    IGravityControl iGravityControl;
+
+    // colliderRange 내의 col 들 모아두는 list 
+    private List<Collider> colInRange = new List<Collider>();
+
 
     private void Awake()
     {
@@ -38,10 +40,26 @@ public class GravityItem : MonoBehaviour
         meshObj.SetActive(false); // 비활성화 
         //effectObj.SetActive(true); // 효과 보여주는거
         colliderRange.enabled = true; // 콜라이더 켜기 
-        meshRenderer.enabled = true; 
+        meshRenderer.enabled = true;
 
-        // 아래 시간 임의로 넣음. 유의 
-        Destroy(transform.parent.gameObject, 4f); // 4초뒤 아이템 clone 삭제 
+        yield return new WaitForSeconds(3f); // 4초 대기 
+
+        // 남은 놈들도 싹 정리해주기 
+        for (int i = colInRange.Count - 1; i >= 0; i--)
+        {
+            Collider col = colInRange[i];
+            IGravityControl iGravityControl = col.GetComponent<IGravityControl>();
+            if (iGravityControl != null)
+            {
+                iGravityControl.AntiGravity_End();
+            }
+            colInRange.RemoveAt(i);
+        }
+
+        //굳이 필요없겠찌?
+        //colInRange.Clear();
+
+        Destroy(transform.parent.gameObject); // 아이템 clone 삭제 
 
     }
 
@@ -52,11 +70,17 @@ public class GravityItem : MonoBehaviour
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
         if (iGravityControl != null)
         {
+            colInRange.Add(col); // 추가함 
             iGravityControl.AntiGravity();
         }
     }
 
     private void OnTriggerExit(Collider col)
+    {
+        ColAntiGravity_End(col);
+    }
+
+    private void ColAntiGravity_End(Collider col)
     {
         iGravityControl = col.GetComponent<IGravityControl>();
 
@@ -64,8 +88,8 @@ public class GravityItem : MonoBehaviour
         if (iGravityControl != null)
         {
             iGravityControl.AntiGravity_End();
+            colInRange.Remove(col);
         }
     }
-
 
 }
