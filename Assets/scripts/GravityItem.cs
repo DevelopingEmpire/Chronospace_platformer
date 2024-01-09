@@ -8,6 +8,7 @@ public class GravityItem : MonoBehaviour
     public Type type;
     public int value;
 
+
     public GameObject meshObj;
     //public GameObject effectObj; // Æø¹ß È¿°ú 
     public Rigidbody rb;

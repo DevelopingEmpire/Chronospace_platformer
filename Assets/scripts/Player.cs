@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Player : IGravityControl
+public class Player : MonoBehaviour, IGravityControl
 {
     //game object elements
     public Transform transformSelf;
@@ -63,6 +63,23 @@ public class Player : IGravityControl
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
 
+    /// <summary>
+    /// 중력 인터페이스 구현부 
+    float gravityStrength = -9.81f;
+    public CharacterController controller; // 컨트롤러
+
+    public void AntiGravity() // 중력 반전 함수 
+    {
+        gravityStrength = 9.81f;
+        Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+        Debug.Log("AntiGravity On.");
+    }
+    public void AntiGravity_End()
+    {
+        gravityStrength = -9.81f; // 반전 해제 
+        Debug.Log("AntiGravity Off.");
+    }
+    /// </summary>
 
     void Start()
     {
