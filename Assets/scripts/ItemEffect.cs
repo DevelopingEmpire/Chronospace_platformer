@@ -71,7 +71,7 @@ public class ItemEffect : MonoBehaviour
     // 중력 템 던지기
     public void AntiGravity()
     {
-        // 중력탬 던짐
+        // 중력탬 생성
         GameObject instantGravityItem = Instantiate(throwGravityItem, 
             targetPlayer.GetComponent<Transform>().position,
             targetPlayer.GetComponent<Transform>().rotation);
