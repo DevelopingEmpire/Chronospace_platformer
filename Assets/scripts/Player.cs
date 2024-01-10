@@ -75,7 +75,7 @@ public class Player : MonoBehaviour, IGravityControl
         //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
         Debug.Log("AntiGravity On.");
     }
-    public void AntiGravity_End()
+    public void AntiGravityEnd()
     {
         gravity = -9.81f; // 반전 해제 
         Debug.Log("AntiGravity Off.");

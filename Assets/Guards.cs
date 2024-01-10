@@ -25,22 +25,42 @@ public class Guards : MonoBehaviour, IGravityControl
     private Vector3 targetPosition;
     private int state = 0;
     private float nextPatrolTime;
+    public CharacterController controller; // 컨트롤러
 
     /// <summary>
     /// 중력 인터페이스 구현부 
-    float gravity = -9.81f;
-    public CharacterController controller; // 컨트롤러
+    /// 
+    public float gravity = -9.81f;
 
     public void AntiGravity() // 중력 반전 함수 
     {
+        // nav 비활 
+        navMeshAgent.enabled = false;
         gravity = 9.81f;
-        //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+
         Debug.Log("AntiGravity On.");
     }
-    public void AntiGravity_End()
+    public void AntiGravityEnd()
     {
         gravity = -9.81f; // 반전 해제 
         Debug.Log("AntiGravity Off.");
+        //땅이면, 그냥 켜줌 
+        if (controller.isGrounded)
+        {
+            // nav 활 
+            navMeshAgent.enabled = true;
+        }
+        
+    }
+
+    //중력을 더하는 함수 
+    void applyGravity()
+    {
+        // 수직 방향으로 중력을 적용.
+        Vector3 gravityVector = new Vector3(0, gravity, 0);
+
+        // 중력 벡터를 현재 위치에 적용
+        controller.Move(gravityVector * Time.deltaTime);
     }
     /// </summary>
 
@@ -51,7 +71,7 @@ public class Guards : MonoBehaviour, IGravityControl
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
         targetPosition = initialPosition;
-        nextPatrolTime = Time.time + patrolDelay;
+        nextPatrolTime = Time.time + patrolDelay; 
     }
 
     // Update is called once per frame
@@ -191,5 +211,6 @@ public class Guards : MonoBehaviour, IGravityControl
     {
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
+        
     }
 }

@@ -70,10 +70,6 @@ public class ItemEffect : MonoBehaviour
     // 중력 템 던지기
     public void ThrowGravityItem()
     {
-        // 생성위치 가져오기 
-        //itemPointTransform = targetPlayer.transform.GetChild(0).GetChild(0);
-        // 인스펙터에서 연결함 
-
         // 중력탬 생성
         GameObject instantGravityItem = Instantiate(throwGravityItem,
             itemPointTransform.position + itemPointTransform.forward,

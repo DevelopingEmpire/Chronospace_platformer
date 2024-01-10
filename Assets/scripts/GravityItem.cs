@@ -51,7 +51,7 @@ public class GravityItem : MonoBehaviour
             IGravityControl iGravityControl = col.GetComponent<IGravityControl>();
             if (iGravityControl != null)
             {
-                iGravityControl.AntiGravity_End();
+                iGravityControl.AntiGravityEnd();
             }
             colInRange.RemoveAt(i);
         }
@@ -87,7 +87,7 @@ public class GravityItem : MonoBehaviour
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
         if (iGravityControl != null)
         {
-            iGravityControl.AntiGravity_End();
+            iGravityControl.AntiGravityEnd();
             colInRange.Remove(col);
         }
     }
