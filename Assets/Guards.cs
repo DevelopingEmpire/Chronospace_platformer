@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System; // 이벤트 쓰기 위해 가져옴 
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Guards : MonoBehaviour, IGravityControl
@@ -26,6 +27,9 @@ public class Guards : MonoBehaviour, IGravityControl
     private int state = 0;
     private float nextPatrolTime;
     public CharacterController controller; // 컨트롤러
+
+    //이벤트 정의 
+    public event EventHandler OnIsGround; // is ground가 켜지거나 꺼질때 발생 
 
     /// <summary>
     /// 중력 인터페이스 구현부 
@@ -62,6 +66,12 @@ public class Guards : MonoBehaviour, IGravityControl
         // 중력 벡터를 현재 위치에 적용
         controller.Move(gravityVector * Time.deltaTime);
     }
+
+    //isGrounded가 변했을 때 호출되는 함수
+    private void CallOnIsGround(object sender, EventArgs e)
+    {
+        // 하고싶은 동작 넣기 
+    }
     /// </summary>
 
     // Start is called before the first frame update
@@ -71,39 +81,50 @@ public class Guards : MonoBehaviour, IGravityControl
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
         targetPosition = initialPosition;
-        nextPatrolTime = Time.time + patrolDelay; 
+        nextPatrolTime = Time.time + patrolDelay;
+
+        // 이벤트 핸들러에 이벤트 추가 
+        OnIsGround += CallOnIsGround;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // If the player is in sight, set the target position to the player's position
-        if (PlayerInSight())
+        if (controller.isGrounded)
         {
-            state = 1; // Change to stare at player state
-            StareAtPlayer();
-            if(PlayerInAdressRange())
+            // If the player is in sight, set the target position to the player's position
+            if (PlayerInSight())
             {
-                targetPosition = (GameObject.FindGameObjectWithTag(playerTag).transform.position);
-                MoveTowardsTarget();
-                Fire();
+                state = 1; // Change to stare at player state
+                StareAtPlayer();
+                if (PlayerInAdressRange())
+                {
+                    targetPosition = (GameObject.FindGameObjectWithTag(playerTag).transform.position);
+                    MoveTowardsTarget();
+                    Fire();
+                }
+                else
+                {
+                    Fire();
+                }
             }
             else
             {
-                Fire();
+                state = 0; // Change to patrol state
+                if (Time.time >= nextPatrolTime)
+                {
+                    Patrol();
+                    // Set the next patrol time
+                    nextPatrolTime = Time.time + patrolDelay;
+                    MoveTowardsTarget();
+                }
             }
         }
         else
         {
-            state = 0; // Change to patrol state
-            if (Time.time >= nextPatrolTime)
-            {
-                Patrol();
-                // Set the next patrol time
-                nextPatrolTime = Time.time + patrolDelay;
-                MoveTowardsTarget();
-            }
+            applyGravity();
         }
+        
 
         // Move towards the target position using NavMeshAgent
     }
@@ -202,7 +223,7 @@ public class Guards : MonoBehaviour, IGravityControl
     // Set a new random target within the travel distance
     void SetRandomPatrolTarget()
     {
-        Vector2 randomCircle = Random.insideUnitCircle * travelDistance;
+        Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * travelDistance;
         targetPosition = initialPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
     }
 
