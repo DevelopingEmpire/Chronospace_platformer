@@ -28,8 +28,29 @@ public class Guards : MonoBehaviour, IGravityControl
     private float nextPatrolTime;
     public CharacterController controller; // 컨트롤러
 
+    bool isGravity; // 중력을 받는 상태인가? 
     //이벤트 정의 
-    public event EventHandler OnIsGround; // is ground가 켜지거나 꺼질때 발생 
+    public bool ISGROUNDEDEVENT; // 가독성 ㄹㅈㄷ . 이벤트에서 쓰일 변수 
+  
+    bool isGroundedEvent // controller의 isgrounded 상태가 변했는지 추적한다  
+    {
+        set
+        {
+            if(ISGROUNDEDEVENT == value) return; // 이전과 같다면 넘어가 
+            ISGROUNDEDEVENT = value; // 달라졌다면? 일단 값 바꿔주고 
+            //할 동작 
+            //만약 착지했다면? 
+            if(ISGROUNDEDEVENT)
+            {
+                isGravity = false; // 중력 상태 끝 
+                navMeshAgent.enabled = true; // 켜준다 
+            }
+        }
+        get
+        {
+            return ISGROUNDEDEVENT;
+        }
+    } 
 
     /// <summary>
     /// 중력 인터페이스 구현부 
@@ -38,6 +59,8 @@ public class Guards : MonoBehaviour, IGravityControl
 
     public void AntiGravity() // 중력 반전 함수 
     {
+        isGravity = true;
+
         // nav 비활 
         navMeshAgent.enabled = false;
         gravity = 9.81f;
@@ -48,13 +71,7 @@ public class Guards : MonoBehaviour, IGravityControl
     {
         gravity = -9.81f; // 반전 해제 
         Debug.Log("AntiGravity Off.");
-        //땅이면, 그냥 켜줌 
-        if (controller.isGrounded)
-        {
-            // nav 활 
-            navMeshAgent.enabled = true;
-        }
-        
+
     }
 
     //중력을 더하는 함수 
@@ -67,11 +84,6 @@ public class Guards : MonoBehaviour, IGravityControl
         controller.Move(gravityVector * Time.deltaTime);
     }
 
-    //isGrounded가 변했을 때 호출되는 함수
-    private void CallOnIsGround(object sender, EventArgs e)
-    {
-        // 하고싶은 동작 넣기 
-    }
     /// </summary>
 
     // Start is called before the first frame update
@@ -83,14 +95,15 @@ public class Guards : MonoBehaviour, IGravityControl
         targetPosition = initialPosition;
         nextPatrolTime = Time.time + patrolDelay;
 
-        // 이벤트 핸들러에 이벤트 추가 
-        OnIsGround += CallOnIsGround;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (controller.isGrounded)
+        //is Grounded 상태가 변했는지 추적
+        isGroundedEvent = controller.isGrounded;
+
+        if (!isGravity) // 중력 받는 상태가 아니라면 
         {
             // If the player is in sight, set the target position to the player's position
             if (PlayerInSight())
@@ -108,7 +121,7 @@ public class Guards : MonoBehaviour, IGravityControl
                     Fire();
                 }
             }
-            else
+            else // Move towards the target position using NavMeshAgent
             {
                 state = 0; // Change to patrol state
                 if (Time.time >= nextPatrolTime)
@@ -120,13 +133,12 @@ public class Guards : MonoBehaviour, IGravityControl
                 }
             }
         }
-        else
+        else // 중력 받는 상태라면 
         {
             applyGravity();
         }
-        
 
-        // Move towards the target position using NavMeshAgent
+        
     }
 
     // Check if the player is in sight
