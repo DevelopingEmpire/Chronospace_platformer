@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -62,6 +63,9 @@ public class Player : MonoBehaviour, IGravityControl
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
+    // 탬 습득 UI 
+    public TextMeshProUGUI textMeshProUGUI;
+    
 
     /// <summary>
     /// 중력 인터페이스 구현부 
@@ -223,9 +227,11 @@ public class Player : MonoBehaviour, IGravityControl
     //interaction . 아이템 상호작용 키 
     void Interaction()
     {
-        if(inputInteraction && nearObject != null && !isJumping && !isDodging)
+        if(nearObject != null && nearObject.tag == "Item")
         {
-            if (nearObject.tag == "Item")
+            //UI 켜기 
+            textMeshProUGUI.enabled = true;
+            if (inputInteraction && !isJumping && !isDodging)
             {
                 Item item = nearObject.GetComponent<Item>();
                 int itemIndex = item.value; // gravity 0, time 1, wind 2 
@@ -233,6 +239,11 @@ public class Player : MonoBehaviour, IGravityControl
                 Destroy(nearObject);
             }
         }
+        else
+        {
+            textMeshProUGUI.enabled = false; // ui 끄기 
+        }
+        
     }
 
     void UseItem()
