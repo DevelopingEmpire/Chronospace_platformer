@@ -50,7 +50,7 @@ public class GravityItem : MonoBehaviour
             Collider col = colInRange[i];
             IGravityControl iGravityControl = col.GetComponent<IGravityControl>();
             if (iGravityControl != null)
-            {
+            { 
                 iGravityControl.AntiGravityEnd();
             }
             colInRange.RemoveAt(i);
@@ -63,13 +63,14 @@ public class GravityItem : MonoBehaviour
 
     }
 
-    private void OnTriggerStay(Collider col)
+    private void OnTriggerEnter(Collider col)
     {
         iGravityControl = col.GetComponent<IGravityControl>();
 
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
-        if (iGravityControl != null)
+        if (iGravityControl != null && iGravityControl.IsInRange == false)
         {
+            //해당 스크립트가 있고 또한 이미 범위에 추가된 것이 아니라면
             colInRange.Add(col); // 추가함 
             iGravityControl.AntiGravity();
         }
