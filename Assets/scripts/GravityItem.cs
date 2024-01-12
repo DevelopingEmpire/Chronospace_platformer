@@ -4,48 +4,48 @@ using UnityEngine;
 
 public class GravityItem : MonoBehaviour 
 {
-    public enum Type { Gravity, TimeStop, WindKey }; // Áß·Â, ½Ã°£, ÅÂ¿± 
+    public enum Type { Gravity, TimeStop, WindKey }; // ì¤‘ë ¥, ì‹œê°„, íƒœì—½ 
     public Type type;
     public int value;
 
-    public GameObject meshObj;
-    //public GameObject effectObj; // Æø¹ß È¿°ú 
+    public GameObject meshObj; // ì´ë¦„ì´ ì•„ì´í…œ ì–´ì©Œêµ¬ë¡œ ìˆ˜ì •
+    //public GameObject effectObj; // í­ë°œ íš¨ê³¼ 
     public Rigidbody rb;
-    public BoxCollider colliderRange; // ÅÆ Àû¿ë ¹üÀ§ Äİ¶óÀÌ´õ 
-    public MeshRenderer meshRenderer; // ÅÛ ¹üÀ§ mesh 
+    public BoxCollider colliderRange; // íƒ¬ ì ìš© ë²”ìœ„ ì½œë¼ì´ë” 
+    public MeshRenderer meshRenderer; // í…œ ë²”ìœ„ mesh 
 
-    // Àû¿ë ´çÇÒ ¿ÀºêÁ§Æ®ÀÇ itemGravityControl
+    // ì ìš© ë‹¹í•  ì˜¤ë¸Œì íŠ¸ì˜ itemGravityControl
     IGravityControl iGravityControl;
 
-    // colliderRange ³»ÀÇ col µé ¸ğ¾ÆµÎ´Â list 
+    // colliderRange ë‚´ì˜ col ë“¤ ëª¨ì•„ë‘ëŠ” list 
     private List<Collider> colInRange = new List<Collider>();
 
 
     private void Awake()
     {
-        rb.AddForce(transform.forward*10, ForceMode.Impulse); // ¾ÕÀ¸·Î ½¹~
+        rb.AddForce(transform.forward*10, ForceMode.Impulse); // ì•ìœ¼ë¡œ ìŠ~
         StartCoroutine(Explosion());
     }
 
-    // ½Ã°£Â÷¸¦ À§ÇØ ÄÚ·çÆ¾À¸·Î
+    // ì‹œê°„ì°¨ë¥¼ ìœ„í•´ ì½”ë£¨í‹´ìœ¼ë¡œ
     IEnumerator Explosion()
     {
-        yield return new WaitForSeconds(0.5f); // 1ÃÊ ±æ¾î¼­ ÁÙÀÓ  
+        yield return new WaitForSeconds(0.5f); // 1ì´ˆ ê¸¸ì–´ì„œ ì¤„ì„  
 
-        // ¹°¸®ÀûÀÎ ¼Óµµµé ¸ğµÎ 0À¸·Î ÇØÁÜ 
+        // ë¬¼ë¦¬ì ì¸ ì†ë„ë“¤ ëª¨ë‘ 0ìœ¼ë¡œ í•´ì¤Œ 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        rb.useGravity = false; // ¸®ÁöµåÀÇ Áß·Â ²ô±â 
-        meshObj.SetActive(false); // ºñÈ°¼ºÈ­ 
-        //effectObj.SetActive(true); // È¿°ú º¸¿©ÁÖ´Â°Å
-        colliderRange.enabled = true; // Äİ¶óÀÌ´õ ÄÑ±â 
+        rb.useGravity = false; // ë¦¬ì§€ë“œì˜ ì¤‘ë ¥ ë„ê¸° 
+        meshObj.SetActive(false); // ë¹„í™œì„±í™” 
+        //effectObj.SetActive(true); // íš¨ê³¼ ë³´ì—¬ì£¼ëŠ”ê±°
+        colliderRange.enabled = true; // ì½œë¼ì´ë” ì¼œê¸° 
         meshRenderer.enabled = true;
 
-        yield return new WaitForSeconds(3f); // 4ÃÊ ´ë±â 
+        yield return new WaitForSeconds(3f); // 4ì´ˆ ëŒ€ê¸° 
 
-        // ³²Àº ³ğµéµµ ½Ï Á¤¸®ÇØÁÖ±â 
-        for (int i = colInRange.Count - 1; i >= 0; i--)
+        // ë‚¨ì€ ë†ˆë“¤ë„ ì‹¹ ì •ë¦¬í•´ì£¼ê¸° 
+        for (int i = colInRange.Count - 1; i >= 0; i--) // for ( )
         {
             Collider col = colInRange[i];
             IGravityControl iGravityControl = col.GetComponent<IGravityControl>();
@@ -56,10 +56,10 @@ public class GravityItem : MonoBehaviour
             colInRange.RemoveAt(i);
         }
 
-        //±»ÀÌ ÇÊ¿ä¾ø°ÚÂî?
+        //êµ³ì´ í•„ìš”ì—†ê² ì°Œ?
         //colInRange.Clear();
 
-        Destroy(transform.parent.gameObject); // ¾ÆÀÌÅÛ clone »èÁ¦ 
+        Destroy(transform.parent.gameObject); // ì•„ì´í…œ clone ì‚­ì œ 
 
     }
 
@@ -67,11 +67,11 @@ public class GravityItem : MonoBehaviour
     {
         iGravityControl = col.GetComponent<IGravityControl>();
 
-        // ÄÄÆ÷³ÍÆ® ¾È´Ş¸° ³ğÀº null ¹İÈ¯ÇÏ´Âµ¥, °Â´Â Á¢±ÙÇÏ¸é ¿À·ù³²{
+        // ì»´í¬ë„ŒíŠ¸ ì•ˆë‹¬ë¦° ë†ˆì€ null ë°˜í™˜í•˜ëŠ”ë°, ê±”ëŠ” ì ‘ê·¼í•˜ë©´ ì˜¤ë¥˜ë‚¨{
         if (iGravityControl != null && iGravityControl.IsInRange == false)
         {
-            //ÇØ´ç ½ºÅ©¸³Æ®°¡ ÀÖ°í ¶ÇÇÑ ÀÌ¹Ì ¹üÀ§¿¡ Ãß°¡µÈ °ÍÀÌ ¾Æ´Ï¶ó¸é
-            colInRange.Add(col); // Ãß°¡ÇÔ 
+            //í•´ë‹¹ ìŠ¤í¬ë¦½íŠ¸ê°€ ìˆê³  ë˜í•œ ì´ë¯¸ ë²”ìœ„ì— ì¶”ê°€ëœ ê²ƒì´ ì•„ë‹ˆë¼ë©´
+            colInRange.Add(col); // ì¶”ê°€í•¨ 
             iGravityControl.AntiGravity();
         }
     }
@@ -85,7 +85,7 @@ public class GravityItem : MonoBehaviour
     {
         iGravityControl = col.GetComponent<IGravityControl>();
 
-        // ÄÄÆ÷³ÍÆ® ¾È´Ş¸° ³ğÀº null ¹İÈ¯ÇÏ´Âµ¥, °Â´Â Á¢±ÙÇÏ¸é ¿À·ù³²{
+        // ì»´í¬ë„ŒíŠ¸ ì•ˆë‹¬ë¦° ë†ˆì€ null ë°˜í™˜í•˜ëŠ”ë°, ê±”ëŠ” ì ‘ê·¼í•˜ë©´ ì˜¤ë¥˜ë‚¨{
         if (iGravityControl != null)
         {
             iGravityControl.AntiGravityEnd();
