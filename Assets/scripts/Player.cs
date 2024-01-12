@@ -8,6 +8,7 @@ public class Player : MonoBehaviour, IGravityControl
 {
     //game object elements
     public Transform transformSelf;
+    public Animator anim;
     //public CharacterController controller; // 이건  IGravityControl 에 있음 
 
     //physical param variables
@@ -152,14 +153,23 @@ public class Player : MonoBehaviour, IGravityControl
         if (controller.isGrounded)
         {
             // On the ground, apply regular movement and jump if needed
+            if (isJumping)
+            {
+                isJumping = false;
+                anim.SetTrigger("doJumpComplete");
+            }
             moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
-            isJumping = false;
             savedDirection = moveDirection;
+            //animation 설정
+            bool isMoving = (inputH != 0 || inputV != 0);
+            anim.SetBool("isRunning", isMoving);
 
             if (inputJump)
             {
+
                 moveDirection.y = jumpSpeed;
                 isJumping = true;
+                anim.SetTrigger("doJump");
             }
         }
         else
