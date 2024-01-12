@@ -2,12 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GravityItem : MonoBehaviour 
+public class GravityItem : Item 
 {
-    public enum Type { Gravity, TimeStop, WindKey }; // 중력, 시간, 태엽 
-    public Type type;
-    public int value;
-
     public GameObject meshObj; // 이름이 아이템 어쩌구로 수정
     //public GameObject effectObj; // 폭발 효과 
     public Rigidbody rb;
