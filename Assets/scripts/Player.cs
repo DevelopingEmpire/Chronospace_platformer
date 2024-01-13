@@ -130,6 +130,8 @@ public class Player : MonoBehaviour, IGravityControl
         Interaction();
         Swap();
         UseItem();
+
+        MoveAnim();
     }
 
     void GetInput() //method which is used in getting input
@@ -161,8 +163,6 @@ public class Player : MonoBehaviour, IGravityControl
             moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
             savedDirection = moveDirection;
             //animation ¼³Á¤
-            bool isMoving = (inputH != 0 || inputV != 0);
-            anim.SetBool("isRunning", isMoving);
 
             if (inputJump)
             {
@@ -185,6 +185,51 @@ public class Player : MonoBehaviour, IGravityControl
         controller.Move(moveDirection * timeCrit);
     }
 
+    void MoveAnim()
+    {
+        bool dirF;
+        bool dirB;
+        bool dirL;
+        bool dirR;
+        //vertical
+        if (inputV > 0)
+        {
+            dirF = true;
+            dirB = false;
+        }
+        else if (inputV < 0)
+        {
+            dirF = false;
+            dirB = true;
+        }
+        else
+        {
+            dirF = false;
+            dirB = false;
+        }
+
+        //horizonal
+        if (inputH > 0)
+        {
+            dirL = false;
+            dirR = true;
+        }
+        else if (inputH < 0)
+        {
+            dirL = true;
+            dirR = false;
+        }
+        else
+        {
+            dirL = false;
+            dirR = false;
+        }
+
+        anim.SetBool("isRunning", dirF);
+        anim.SetBool("isRunningR", dirR);
+        anim.SetBool("isRunningL", dirL);
+
+    }
     void Rotate()
     {
         transformSelf.Rotate((Vector3.up * rotateX * rotSpeed * timeCrit));
