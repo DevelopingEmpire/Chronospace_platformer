@@ -228,7 +228,7 @@ public class Player : MonoBehaviour, IGravityControl
         anim.SetBool("isRunning", dirF);
         anim.SetBool("isRunningR", dirR);
         anim.SetBool("isRunningL", dirL);
-
+        anim.SetBool("isRunningB", dirB);
     }
     void Rotate()
     {
