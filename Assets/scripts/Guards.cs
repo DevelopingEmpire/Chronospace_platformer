@@ -89,10 +89,13 @@ public class Guards : MonoBehaviour, IGravityControl
     }
 
     //중력을 더하는 함수 
-    void applyGravity()
+    void ApplyGravity()
     {
         // 수직 방향으로 중력을 적용.
         Vector3 gravityVector = new Vector3(0, Gravity, 0);
+
+        // 경박스런 움직임. Lerp으로 퇴마  
+        gravityVector = Vector3.Lerp(controller.velocity, gravityVector, Time.deltaTime);
 
         // 중력 벡터를 현재 위치에 적용
         controller.Move(gravityVector * Time.deltaTime);
@@ -149,7 +152,7 @@ public class Guards : MonoBehaviour, IGravityControl
         }
         else // 중력 받는 상태라면 
         {
-            applyGravity();
+            ApplyGravity();
         }
 
         

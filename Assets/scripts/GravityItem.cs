@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GravityItem : Item 
 {
-    public GameObject meshObj; // 이름이 아이템 어쩌구로 수정
+    public GameObject itemMeshObj; // 이름이 아이템 어쩌구로 수정
     //public GameObject effectObj; // 폭발 효과 
     public Rigidbody rb;
     public BoxCollider colliderRange; // 탬 적용 범위 콜라이더 
@@ -33,7 +33,7 @@ public class GravityItem : Item
         rb.angularVelocity = Vector3.zero;
 
         rb.useGravity = false; // 리지드의 중력 끄기 
-        meshObj.SetActive(false); // 비활성화 
+        itemMeshObj.SetActive(false); // 비활성화 
         //effectObj.SetActive(true); // 효과 보여주는거
         colliderRange.enabled = true; // 콜라이더 켜기 
         meshRenderer.enabled = true;
@@ -41,15 +41,13 @@ public class GravityItem : Item
         yield return new WaitForSeconds(3f); // 4초 대기 
 
         // 남은 놈들도 싹 정리해주기 
-        for (int i = colInRange.Count - 1; i >= 0; i--) // for ( )
+        foreach (Collider col in colInRange)
         {
-            Collider col = colInRange[i];
-            IGravityControl iGravityControl = col.GetComponent<IGravityControl>();
+            iGravityControl = col.GetComponent<IGravityControl>();
             if (iGravityControl != null)
-            { 
+            {
                 iGravityControl.AntiGravityEnd();
             }
-            colInRange.RemoveAt(i);
         }
 
         //굳이 필요없겠찌?
@@ -74,10 +72,10 @@ public class GravityItem : Item
 
     private void OnTriggerExit(Collider col)
     {
-        ColAntiGravity_End(col);
+        ColAntiGravityEnd(col);
     }
 
-    private void ColAntiGravity_End(Collider col)
+    private void ColAntiGravityEnd(Collider col)
     {
         iGravityControl = col.GetComponent<IGravityControl>();
 
