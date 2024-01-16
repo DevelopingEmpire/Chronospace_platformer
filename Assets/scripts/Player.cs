@@ -321,7 +321,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         if (inputUseItem1)
         {
-            if (equipItemIndex == 2 && nearObject.tag =="Player") // 손에 든 게 태엽이고 주변 obj가 플레이어라면 
+            if (equipItemIndex == 2 && nearObject != null && nearObject.tag =="Player") // 손에 든 게 태엽이고 주변 obj가 플레이어라면 
             {
                 nearObject.GetComponent<Player>().Winding();
             }
@@ -342,7 +342,7 @@ public class Player : MonoBehaviour, IGravityControl
     public void Winding()
     {
         windKey.SetActive(true);
-        //시간초 추가하는 코드 필요
+        //태엽시간 추가하는 코드 필요
         
     }
 
