@@ -9,11 +9,10 @@ public class Player : MonoBehaviour, IGravityControl
     //game object elements
     public Transform transformSelf;
     public Animator anim;
-    //public CharacterController controller; // 이건  IGravityControl 에 있음 
+    public CharacterController controller; // 이건  IGravityControl 에 있음 
 
     //physical param variables
-    public float jumpSpeed = 10f;
-    //public float gravity = 20f;  // 이건  IGravityControl 에 있음 
+    public float jumpSpeed = 10f;    
     public float movSpeed = 20f;
     public float rotSpeed = 400f;
     public float walkSpeedPercentage = 0.35f;
@@ -56,6 +55,7 @@ public class Player : MonoBehaviour, IGravityControl
     bool isJumping = false;
     bool isDodging = false;
     bool isSwaping = false;
+    bool isWinding = false; // 태엽 감는 중 
 
     //캐릭터가 살았는지! ( 시간) . is TimeOver로 이름 바꿀까 싶네 
     public bool isAlive = true;
@@ -82,7 +82,6 @@ public class Player : MonoBehaviour, IGravityControl
         get { return gravity; }
         set { gravity = value; }
     }
-    public CharacterController controller; // 컨트롤러
 
 
     public void AntiGravity() // 중력 반전 함수 
@@ -118,6 +117,8 @@ public class Player : MonoBehaviour, IGravityControl
         timeCrit = Time.unscaledDeltaTime;
 
         if (!isAlive) return;
+        if (isWinding) return; // 와인딩 중엔 암것도 못해! 
+
         //시야조정
         GetInput();
         Rotate();
@@ -302,7 +303,7 @@ public class Player : MonoBehaviour, IGravityControl
             if (inputInteraction && !isJumping && !isDodging)
             {
                 Item item = nearObject.GetComponent<Item>();
-                int itemIndex = item.value; // gravity 0, time 1, wind 2 
+                int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
                 hasItems[itemIndex] = true;
                 Destroy(nearObject);
             }

@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GravityItem : Item 
-{
+public class GravityItem : MonoBehaviour
+    {
     public GameObject itemMeshObj; // 이름이 아이템 어쩌구로 수정
     //public GameObject effectObj; // 폭발 효과 
     public Rigidbody rb;

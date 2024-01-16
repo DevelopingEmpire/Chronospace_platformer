@@ -90,6 +90,11 @@ public class ItemEffect : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
+    public void Winding()
+    {
+        Debug.Log("wind key »ç¿ë");
+    }
+
     //Function of Items list
     public void Blank()
     {
