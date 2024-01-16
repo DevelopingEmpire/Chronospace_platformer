@@ -10,6 +10,7 @@ public class Player : MonoBehaviour, IGravityControl
     public Transform transformSelf;
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
+    public GameObject windKey; // 내 태엽 
 
     //physical param variables
     public float jumpSpeed = 10f;    
@@ -64,6 +65,7 @@ public class Player : MonoBehaviour, IGravityControl
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
+
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
@@ -319,8 +321,16 @@ public class Player : MonoBehaviour, IGravityControl
 
         if (inputUseItem1)
         {
-            //event activation 1
-            useItem1.Invoke(); //r
+            if (equipItemIndex == 2 && nearObject.tag =="Player") // 손에 든 게 태엽이고 주변 obj가 플레이어라면 
+            {
+                nearObject.GetComponent<Player>().Winding();
+            }
+            else
+            {
+                //event activation 1
+                useItem1.Invoke(); //r
+            }
+            
         }
         else if (inputUseItem2)
         {
@@ -328,18 +338,27 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
+    //Winding
+    public void Winding()
+    {
+        windKey.SetActive(true);
+        //시간초 추가하는 코드 필요
+        
+    }
+
+
     //아이템 입수 관련 콜라이더
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Item")
+        if (other.tag == "Item" || other.tag == "Player") // 아이템이나 플레이어면 
             nearObject = other.gameObject;
             //Debug.Log(nearObject.name);  // 출력 잘된다! 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Item")
+        if (other.tag == "Item" || other.tag == "Player")
             nearObject = null;
     }
 }
