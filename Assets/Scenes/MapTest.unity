@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &52477327 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5982909500906546990, guid: 70249033f57350b4eaede8aa4cea2438, type: 3}
+  m_PrefabInstance: {fileID: 5982909500959005345}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &86300068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,7 +1908,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1977597552}
-  - component: {fileID: 1977597554}
   - component: {fileID: 1977597553}
   m_Layer: 0
   m_Name: WindKey
@@ -1941,19 +1945,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windKeyMesh: {fileID: 1226970413}
---- !u!135 &1977597554
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977597551}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2001632175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2202,13 +2193,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 1.5
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.2, z: 0}
 --- !u!114 &3585293060872063637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2224,6 +2215,7 @@ MonoBehaviour:
   transformSelf: {fileID: 3585293060872063630}
   anim: {fileID: 3585293061830684680}
   controller: {fileID: 3585293060872063636}
+  windKey: {fileID: 1977597551}
   jumpSpeed: 10
   movSpeed: 8
   rotSpeed: 400
@@ -2449,9 +2441,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 525265301}
     - target: {fileID: 5517075624610010082, guid: 70249033f57350b4eaede8aa4cea2438, type: 3}
+      propertyPath: windKey
+      value: 
+      objectReference: {fileID: 52477327}
+    - target: {fileID: 5517075624610010082, guid: 70249033f57350b4eaede8aa4cea2438, type: 3}
       propertyPath: textMeshProUGUI
       value: 
       objectReference: {fileID: 525265300}
+    - target: {fileID: 5517075624610010083, guid: 70249033f57350b4eaede8aa4cea2438, type: 3}
+      propertyPath: m_Radius
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5517075624610010083, guid: 70249033f57350b4eaede8aa4cea2438, type: 3}
+      propertyPath: m_Center.y
+      value: -0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 5517075624610010104, guid: 70249033f57350b4eaede8aa4cea2438, type: 3}
       propertyPath: m_Name
       value: Character

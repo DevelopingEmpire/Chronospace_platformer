@@ -13,6 +13,11 @@ public class WindKeyItem : MonoBehaviour
 
         windKeyMesh.transform.DOLocalRotate(new Vector3(0, 90, 0), 2f).SetLoops(3,LoopType.Incremental);// 회전각, 지속시간 .
 
+        Invoke("SetActiveFalse", 7f); // 7초 뒤 비활성화 됨 
+    }
+
+    void SetActiveFalse() // 스스로 비활성화 하는 함수 
+    {
         gameObject.SetActive(false);// 스스로 꺼지는 착한 아이 
     }
 
