@@ -13,7 +13,7 @@ public class WindKeyItem : MonoBehaviour
 
         windKeyMesh.transform.DOLocalRotate(new Vector3(0, 90, 0), 2f).SetLoops(3,LoopType.Incremental);// 회전각, 지속시간 .
         Debug.Log("태엽 활성화");
-        Invoke("SetActiveFalse", 7f); // 7초 뒤 비활성화 됨 
+        Invoke("SetActiveFalse", 7f); // 7초 뒤 비활성화 됨. dotween 이 코루틴으로 도는 듯.. 하여 그냥 적으면 시작하자마자 비활됨 
     }
 
     void SetActiveFalse() // 스스로 비활성화 하는 함수 

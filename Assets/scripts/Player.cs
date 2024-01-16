@@ -58,6 +58,7 @@ public class Player : MonoBehaviour, IGravityControl
     bool isSwaping = false;
     bool isWinding = false; // 태엽 감는 중 
 
+    bool isPlayerNear = false; // 주변에 동료가 있는가 
     //캐릭터가 살았는지! ( 시간) . is TimeOver로 이름 바꿀까 싶네 
     public bool isAlive = true;
 
@@ -321,7 +322,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         if (inputUseItem1)
         {
-            if (equipItemIndex == 2 && nearObject != null && nearObject.tag =="Player") // 손에 든 게 태엽이고 주변 obj가 플레이어라면 
+            if (equipItemIndex == 2 && nearObject != null && isPlayerNear == true) // 손에 든 게 태엽이고 주변 obj가 플레이어라면 
             {
                 nearObject.GetComponent<Player>().Winding();
             }
@@ -348,17 +349,29 @@ public class Player : MonoBehaviour, IGravityControl
 
 
     //아이템 입수 관련 콜라이더
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player") //플레이어면 
+            nearObject = other.gameObject;
+            isPlayerNear = true;
+    }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Item" || other.tag == "Player") // 아이템이나 플레이어면 
+        if (other.tag == "Item") // 아이템이나 플레이어면 
             nearObject = other.gameObject;
             //Debug.Log(nearObject.name);  // 출력 잘된다! 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Item" || other.tag == "Player")
+        if (other.tag == "Item")
             nearObject = null;
+        if(other.tag == "Player")
+        {
+            nearObject = null;
+            isPlayerNear = false;
+        }
+
     }
 }
