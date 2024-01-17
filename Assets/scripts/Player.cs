@@ -7,11 +7,13 @@ using TMPro;
 public class Player : MonoBehaviour, IGravityControl
 {
     //game object elements
+    [Header("Component")]
     public Transform transformSelf;
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽 
 
+    [Header("PhysicsValue")]
     //physical param variables
     public float jumpSpeed = 10f;    
     public float movSpeed = 20f;
@@ -52,12 +54,13 @@ public class Player : MonoBehaviour, IGravityControl
     public UnityEvent useItem1;
     public UnityEvent useItem2;
 
+    #region animValue
     //character status
     bool isJumping = false;
     bool isDodging = false;
     bool isSwaping = false;
     bool isWinding = false; // 태엽 감는 중 
-
+    #endregion
     bool isPlayerNear = false; // 주변에 동료가 있는가 
     //캐릭터가 살았는지! ( 시간) . is TimeOver로 이름 바꿀까 싶네 
     public bool isAlive = true;
