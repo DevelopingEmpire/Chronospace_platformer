@@ -63,7 +63,7 @@ public class Player : MonoBehaviour, IGravityControl
     public bool isAlive = true;
 
     //주변 템
-    GameObject nearObject;
+    public GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
 
@@ -349,18 +349,19 @@ public class Player : MonoBehaviour, IGravityControl
 
 
     //아이템 입수 관련 콜라이더
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player") //플레이어면 
-            nearObject = other.gameObject;
-            isPlayerNear = true;
-    }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Item") // 아이템이나 플레이어면 
+        if (other.tag == "Item") // 아이템
             nearObject = other.gameObject;
-            //Debug.Log(nearObject.name);  // 출력 잘된다! 
+        //Debug.Log(nearObject.name);  // 출력 잘된다! 
+
+        if (other.tag == "Player") //플레이어면 
+        {
+            nearObject = other.gameObject;
+            isPlayerNear = true;
+        }
+            
     }
 
     private void OnTriggerExit(Collider other)
@@ -372,6 +373,5 @@ public class Player : MonoBehaviour, IGravityControl
             nearObject = null;
             isPlayerNear = false;
         }
-
     }
 }
