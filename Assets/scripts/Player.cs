@@ -71,6 +71,7 @@ public class Player : MonoBehaviour, IGravityControl
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
+    public float timeScaleMultiplier = 8.0f; // 타임 스케일 계수 
 
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
@@ -341,9 +342,8 @@ public class Player : MonoBehaviour, IGravityControl
                     Debug.Log("AntiGravity 던짐 .");
                     break;
                 case 1: // 시간탬
-                    //Time.timeScale = timeScaleMultiplier;
-                    Time.timeScale = 0.8f;
-                    Invoke("Tweaktime_End", 10f);
+                    Time.timeScale = timeScaleMultiplier; // 8배속 
+                    Invoke("Tweaktime_End", Time.unscaledTime * 5); // 5초 뒤 해제 
                     Debug.Log("Time Scale Tweaked.");
                     break;
                 case 2: // 태엽

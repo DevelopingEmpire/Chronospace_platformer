@@ -81,7 +81,7 @@ public class ItemEffect : MonoBehaviour
 
     public void Tweaktime ()
     {
-        Time.timeScale = timeScaleMultiplier;
+        Time.timeScale = timeScaleMultiplier; // 8¹è¼Ó 
         Invoke("Tweaktime_End", 10f);
         Debug.Log("Time Scale Tweaked.");
     }
