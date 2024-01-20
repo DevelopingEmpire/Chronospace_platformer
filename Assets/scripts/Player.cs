@@ -12,14 +12,16 @@ public class Player : MonoBehaviour, IGravityControl
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽 
+    public GameObject throwGravityItem;    // 던질 중력탬  
+    public Transform itemPointTransform; // 탬 생성 위치
 
     [Header("PhysicsValue")]
     //physical param variables
-    public float jumpSpeed = 10f;    
-    public float movSpeed = 20f;
-    public float rotSpeed = 400f;
-    public float walkSpeedPercentage = 0.35f;
-    public float timeCrit;
+    float jumpSpeed = 10f;    
+    float movSpeed = 20f;
+    float rotSpeed = 400f;
+    float walkSpeedPercentage = 0.35f;
+    float timeCrit;
 
     //movement param variables
     Vector3 moveDirection;
@@ -66,12 +68,13 @@ public class Player : MonoBehaviour, IGravityControl
     public bool isAlive = true;
 
     //주변 템
-    public GameObject nearObject;
+    GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
 
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
+
 
     /// <summary>
     /// 중력 인터페이스 구현부 
@@ -325,14 +328,38 @@ public class Player : MonoBehaviour, IGravityControl
 
         if (inputUseItem1)
         {
-            if (equipItemIndex == 2 && nearObject != null && isPlayerNear == true) // 손에 든 게 태엽이고 주변 obj가 플레이어라면 
+            // 원랜 useItem1.Invoke();
+            switch (equipItemIndex) 
             {
-                nearObject.GetComponent<Player>().Winding();
-            }
-            else
-            {
-                //event activation 1
-                useItem1.Invoke(); //r
+                case 0: // 중력탬
+                    // 중력탬 생성
+                    GameObject instantGravityItem = Instantiate(throwGravityItem,
+                        itemPointTransform.position + itemPointTransform.forward,
+                        itemPointTransform.rotation
+                        ); // 해당 위치 , 각도 
+
+                    Debug.Log("AntiGravity 던짐 .");
+                    break;
+                case 1: // 시간탬
+                    //Time.timeScale = timeScaleMultiplier;
+                    Time.timeScale = 0.8f;
+                    Invoke("Tweaktime_End", 10f);
+                    Debug.Log("Time Scale Tweaked.");
+                    break;
+                case 2: // 태엽
+                    if (nearObject != null && isPlayerNear == true) // 손에 든 게 태엽이고 주변 obj가 플레이어라면 
+                    {
+                        nearObject.GetComponent<Player>().Winding();
+                    }
+                    break;
+                case -1:
+                    Debug.Log("No Item Holding Mode.");
+                    break;
+                default: // 그 외 경우들~ 장비 안했거나 등등
+                    useItem1.Invoke();
+                    Debug.LogError("Invalid itemIndex: " + itemIndex);
+                    break;
+
             }
             
         }
@@ -342,11 +369,17 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
+    // time 
+    public void Tweaktime_End()
+    {
+        Time.timeScale = 1.0f;
+    }
+
     //Winding
     public void Winding()
     {
         windKey.SetActive(true);
-        //태엽시간 추가하는 코드 필요
+        //자신의! 태엽시간 추가하는 코드 필요
         
     }
 
