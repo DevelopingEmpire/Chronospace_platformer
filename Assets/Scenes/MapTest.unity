@@ -2384,6 +2384,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isAlive: 1
+  timeScaleMultiplier: 8
   textMeshProUGUI: {fileID: 2144860560}
   gravity: -9.81
 --- !u!114 &3585293060872063638
@@ -2643,5 +2644,33 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 525265301}
+    - target: {fileID: 5527576061220458923, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576061220458923, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576061220458923, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576061220458923, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576061220458923, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576062137193747, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: orthographic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576062137193747, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: field of view
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
