@@ -76,7 +76,6 @@ public class Player : MonoBehaviour, IGravityControl
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
-
     /// <summary>
     /// 중력 인터페이스 구현부 
     bool isInRange = false; // 중력 범위 내에 있는가 
@@ -115,6 +114,7 @@ public class Player : MonoBehaviour, IGravityControl
         //transformSelf = GetComponent<Transform>();
         //controller = GetComponent<CharacterController>();
 
+        
 
         //set framerate
         Application.targetFrameRate = 60;
@@ -130,14 +130,10 @@ public class Player : MonoBehaviour, IGravityControl
         if (!isAlive) return;
         if (isWinding) return; // 와인딩 중엔 암것도 못해! 
 
-        if (transform.position.y < -5)
-        {
-            Debug.Log("떨어짐!");
-            transform.position = new Vector3(65, 32, 44);
-        }
+        
 
-            //시야조정
-            GetInput();
+        //시야조정
+        GetInput();
         Rotate();
 
         //이동
@@ -192,6 +188,7 @@ public class Player : MonoBehaviour, IGravityControl
         }
         else
         {
+
             // In the air, apply falling and allow directional input
             moveDirection.x = inputH * movSpeed * (inputWalk ? 0.3f : 1f);
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
