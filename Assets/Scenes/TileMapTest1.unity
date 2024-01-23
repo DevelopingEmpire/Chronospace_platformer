@@ -17257,9 +17257,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8002928549535283189, guid: 524c7b5a1bd1c7d458e4e286811e9add, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002928549535283191, guid: 524c7b5a1bd1c7d458e4e286811e9add, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 524c7b5a1bd1c7d458e4e286811e9add, type: 3}
@@ -17280,7 +17284,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 733625228}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -19577,7 +19581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5527576060991757515, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 14.33
+      value: 14.03
       objectReference: {fileID: 0}
     - target: {fileID: 5527576060991757515, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: m_LocalPosition.z
@@ -19623,6 +19627,18 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 733625231}
+    - target: {fileID: 5527576062137193747, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: field of view
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576062137193747, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: far clip plane
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5527576062137193747, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: near clip plane
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
 --- !u!1001 &825055906
