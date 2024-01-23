@@ -68,6 +68,7 @@ public class Player : MonoBehaviour, IGravityControl
     public bool isAlive = true;
 
     //주변 템
+    [SerializeField]
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
