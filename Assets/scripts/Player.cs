@@ -130,8 +130,14 @@ public class Player : MonoBehaviour, IGravityControl
         if (!isAlive) return;
         if (isWinding) return; // 와인딩 중엔 암것도 못해! 
 
-        //시야조정
-        GetInput();
+        if (transform.position.y < -5)
+        {
+            Debug.Log("떨어짐!");
+            transform.position = new Vector3(65, 32, 44);
+        }
+
+            //시야조정
+            GetInput();
         Rotate();
 
         //이동
