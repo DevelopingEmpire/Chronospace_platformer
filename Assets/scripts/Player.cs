@@ -18,7 +18,7 @@ public class Player : MonoBehaviour, IGravityControl
     [Header("PhysicsValue")]
     //physical param variables
     float jumpSpeed = 10f;    
-    float movSpeed = 20f;
+    float movSpeed = 5f; // 20f ¿´´Âµ¥ ³Ê¹« »¡¶ó¼­ ¹Ù²Þ  
     float rotSpeed = 400f;
     float walkSpeedPercentage = 0.35f;
 
