@@ -21,7 +21,6 @@ public class Player : MonoBehaviour, IGravityControl
     float movSpeed = 20f;
     float rotSpeed = 400f;
     float walkSpeedPercentage = 0.35f;
-    float timeCrit;
 
     //movement param variables
     Vector3 moveDirection;
@@ -72,7 +71,7 @@ public class Player : MonoBehaviour, IGravityControl
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     int equipItemIndex = -1; // 현재 손에 있는 탬 종류 
-    public float timeScaleMultiplier = 8.0f; // 타임 스케일 계수 
+    public float timeScaleMultiplier = 0.5f; // 타임 스케일 계수 
 
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
@@ -116,6 +115,7 @@ public class Player : MonoBehaviour, IGravityControl
         //transformSelf = GetComponent<Transform>();
         //controller = GetComponent<CharacterController>();
 
+
         //set framerate
         Application.targetFrameRate = 60;
 
@@ -125,7 +125,7 @@ public class Player : MonoBehaviour, IGravityControl
     }
     void FixedUpdate()
     {
-        timeCrit = Time.unscaledDeltaTime;
+        //timeCrit = Time.unscaledDeltaTime;
 
         if (!isAlive) return;
         if (isWinding) return; // 와인딩 중엔 암것도 못해! 
@@ -191,10 +191,10 @@ public class Player : MonoBehaviour, IGravityControl
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
             // Apply additional gravity to simulate a more natural fall
-            moveDirection.y += Gravity * timeCrit * 2;
+            moveDirection.y += Gravity * Time.unscaledDeltaTime * 2;
         }
         moveDirection = transformSelf.TransformDirection(moveDirection);
-        controller.Move(moveDirection * timeCrit);
+        controller.Move(moveDirection * Time.unscaledDeltaTime);
     }
 
     void MoveAnim()
@@ -244,7 +244,7 @@ public class Player : MonoBehaviour, IGravityControl
     }
     void Rotate()
     {
-        transformSelf.Rotate((Vector3.up * rotateX * rotSpeed * timeCrit));
+        transformSelf.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
     }
 
     void Dodge()
@@ -343,7 +343,9 @@ public class Player : MonoBehaviour, IGravityControl
                     Debug.Log("AntiGravity 던짐 .");
                     break;
                 case 1: // 시간탬
-                    Time.timeScale = timeScaleMultiplier; // 8배속 
+                    Time.timeScale = timeScaleMultiplier; // 0.5배속 
+                    anim.speed = 1.0f / Time.timeScale; // 애니메이션 속도도 바꿔준다 
+
                     Invoke("Tweaktime_End", Time.unscaledTime * 5); // 5초 뒤 해제 
                     Debug.Log("Time Scale Tweaked.");
                     break;
@@ -374,6 +376,7 @@ public class Player : MonoBehaviour, IGravityControl
     public void Tweaktime_End()
     {
         Time.timeScale = 1.0f;
+        anim.speed = 1.0f / Time.timeScale; // 애니메이션 속도도 바꿔준다
     }
 
     //Winding
