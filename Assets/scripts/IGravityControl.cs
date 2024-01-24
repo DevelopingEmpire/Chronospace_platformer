@@ -4,13 +4,12 @@ using UnityEngine;
 
 interface IGravityControl
 {
-    // ±×³É º¯¼ö·Ğ ¾ÈµÊ. ÇÁ·ÎÆÛÆ¼ ¿©¾ßÇÔ (?? Ã£¾Æº¸±â)
-    public float Gravity { get; set; } // Áß·ÂÀÇ ¼¼±â. 
-    public bool IsInRange { get; set; } // ¹üÀ§ ³»¿¡ ÀÖ´ÂÁö ¿©ºÎ 
+    public float Gravity { get; set; } // ì¤‘ë ¥ì˜ ì„¸ê¸°. 
+    public bool IsInRange { get; set; } // ë²”ìœ„ ë‚´ì— ìˆëŠ”ì§€ ì—¬ë¶€ 
     
 
-    void AntiGravity(); // Áß·Â ¹İÀü ÇÔ¼ö 
+    void AntiGravity(); // ì¤‘ë ¥ ë°˜ì „ í•¨ìˆ˜ 
 
-    void AntiGravityEnd(); // Áß·Â ¹İÀü ³¡³ª´Â ÇÔ¼ö 
+    void AntiGravityEnd(); // ì¤‘ë ¥ ë°˜ì „ ëë‚˜ëŠ” í•¨ìˆ˜ 
 
 }

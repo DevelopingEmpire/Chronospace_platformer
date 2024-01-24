@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour
     private float timeDilation = 1f;
     private Vector3 initialDirection;
 
-    void Start() //instanciate 이후 실행되는 스크립트이기에 본래 계획대로 총알이 방향을 향함
+    void Start() //instanciate 이후 실행되는 스크립트이기에 본래 계획대로 총알이 방향을 
     {
         SetInitialDirectionToPlayer();
         Destroy(gameObject, lifetime);

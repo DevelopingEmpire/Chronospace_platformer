@@ -8,144 +8,104 @@ public class Player : MonoBehaviour, IGravityControl
 {
     //game object elements
     [Header("Component")]
-    public Transform transformSelf;
     public Animator anim;
-    public CharacterController controller; // ÀÌ°Ç  IGravityControl ¿¡ ÀÖÀ½ 
-    public GameObject windKey; // ³» ÅÂ¿± 
-    public GameObject throwGravityItem;    // ´øÁú Áß·ÂÅÆ  
-    public Transform itemPointTransform; // ÅÆ »ı¼º À§Ä¡
+    public CharacterController controller; // ì´ê±´  IGravityControl ì— ìˆìŒ 
+    public GameObject windKey; // ë‚´ íƒœì—½ 
+    public GameObject throwGravityItem;    // ë˜ì§ˆ ì¤‘ë ¥íƒ¬  
+    public Transform itemPointTransform; // íƒ¬ ìƒì„± ìœ„ì¹˜
 
     [Header("PhysicsValue")]
     //physical param variables
-    float jumpSpeed = 10f;    
-    float movSpeed = 5f; // 20f ¿´´Âµ¥ ³Ê¹« »¡¶ó¼­ ¹Ù²Ş  
-    float rotSpeed = 400f;
-    float walkSpeedPercentage = 0.35f;
+    float jumpForce = 8f;    
+    float movSpeed = 5f; 
+    float rotSpeed = 300f;
 
-    //movement param variables
+    [Header("InputValue")]
     Vector3 moveDirection;
-    Vector3 savedDirection;
     private float inputV;
     private float inputH;
     private float rotateX;
     private bool inputWalk;
     private bool inputJump;
-    private bool inputDodge;
 
-    /*
-    Input Axis V(front and back)
-    Input Axis H(left and right)
-    Input of Walking Switch
-    Input of Jumping Switch
-    Input of Dodging Switch
-    Input Axis X of POV(Y in camera)
-    */
-
-    //item inputs    
-    bool inputInteraction; // interactionÅ° down. ¾ÆÀÌÅÛ Áİ´Â ÀÔ·Â e 
+    [Header("Item")]   
+    bool inputInteraction; // interactioní‚¤ down. ì•„ì´í…œ ì¤ëŠ” ì…ë ¥ e 
     public GameObject[] Items; 
-    public bool[] hasItems; // ¾ÆÀÌÅÛ °¡Á³´ÂÁö
-    public int itemIndex = -1; // ±âº»À¸·Î ¾î´À°Íµµ ¼±ÅÃµÇÁö ¾Êµµ·Ï 
-    private bool inputSelect1; // ÅÛ ½º¿Ò 1
-    private bool inputSelect2; // ÅÛ ½º¿Ò 2
-    private bool inputSelect3; // ÅÛ ½º¿Ò 3
-    private bool inputUseItem1;
-    private bool inputUseItem2;
+    public bool[] hasItems; // ì•„ì´í…œ ê°€ì¡ŒëŠ”ì§€
+    private bool inputKeyButton1; // í…œ ìŠ¤ì™‘ 1
+    private bool inputKeyButton2; // í…œ ìŠ¤ì™‘ 2
+    private bool inputKeyButton3; // í…œ ìŠ¤ì™‘ 3
+    private bool inputKeyR;
 
-    public UnityEvent useItem1;
-    public UnityEvent useItem2;
+    bool isSwaping = false; //ì‚¬ìš©í•˜ê³  ìˆëŠ” ë³€ìˆ˜. Consoleì— ì‚¬ìš©í•˜ì§€ ì•ŠëŠ”ë‹¤ê³  ëœ¬ë‹¤. 
 
     #region animValue
     //character status
     bool isJumping = false;
     bool isDodging = false;
-    bool isSwaping = false;
-    bool isWinding = false; // ÅÂ¿± °¨´Â Áß 
+    bool isWinding = false; 
     #endregion
-    bool isPlayerNear = false; // ÁÖº¯¿¡ µ¿·á°¡ ÀÖ´Â°¡ 
-    //Ä³¸¯ÅÍ°¡ »ì¾Ò´ÂÁö! ( ½Ã°£) . is TimeOver·Î ÀÌ¸§ ¹Ù²Ü±î ½Í³× 
+
+    bool isPlayerNear = false; // ì£¼ë³€ì— ë™ë£Œê°€ ìˆëŠ”ê°€ 
     public bool isAlive = true;
 
-    //ÁÖº¯ ÅÛ
+    //ì£¼ë³€ í…œ
     [SerializeField]
     GameObject nearObject;
-    GameObject equipItem; // ÇöÀç ¼Õ¿¡ µé°íÀÖ´Â ¾ÆÀÌÅÛ 
-    int equipItemIndex = -1; // ÇöÀç ¼Õ¿¡ ÀÖ´Â ÅÆ Á¾·ù 
-    public float timeScaleMultiplier = 0.5f; // Å¸ÀÓ ½ºÄÉÀÏ °è¼ö 
+    GameObject equipItem; // í˜„ì¬ ì†ì— ë“¤ê³ ìˆëŠ” ì•„ì´í…œ 
+    public Item.Type equipItemIndex = Item.Type.Null; // í˜„ì¬ ì†ì— ìˆëŠ” íƒ¬ ì¢…ë¥˜ 
+    public float timeScaleMultiplier = 0.5f; // íƒ€ì„ ìŠ¤ì¼€ì¼ ê³„ìˆ˜ 
 
-    // ¾ÆÀÌÅÛ ½Àµæ UI 
+    // ì•„ì´í…œ ìŠµë“ UI 
     public TextMeshProUGUI textMeshProUGUI;
 
     /// <summary>
-    /// Áß·Â ÀÎÅÍÆäÀÌ½º ±¸ÇöºÎ 
-    bool isInRange = false; // Áß·Â ¹üÀ§ ³»¿¡ ÀÖ´Â°¡ 
-    public bool IsInRange
-    {
-        get { return isInRange; }
-        set { isInRange = value; }
-    }
-    public float gravity = -9.81f;
+    /// ì¤‘ë ¥ ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„ë¶€ 
+    public bool IsInRange { get; set; }
 
-    public float Gravity
-    {
-        get { return gravity; }
-        set { gravity = value; }
-    }
+    public float Gravity { get; set; }
 
-
-    public void AntiGravity() // Áß·Â ¹İÀü ÇÔ¼ö 
+    
+    public void AntiGravity() // ì¤‘ë ¥ ë°˜ì „ í•¨ìˆ˜ 
     {
         IsInRange = true;
         Gravity = 9.81f;
-        //Invoke("AntiGravity_End", 3f); // 3ÃÊµÚ ÇØÁ¦ 
+        //Invoke("AntiGravity_End", 3f); // 3ì´ˆë’¤ í•´ì œ 
         Debug.Log("AntiGravity On.");
     }
     public void AntiGravityEnd()
     {
         IsInRange = false;
-        Gravity = -9.81f; // ¹İÀü ÇØÁ¦ 
+        Gravity = -9.81f; // ë°˜ì „ í•´ì œ 
         Debug.Log("AntiGravity Off.");
     }
     /// </summary>
 
     void Start()
     {
-        //self component import
-        //transformSelf = GetComponent<Transform>();
-        //controller = GetComponent<CharacterController>();
-
-        
-
         //set framerate
         Application.targetFrameRate = 60;
 
-        //Ä¿¼­ Àá±İ
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Gravity = -9.81f;
+
+        controller.detectCollisions = false;
     }
     void FixedUpdate()
     {
-        //timeCrit = Time.unscaledDeltaTime;
-
-        if (!isAlive) return;
-        if (isWinding) return; // ¿ÍÀÎµù Áß¿£ ¾Ï°Íµµ ¸øÇØ! 
-
+        if (!isAlive)  return;
+        if (isWinding) return; // ì™€ì¸ë”© ì¤‘ì—” ì•”ê²ƒë„ ëª»í•´! 
         
-
-        //½Ã¾ßÁ¶Á¤
+        //ì‹œì•¼ì¡°ì •
         GetInput();
         Rotate();
 
-        //ÀÌµ¿
+        //ì´ë™
         Move();
-        Dodge();
 
-        //¾ÆÀÌÅÛ ÀÔ¼ö+»ç¿ë
+        //ì•„ì´í…œ ì…ìˆ˜+ì‚¬ìš©
         Interaction();
         Swap();
         UseItem();
-
-        MoveAnim();
     }
 
     void GetInput() //method which is used in getting input
@@ -155,40 +115,30 @@ public class Player : MonoBehaviour, IGravityControl
         rotateX = Input.GetAxis("Mouse X");
         inputWalk = Input.GetButton("Walk");
         inputJump = Input.GetButton("Jump");
-        inputDodge = Input.GetButton("Dodge");
+
         inputInteraction = Input.GetButtonDown("Interaction"); //e
-        inputSelect1 = Input.GetButtonDown("Swap1");
-        inputSelect2 = Input.GetButtonDown("Swap2");
-        inputSelect3 = Input.GetButtonDown("Swap3");
-        inputUseItem1 = Input.GetButtonDown("Effect1"); //r
-        inputUseItem2 = Input.GetButtonDown("Effect2"); // f
+        inputKeyButton1 = Input.GetButtonDown("Swap1");
+        inputKeyButton2 = Input.GetButtonDown("Swap2");
+        inputKeyButton3 = Input.GetButtonDown("Swap3");
+        inputKeyR = Input.GetButtonDown("Effect1"); //r
     }
 
     void Move()  //integrated jump and moving control
     {
         if (controller.isGrounded)
         {
-            // On the ground, apply regular movement and jump if needed
-            if (isJumping)
-            {
-                isJumping = false;
-                anim.SetTrigger("doJumpComplete");
-            }
-            moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
-            savedDirection = moveDirection;
-            //animation ¼³Á¤
+            isJumping = false;
+            moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f)) ;
 
             if (inputJump)
             {
-
-                moveDirection.y = jumpSpeed;
+                moveDirection.y = jumpForce;
                 isJumping = true;
                 anim.SetTrigger("doJump");
             }
         }
         else
         {
-
             // In the air, apply falling and allow directional input
             moveDirection.x = inputH * movSpeed * (inputWalk ? 0.3f : 1f);
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
@@ -196,210 +146,149 @@ public class Player : MonoBehaviour, IGravityControl
             // Apply additional gravity to simulate a more natural fall
             moveDirection.y += Gravity * Time.unscaledDeltaTime * 2;
         }
-        moveDirection = transformSelf.TransformDirection(moveDirection);
+        moveDirection = transform.TransformDirection(moveDirection);
         controller.Move(moveDirection * Time.unscaledDeltaTime);
+
+        bool isRunning = moveDirection.x != 0f || moveDirection.z != 0f; // You might need to adjust this condition based on your needs
+        anim.SetBool("isRunning", isRunning); // Set the isMove parameter in the Animator
     }
 
-    void MoveAnim()
-    {
-        bool dirF;
-        bool dirB;
-        bool dirL;
-        bool dirR;
-        //vertical
-        if (inputV > 0)
-        {
-            dirF = true;
-            dirB = false;
-        }
-        else if (inputV < 0)
-        {
-            dirF = false;
-            dirB = true;
-        }
-        else
-        {
-            dirF = false;
-            dirB = false;
-        }
-
-        //horizonal
-        if (inputH > 0)
-        {
-            dirL = false;
-            dirR = true;
-        }
-        else if (inputH < 0)
-        {
-            dirL = true;
-            dirR = false;
-        }
-        else
-        {
-            dirL = false;
-            dirR = false;
-        }
-
-        anim.SetBool("isRunning", dirF);
-        anim.SetBool("isRunningR", dirR);
-        anim.SetBool("isRunningL", dirL);
-
-    }
     void Rotate()
     {
-        transformSelf.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
+        transform.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
     }
 
-    void Dodge()
-    {
-        if (inputDodge && (moveDirection != Vector3.zero) && !isJumping && !isDodging)
-        {
-            moveDirection = savedDirection;
-            movSpeed *= 2;
-            //anim.SetTrigger("doDodging");
-            isDodging = true;
+    #region Item
 
-            Invoke("DodgeOut", 0.35f);
-        }
-    }
-
-    void DodgeOut()
-    {
-        movSpeed *= 0.5f;
-        isDodging = false;
-    }
-
-    // ¾ÆÀÌÅÛ ½º¿Ò 
     void Swap()
     {
-        if (inputSelect1 && (!hasItems[0] || equipItemIndex == 0)) // 0¹ø ÅÛÀ» ¾È°®°í ÀÖ°Å³ª ÀÌ¹Ì ÀåÂøÁßÀÌ¸é 
-            return; // °Á ¹«½ÃÇÏ¼À 
-        if (inputSelect2 && (!hasItems[1] || equipItemIndex == 1)) 
-            return; // °Á ¹«½ÃÇÏ¼À 
-        if (inputSelect3 && (!hasItems[2] || equipItemIndex == 2))
-            return; // °Á ¹«½ÃÇÏ¼À 
-
-        if(inputSelect1) itemIndex = 0;
-        if(inputSelect2) itemIndex = 1;
-        if(inputSelect3) itemIndex = 2;
-
-        if ((inputSelect1 || inputSelect2 || inputSelect3) && !isJumping && !isDodging)
+        if ((inputKeyButton1 && hasItems[0]) || (inputKeyButton2 && hasItems[1]) || (inputKeyButton3 && hasItems[2]))
         {
-            // ¼Õ¿¡ ÀÌ¹Ì ¼±ÅÃµÈ ÅÆÀÌ ÀÖÀ» ¶© ºñÈ°¼ºÈ­ 
-            if(equipItem != null)
-                equipItem.SetActive(false);
+            // Deactivate current equipItem
+            if (equipItem != null) equipItem.SetActive(false);
 
-            equipItemIndex = itemIndex;
-            equipItem = Items[itemIndex];
+            // Update equipItem based on input
+            if (inputKeyButton1)
+            {
+                equipItemIndex = Item.Type.Gravity;
+            }
+            else if (inputKeyButton2)
+            {
+                equipItemIndex = Item.Type.TimeStop;
+            }
+            else if (inputKeyButton3)
+            {
+                equipItemIndex = Item.Type.WindKey;
+            }
+
+            // Activate new equipItem and store its reference
+            equipItem = Items[(int)equipItemIndex];
             equipItem.SetActive(true);
 
-            // ¾Ö´Ï¸ÅÀÌ¼Ç °ü·Ã ÄÚµå 
-
             isSwaping = true;
-
-            Invoke("SwapOut", 0.4f);
+            Invoke("SwapOut", 0.4f); // Assuming you want to perform some post-swap logic
         }
     }
 
-    //swap() ³¡³¯¶§ 
+    //swap() ëë‚ ë•Œ 
     void SwapOut()
     {
         isSwaping = false;
     }
 
-    //interaction . ¾ÆÀÌÅÛ »óÈ£ÀÛ¿ë Å° 
+    //interaction . ì•„ì´í…œ ìƒí˜¸ì‘ìš© í‚¤ 
     void Interaction()
     {
         if (nearObject != null && nearObject.tag == "Item")
         {
-            //UI ÄÑ±â
+            //UI ì¼œê¸°
             textMeshProUGUI.enabled = true;
-            if (inputInteraction && !isJumping && !isDodging)
+            Debug.Log("isJumping" + isJumping);
+            if (inputInteraction)
             {
                 Item item = nearObject.GetComponent<Item>();
                 int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
+                Debug.Log("itemIndex" + itemIndex);
                 hasItems[itemIndex] = true;
                 Destroy(nearObject);
             }
         }
         else
         {
-            textMeshProUGUI.enabled = false; // ui ²ô±â 
+            textMeshProUGUI.enabled = false; // ui ë„ê¸° 
         }
     }
 
     void UseItem()
     {
+        if (!inputKeyR) return;
 
-        if (inputUseItem1)
+        switch (equipItemIndex)
         {
-            // ¿ø·£ useItem1.Invoke();
-            switch (equipItemIndex) 
-            {
-                case 0: // Áß·ÂÅÆ
-                    // Áß·ÂÅÆ »ı¼º
-                    GameObject instantGravityItem = Instantiate(throwGravityItem,
-                        itemPointTransform.position + itemPointTransform.forward,
-                        itemPointTransform.rotation
-                        ); // ÇØ´ç À§Ä¡ , °¢µµ 
+            case Item.Type.Gravity:
+                Instantiate(throwGravityItem, itemPointTransform.position + itemPointTransform.forward
+                    , itemPointTransform.rotation);
+                break;
 
-                    Debug.Log("AntiGravity ´øÁü .");
-                    break;
-                case 1: // ½Ã°£ÅÆ
-                    Time.timeScale = timeScaleMultiplier; // 0.5¹è¼Ó 
-                    anim.speed = 1.0f / Time.timeScale; // ¾Ö´Ï¸ŞÀÌ¼Ç ¼Óµµµµ ¹Ù²ãÁØ´Ù 
+            case Item.Type.TimeStop:
+                TweakTimeStart(timeScaleMultiplier);
+                Invoke("TweakTimeEnd", 5 * Time.unscaledTime); // Adjust based on the intended effect duration
+                break;
 
-                    Invoke("Tweaktime_End", Time.unscaledTime * 5); // 5ÃÊ µÚ ÇØÁ¦ 
-                    Debug.Log("Time Scale Tweaked.");
-                    break;
-                case 2: // ÅÂ¿±
-                    if (nearObject != null && isPlayerNear == true) // ¼Õ¿¡ µç °Ô ÅÂ¿±ÀÌ°í ÁÖº¯ obj°¡ ÇÃ·¹ÀÌ¾î¶ó¸é 
-                    {
-                        nearObject.GetComponent<Player>().Winding();
-                    }
-                    break;
-                case -1:
-                    Debug.Log("No Item Holding Mode.");
-                    break;
-                default: // ±× ¿Ü °æ¿ìµé~ Àåºñ ¾ÈÇß°Å³ª µîµî
-                    useItem1.Invoke();
-                    Debug.LogError("Invalid itemIndex: " + itemIndex);
-                    break;
+            case Item.Type.WindKey:
+                if (nearObject != null && isPlayerNear == true)  
+                {
+                    nearObject.GetComponent<Player>().WindKeyActivate();
+                }
+                break;
 
-            }
-            
-        }
-        else if (inputUseItem2)
-        {
-            useItem2.Invoke(); //f
+            case Item.Type.Null:
+                // Handle no item selected
+                break;
+            default:
+                Debug.LogError("Unknown item type: " + equipItemIndex);
+                break;
         }
     }
 
-    // time 
-    public void Tweaktime_End()
+    public void TweakTimeStart(float timeScaleMultiplier)
+    {
+        Time.timeScale = timeScaleMultiplier;
+        //Time.fixedDeltaTime = Time.timeScale * (1 / Application.targetFrameRate);
+        OnCallBackTweakTimeStart();
+    }
+    public void TweakTimeEnd()
     {
         Time.timeScale = 1.0f;
-        anim.speed = 1.0f / Time.timeScale; // ¾Ö´Ï¸ŞÀÌ¼Ç ¼Óµµµµ ¹Ù²ãÁØ´Ù
+
+        OnCallBackTweakTimeEnd();
+    }
+    public void OnCallBackTweakTimeStart() // CallBackì„ ê·¸ëƒ¥ Method Callë¡œ ëŒ€ì²´ 
+    {
+        anim.speed = 1.0f / Time.timeScale; // ì• ë‹ˆë©”ì´ì…˜ ì†ë„ë„ ë°”ê¿”ì¤€ë‹¤
+        // ì¶”ê°€ì ìœ¼ë¡œ ì²˜ë¦¬í•´ì¤˜ì•¼ í•  ë¶€ë¶„ë“¤ 
+    }
+    public void OnCallBackTweakTimeEnd() // CallBackì„ ê·¸ëƒ¥ Method Callë¡œ ëŒ€ì²´ 
+    {
+        anim.speed = 1.0f;
+        // ì¶”ê°€ì ìœ¼ë¡œ ì²˜ë¦¬í•´ì¤˜ì•¼ í•  ë¶€ë¶„ë“¤
     }
 
     //Winding
-    public void Winding()
+    public void WindKeyActivate() // í™œì„±í™”ë˜ë©´ì„œ 
     {
-        windKey.SetActive(true);
-        //ÀÚ½ÅÀÇ! ÅÂ¿±½Ã°£ Ãß°¡ÇÏ´Â ÄÚµå ÇÊ¿ä
+        windKey.SetActive(true); 
         
     }
 
-
-    //¾ÆÀÌÅÛ ÀÔ¼ö °ü·Ã Äİ¶óÀÌ´õ
-
+    // í•„ìˆ˜ ì¡°ê±´ 
+    // 1. ë‘˜ ì¤‘ì— í•˜ë‚˜ì— ë¬´ì¡°ê±´ rigidbody
+    // 2. ë‘˜ ì¤‘ì— í•˜ë‚˜ì— ë¬´ì¡°ê±´ isTrigger ì²´í¬ 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Item") // ¾ÆÀÌÅÛ
-            nearObject = other.gameObject;
-        //Debug.Log(nearObject.name);  // Ãâ·Â ÀßµÈ´Ù! 
+        if (other.CompareTag("Item")) nearObject = other.gameObject;
 
-        if (other.tag == "Player") //ÇÃ·¹ÀÌ¾î¸é 
+        if (other.CompareTag("Player")) //í”Œë ˆì´ì–´ë©´ 
         {
             nearObject = other.gameObject;
             isPlayerNear = true;
@@ -409,12 +298,14 @@ public class Player : MonoBehaviour, IGravityControl
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Item")
-            nearObject = null;
-        if(other.tag == "Player")
+        if (other.CompareTag("Item")) nearObject = null;
+
+        if (other.CompareTag("Player"))
         {
             nearObject = null;
             isPlayerNear = false;
         }
     }
+
+    #endregion
 }

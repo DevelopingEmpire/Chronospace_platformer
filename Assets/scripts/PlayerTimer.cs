@@ -6,21 +6,21 @@ public class PlayerTimer : MonoBehaviour
 {
     public float timeLimit; // 시간제한 
     public float speed; // 1초에 몇 닳는 지 ( 기본 1 )
-    public float currentValue; // 현재 남은 시간 
+    public float currentTime; // 현재 남은 시간 
     public Player player; // player 스크립트 
 
     // Start is called before the first frame update
     void Start()
     {
-        currentValue = timeLimit;
+        currentTime = timeLimit;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentValue > 0)
+        if (currentTime > 0)
         {
-            currentValue -= speed * Time.deltaTime;
+            currentTime -= speed * Time.deltaTime;
         }
         else
         {

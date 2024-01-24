@@ -1,20 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Goalpoint : MonoBehaviour
 {
-    // The tag of the player objects
-    public string playerTag = "Player";
+    public static Goalpoint instance;
 
-    // Called when another collider enters the trigger collider attached to this object
-    void OnTriggerEnter(Collider other)
+    // Awake 함수에서 싱글톤 인스턴스를 초기화합니다.
+    void Awake()
     {
-        // Check if the entering collider has the specified tag (is a player)
-        if (other.CompareTag(playerTag))
+        if (instance == null)
         {
-            Debug.Log("(From Debug Log on Goalpoint)Stage completed! Player reached the goal!");
-            // You can add additional logic here, such as loading the next level
+            instance = this; // 현재 인스턴스를 싱글톤 인스턴스로 설정합니다.
+            DontDestroyOnLoad(gameObject); // 씬이 변경되어도 파괴되지 않도록 설정합니다.
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject); // 이미 싱글톤 인스턴스가 존재하면, 중복 인스턴스를 파괴합니다.
         }
     }
 }

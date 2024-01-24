@@ -4,23 +4,15 @@ using UnityEngine;
 
 public class ItemGravityControl : MonoBehaviour, IGravityControl
 {
-    bool isInRange = false; // Áß·Â ¹üÀ§ ³»¿¡ ÀÖ´Â°¡ 
-    public bool IsInRange
-    {
-        get { return isInRange; }
-        set { isInRange = value; }
-    }
 
-    // ÀÎÅÍÆäÀÌ½º ±¸Çö 
-    public float gravity = -9.81f;
-    public float Gravity
-    {
-        get { return gravity; }
-        set { gravity = value; }
-    }
-    public CharacterController controller; // ÄÁÆ®·Ñ·¯
+    public bool IsInRange { get; set; }
 
-    public void AntiGravity() // Áß·Â ¹İÀü ÇÔ¼ö 
+    // ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„ 
+
+    public float Gravity { get; set; }
+    public CharacterController controller; // ì»¨íŠ¸ë¡¤ëŸ¬
+
+    public void AntiGravity() // ì¤‘ë ¥ ë°˜ì „ í•¨ìˆ˜ 
     {
         IsInRange = true;
         Gravity = 9.81f;
@@ -30,7 +22,7 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     public void AntiGravityEnd()
     {
         IsInRange = false;
-        Gravity = -9.81f; // ¹İÀü ÇØÁ¦ 
+        Gravity = -9.81f; // ë°˜ì „ í•´ì œ 
 
         Debug.Log("AntiGravity Off.");
     }
@@ -43,13 +35,13 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
 
     void ApplyGravity()
     {
-        // ¼öÁ÷ ¹æÇâÀ¸·Î Áß·ÂÀ» Àû¿ë.
+        // ìˆ˜ì§ ë°©í–¥ìœ¼ë¡œ ì¤‘ë ¥ì„ ì ìš©.
         Vector3 gravityVector = new Vector3(0, Gravity, 0);
 
-        // °æ¹Ú½º·± ¿òÁ÷ÀÓ. LerpÀ¸·Î Åğ¸¶  
+        // ê²½ë°•ìŠ¤ëŸ° ì›€ì§ì„. Lerpìœ¼ë¡œ í‡´ë§ˆ  
         gravityVector = Vector3.Lerp(controller.velocity, gravityVector, Time.deltaTime);
 
-        // Áß·Â º¤ÅÍ¸¦ ÇöÀç À§Ä¡¿¡ Àû¿ë
+        // ì¤‘ë ¥ ë²¡í„°ë¥¼ í˜„ì¬ ìœ„ì¹˜ì— ì ìš©
         controller.Move(gravityVector * Time.deltaTime);
     }
 

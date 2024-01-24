@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GravityItem : MonoBehaviour
-    {
+{
     public GameObject itemMeshObj; // 이름이 아이템 어쩌구로 수정
     //public GameObject effectObj; // 폭발 효과 
     public Rigidbody rb;
@@ -19,7 +19,7 @@ public class GravityItem : MonoBehaviour
 
     private void Awake()
     {
-        rb.AddForce(transform.forward*10, ForceMode.Impulse); // 앞으로 슝~
+        rb.AddForce(transform.forward * 10, ForceMode.Impulse); // 앞으로 슝~
         StartCoroutine(Explosion());
     }
 
@@ -50,11 +50,7 @@ public class GravityItem : MonoBehaviour
             }
         }
 
-        //굳이 필요없겠찌?
-        //colInRange.Clear();
-
         Destroy(transform.parent.gameObject); // 아이템 clone 삭제 
-
     }
 
     private void OnTriggerEnter(Collider col)
