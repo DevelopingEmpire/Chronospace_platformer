@@ -16,8 +16,8 @@ public class Player : MonoBehaviour, IGravityControl
 
     [Header("PhysicsValue")]
     //physical param variables
-    float jumpForce = 8f;    
-    float movSpeed = 5f; 
+    float jumpForce = 8f;
+    float movSpeed = 5f;
     float rotSpeed = 300f;
 
     [Header("InputValue")]
@@ -28,9 +28,9 @@ public class Player : MonoBehaviour, IGravityControl
     private bool inputWalk;
     private bool inputJump;
 
-    [Header("Item")]   
+    [Header("Item")]
     bool inputInteraction; // interaction키 down. 아이템 줍는 입력 e 
-    public GameObject[] Items; 
+    public GameObject[] Items;
     public bool[] hasItems; // 아이템 가졌는지
     private bool inputKeyButton1; // 템 스왑 1
     private bool inputKeyButton2; // 템 스왑 2
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour, IGravityControl
     //character status
     bool isJumping = false;
     bool isDodging = false;
-    bool isWinding = false; 
+    bool isWinding = false;
     #endregion
 
     bool isPlayerNear = false; // 주변에 동료가 있는가 
@@ -54,7 +54,7 @@ public class Player : MonoBehaviour, IGravityControl
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     public Item.Type equipItemIndex = Item.Type.Null; // 현재 손에 있는 탬 종류 
-    public float timeScaleMultiplier = 0.5f; // 타임 스케일 계수 
+    public float timeScaleMultiplier = 0.05f; // 타임 스케일 계수 
 
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     public float Gravity { get; set; }
 
-    
+
     public void AntiGravity() // 중력 반전 함수 
     {
         IsInRange = true;
@@ -84,17 +84,23 @@ public class Player : MonoBehaviour, IGravityControl
     void Start()
     {
         //set framerate
-        Application.targetFrameRate = 60;
 
         Gravity = -9.81f;
 
         controller.detectCollisions = false;
     }
+
+    void Update()
+    {
+        Debug.Log("Time" + Time.deltaTime);
+        Debug.Log("Fixed" + Time.fixedDeltaTime);
+        Debug.Log("UnScale" + Time.unscaledDeltaTime);
+    }
     void FixedUpdate()
     {
-        if (!isAlive)  return;
+        if (!isAlive) return;
         if (isWinding) return; // 와인딩 중엔 암것도 못해! 
-        
+
         //시야조정
         GetInput();
         Rotate();
@@ -107,13 +113,12 @@ public class Player : MonoBehaviour, IGravityControl
         Swap();
         UseItem();
     }
-
     void GetInput() //method which is used in getting input
     {
-        inputH = Input.GetAxis("Horizontal");
-        inputV = Input.GetAxis("Vertical");
+        inputH = Input.GetAxisRaw("Horizontal");
+        inputV = Input.GetAxisRaw("Vertical");
         rotateX = Input.GetAxis("Mouse X");
-        inputWalk = Input.GetButton("Walk");
+        inputWalk = Input.GetButton("Walk"); // -> Dash
         inputJump = Input.GetButton("Jump");
 
         inputInteraction = Input.GetButtonDown("Interaction"); //e
@@ -123,12 +128,12 @@ public class Player : MonoBehaviour, IGravityControl
         inputKeyR = Input.GetButtonDown("Effect1"); //r
     }
 
-    void Move()  //integrated jump and moving control
+    void Move()
     {
         if (controller.isGrounded)
         {
             isJumping = false;
-            moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f)) ;
+            moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
 
             if (inputJump)
             {
@@ -139,18 +144,19 @@ public class Player : MonoBehaviour, IGravityControl
         }
         else
         {
-            // In the air, apply falling and allow directional input
+            // 공중에 있을 때의 움직임 조정, Time.deltaTime을 곱하여 일관된 속도 유지
             moveDirection.x = inputH * movSpeed * (inputWalk ? 0.3f : 1f);
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
-            // Apply additional gravity to simulate a more natural fall
-            moveDirection.y += Gravity * Time.unscaledDeltaTime * 2;
+            // 추가 중력 적용
+            moveDirection.y += Gravity * 2 * Time.unscaledDeltaTime; // 중력 적용에도 Time.deltaTime을 사용
         }
-        moveDirection = transform.TransformDirection(moveDirection);
-        controller.Move(moveDirection * Time.unscaledDeltaTime);
 
-        bool isRunning = moveDirection.x != 0f || moveDirection.z != 0f; // You might need to adjust this condition based on your needs
-        anim.SetBool("isRunning", isRunning); // Set the isMove parameter in the Animator
+        moveDirection = transform.TransformDirection(moveDirection);
+        controller.Move(moveDirection * Time.unscaledDeltaTime); // 이동 명령에 Time.deltaTime 적용
+
+        bool isRunning = Mathf.Abs(inputH) > 0f || Mathf.Abs(inputV) > 0f; // 입력에 따른 달리기 상태 결정
+        anim.SetBool("isRunning", isRunning); // Animator에 달리기 상태 전달
     }
 
     void Rotate()
@@ -231,12 +237,11 @@ public class Player : MonoBehaviour, IGravityControl
                 break;
 
             case Item.Type.TimeStop:
-                TweakTimeStart(timeScaleMultiplier);
-                Invoke("TweakTimeEnd", 5 * Time.unscaledTime); // Adjust based on the intended effect duration
+                StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
                 break;
 
             case Item.Type.WindKey:
-                if (nearObject != null && isPlayerNear == true)  
+                if (nearObject != null && isPlayerNear == true)
                 {
                     nearObject.GetComponent<Player>().WindKeyActivate();
                 }
@@ -249,6 +254,12 @@ public class Player : MonoBehaviour, IGravityControl
                 Debug.LogError("Unknown item type: " + equipItemIndex);
                 break;
         }
+    }
+    IEnumerator TweakTimeEffect(float scale, float duration)
+    {
+        TweakTimeStart(scale);
+        yield return new WaitForSecondsRealtime(duration); // Unscaled time을 사용
+        TweakTimeEnd();
     }
 
     public void TweakTimeStart(float timeScaleMultiplier)
@@ -266,19 +277,21 @@ public class Player : MonoBehaviour, IGravityControl
     public void OnCallBackTweakTimeStart() // CallBack을 그냥 Method Call로 대체 
     {
         anim.speed = 1.0f / Time.timeScale; // 애니메이션 속도도 바꿔준다
-        // 추가적으로 처리해줘야 할 부분들 
+        Time.timeScale = timeScaleMultiplier;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
     public void OnCallBackTweakTimeEnd() // CallBack을 그냥 Method Call로 대체 
     {
         anim.speed = 1.0f;
+        Time.fixedDeltaTime = 0.02f;
         // 추가적으로 처리해줘야 할 부분들
     }
 
     //Winding
     public void WindKeyActivate() // 활성화되면서 
     {
-        windKey.SetActive(true); 
-        
+        windKey.SetActive(true);
+
     }
 
     // 필수 조건 
@@ -293,7 +306,7 @@ public class Player : MonoBehaviour, IGravityControl
             nearObject = other.gameObject;
             isPlayerNear = true;
         }
-            
+
     }
 
     private void OnTriggerExit(Collider other)
