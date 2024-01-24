@@ -92,26 +92,24 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Update()
     {
-        Debug.Log("Time" + Time.deltaTime);
-        Debug.Log("Fixed" + Time.fixedDeltaTime);
-        Debug.Log("UnScale" + Time.unscaledDeltaTime);
+        if (!isAlive)  return;
+        if (isWinding) return; // 와인딩 중엔 암것도 못해! 
+
+        if (inputInteraction)
+        {
+            Interaction();
+        }
+        Swap();
+        UseItem();
+        GetInput();
     }
     void FixedUpdate()
     {
         if (!isAlive)  return;
         if (isWinding) return; // 와인딩 중엔 암것도 못해! 
         
-        //시야조정
-        GetInput();
         Rotate();
-
-        //이동
         Move();
-
-        //아이템 입수+사용
-        Interaction();
-        Swap();
-        UseItem();
     }
     void GetInput() //method which is used in getting input
     {
@@ -210,14 +208,13 @@ public class Player : MonoBehaviour, IGravityControl
             //UI 켜기
             textMeshProUGUI.enabled = true;
             Debug.Log("isJumping" + isJumping);
-            if (inputInteraction)
-            {
-                Item item = nearObject.GetComponent<Item>();
-                int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
-                Debug.Log("itemIndex" + itemIndex);
-                hasItems[itemIndex] = true;
-                Destroy(nearObject);
-            }
+            
+            Item item = nearObject.GetComponent<Item>();
+            int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
+            Debug.Log("itemIndex" + itemIndex);
+            hasItems[itemIndex] = true;
+            Destroy(nearObject);
+            
         }
         else
         {
