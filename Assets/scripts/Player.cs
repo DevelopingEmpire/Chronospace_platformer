@@ -83,6 +83,8 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Start()
     {
+        //Application.targetFrameRate = 60; // 서주민 전용코드 
+
         //set framerate
 
         Gravity = -9.81f;
@@ -205,20 +207,14 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (nearObject != null && nearObject.tag == "Item")
         {
-            //UI 켜기
-            textMeshProUGUI.enabled = true;
-            Debug.Log("isJumping" + isJumping);
-            
+
+            textMeshProUGUI.enabled = false; // ui 끄기 
             Item item = nearObject.GetComponent<Item>();
             int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
             Debug.Log("itemIndex" + itemIndex);
             hasItems[itemIndex] = true;
             Destroy(nearObject);
             
-        }
-        else
-        {
-            textMeshProUGUI.enabled = false; // ui 끄기 
         }
     }
 
@@ -296,7 +292,12 @@ public class Player : MonoBehaviour, IGravityControl
     // 2. 둘 중에 하나에 무조건 isTrigger 체크 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Item")) nearObject = other.gameObject;
+        if (other.CompareTag("Item"))
+        {
+            //UI 켜기
+            textMeshProUGUI.enabled = true;
+            nearObject = other.gameObject;
+        }
 
         if (other.CompareTag("Player")) //플레이어면 
         {
@@ -308,7 +309,12 @@ public class Player : MonoBehaviour, IGravityControl
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Item")) nearObject = null;
+        if (other.CompareTag("Item"))
+        {
+            textMeshProUGUI.enabled = false; // ui 끄기 
+            nearObject = null;
+        }
+
 
         if (other.CompareTag("Player"))
         {
