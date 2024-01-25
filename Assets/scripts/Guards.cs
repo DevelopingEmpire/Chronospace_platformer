@@ -121,16 +121,18 @@ public class Guards : MonoBehaviour, IGravityControl
             {
                 state = 1; // Change to stare at player state
                 StareAtPlayer();
-                if (PlayerInAdressRange())
+                if (PlayerInAdressRange()) // address 범위 내라면
                 {
+                    Fire();
+                }
+                else // 시야 안, 사거리 밖이라면 
+                {
+                    //그쪽으로 움직이기 
                     targetPosition = (GameObject.FindGameObjectWithTag(playerTag).transform.position);
                     MoveTowardsTarget();
-                    Fire();
                 }
-                else
-                {
-                    Fire();
-                }
+                
+                
             }
             else // Move towards the target position using NavMeshAgent
             {
@@ -147,9 +149,20 @@ public class Guards : MonoBehaviour, IGravityControl
         else // 중력 받는 상태라면 
         {
             ApplyGravity();
+            if (PlayerInSight())
+            {
+                state = 1; // Change to stare at player state
+                StareAtPlayer();
+     
+                if (PlayerInAdressRange())
+                {
+                    Fire();
+                }
+
+
+            }
         }
 
-        
     }
 
     // Check if the player is in sight
