@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
-using System; // ÀÌº¥Æ® ¾²±â À§ÇØ °¡Á®¿È 
+using System; // ì´ë²¤íŠ¸ ì“°ê¸° ìœ„í•´ ê°€ì ¸ì˜´ 
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Guards : MonoBehaviour, IGravityControl
@@ -26,36 +26,17 @@ public class Guards : MonoBehaviour, IGravityControl
     private Vector3 targetPosition;
     private int state = 0;
     private float nextPatrolTime;
-    public CharacterController controller; // ÄÁÆ®·Ñ·¯
+    public CharacterController controller; // ì»¨íŠ¸ë¡¤ëŸ¬
 
-    bool isGravity; // Áß·ÂÀ» ¹Ş´Â »óÅÂÀÎ°¡? 
-    //ÀÌº¥Æ® Á¤ÀÇ 
-    public bool ISGROUNDEDEVENT; // °¡µ¶¼º ¤©¤¸¤§ . ÀÌº¥Æ®¿¡¼­ ¾²ÀÏ º¯¼ö 
-  
-    bool isGroundedEvent // controllerÀÇ isgrounded »óÅÂ°¡ º¯Çß´ÂÁö ÃßÀûÇÑ´Ù  
-    {
-        set
-        {
-            if(ISGROUNDEDEVENT == value) return; // ÀÌÀü°ú °°´Ù¸é ³Ñ¾î°¡ 
-            ISGROUNDEDEVENT = value; // ´Ş¶óÁ³´Ù¸é? ÀÏ´Ü °ª ¹Ù²ãÁÖ°í 
-            //ÇÒ µ¿ÀÛ 
-            //¸¸¾à ÂøÁöÇß´Ù¸é? 
-            if(ISGROUNDEDEVENT)
-            {
-                isGravity = false; // Áß·Â »óÅÂ ³¡ 
-                navMeshAgent.enabled = true; // ÄÑÁØ´Ù 
-            }
-        }
-        get
-        {
-            return ISGROUNDEDEVENT;
-        }
-    }
+    bool isGravity; // ì¤‘ë ¥ì„ ë°›ëŠ” ìƒíƒœì¸ê°€? 
+
+    public bool isGroundChecker; //is Grounded ìƒíƒœê°€ ë³€í–ˆëŠ”ì§€ ì¶”ì   
+
 
     /// <summary>
-    /// Áß·Â ÀÎÅÍÆäÀÌ½º ±¸ÇöºÎ 
+    /// ì¤‘ë ¥ ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„ë¶€ 
     /// 
-    bool isInRange = false; // Áß·Â ¹üÀ§ ³»¿¡ ÀÖ´Â°¡ 
+    bool isInRange = false; // ì¤‘ë ¥ ë²”ìœ„ ë‚´ì— ìˆëŠ”ê°€ 
     public bool IsInRange
     {
         get { return isInRange; }
@@ -69,12 +50,12 @@ public class Guards : MonoBehaviour, IGravityControl
         set { gravity = value; }
     }
 
-    public void AntiGravity() // Áß·Â ¹İÀü ÇÔ¼ö 
+    public void AntiGravity() // ì¤‘ë ¥ ë°˜ì „ í•¨ìˆ˜ 
     {
         isInRange = true;
         isGravity = true;
 
-        // nav ºñÈ° 
+        // nav ë¹„í™œ 
         navMeshAgent.enabled = false;
         Gravity = 9.81f;
 
@@ -83,21 +64,21 @@ public class Guards : MonoBehaviour, IGravityControl
     public void AntiGravityEnd()
     {
         isInRange = false;
-        Gravity = -9.81f; // ¹İÀü ÇØÁ¦ 
+        Gravity = -9.81f; // ë°˜ì „ í•´ì œ 
         Debug.Log("AntiGravity Off.");
 
     }
 
-    //Áß·ÂÀ» ´õÇÏ´Â ÇÔ¼ö 
+    //ì¤‘ë ¥ì„ ë”í•˜ëŠ” í•¨ìˆ˜ 
     void ApplyGravity()
     {
-        // ¼öÁ÷ ¹æÇâÀ¸·Î Áß·ÂÀ» Àû¿ë.
+        // ìˆ˜ì§ ë°©í–¥ìœ¼ë¡œ ì¤‘ë ¥ì„ ì ìš©.
         Vector3 gravityVector = new Vector3(0, Gravity, 0);
 
-        // °æ¹Ú½º·± ¿òÁ÷ÀÓ. LerpÀ¸·Î Åğ¸¶  
+        // ê²½ë°•ìŠ¤ëŸ° ì›€ì§ì„. Lerpìœ¼ë¡œ í‡´ë§ˆ  
         gravityVector = Vector3.Lerp(controller.velocity, gravityVector, Time.deltaTime);
 
-        // Áß·Â º¤ÅÍ¸¦ ÇöÀç À§Ä¡¿¡ Àû¿ë
+        // ì¤‘ë ¥ ë²¡í„°ë¥¼ í˜„ì¬ ìœ„ì¹˜ì— ì ìš©
         controller.Move(gravityVector * Time.deltaTime);
     }
 
@@ -111,16 +92,29 @@ public class Guards : MonoBehaviour, IGravityControl
         initialPosition = transform.position;
         targetPosition = initialPosition;
         nextPatrolTime = Time.time + patrolDelay;
-
+        isGroundChecker = controller.isGrounded;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //is Grounded »óÅÂ°¡ º¯Çß´ÂÁö ÃßÀû
-        isGroundedEvent = controller.isGrounded;
+        
+        // ì´ê±°, ê·¸ëƒ¥ ì´ë²¤íŠ¸ ì“°ì§€ ë§ê³  ì—¬ê¸°ì„œ íŒë‹¨í•˜ëŠ” ì‹ìœ¼ë¡œ ë°”ê¾¸ê¸°.
 
-        if (!isGravity) // Áß·Â ¹Ş´Â »óÅÂ°¡ ¾Æ´Ï¶ó¸é 
+        if (isGroundChecker != controller.isGrounded) // ë³€í™”ê°€ ìƒê²¼ë‹¤ë©´
+        {
+            isGroundChecker = controller.isGrounded; // ë˜‘ê°™ì´ ë§ì¶°ì¤€ë‹¤
+            // ë§Œì•½ ê³µì¤‘ì— ëœ¬ ê±°ë¼ë©´? ë¨¸.. ì•Œë¹ ì—†ìŒ. ê·¸ë˜ë¹„í‹° true ëì„ê±°ì„
+            // ë§Œì•½ ì°©ì§€ í•œë‹¤ë©´? ê·¸ë˜ë¹„í‹° falseí•˜ê³  nav ì¼œì¤˜ì•¼í•¨ 
+            if(isGroundChecker)
+            {
+                isGravity = false; // ì¤‘ë ¥ ìƒíƒœ ë 
+                navMeshAgent.enabled = true; // ì¼œì¤€ë‹¤
+            }
+        }
+
+
+        if (!isGravity) // ì¤‘ë ¥ ë°›ëŠ” ìƒíƒœê°€ ì•„ë‹ˆë¼ë©´ 
         {
             // If the player is in sight, set the target position to the player's position
             if (PlayerInSight())
@@ -150,7 +144,7 @@ public class Guards : MonoBehaviour, IGravityControl
                 }
             }
         }
-        else // Áß·Â ¹Ş´Â »óÅÂ¶ó¸é 
+        else // ì¤‘ë ¥ ë°›ëŠ” ìƒíƒœë¼ë©´ 
         {
             ApplyGravity();
         }

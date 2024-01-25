@@ -83,7 +83,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Start()
     {
-        //Application.targetFrameRate = 60; // 서주민 전용코드 
+        Application.targetFrameRate = 60; // 서주민 전용코드 
 
         //set framerate
 
