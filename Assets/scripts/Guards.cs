@@ -2,15 +2,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using System; // 이벤트 쓰기 위해 가져옴 
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
+using UnityEngine.Diagnostics;
 
 public class Guards : MonoBehaviour, IGravityControl
 {
-    // The tag of the player object
-    //public string Player = "Player";
-    public GameObject[] players; // 플레이어 두마리 등록해놓자 
+    public GameObject[] players; // 이거 자주 쓰길래 일단 전역으로 빼 봄 
     public GameObject nearestPlayer;
+
     public Vector3 initialPosition; // 초기 위치
-    public float sightRange = 10f;
     public float addressRange = 5f;
     public float rotationSpeed = 5f;
 
@@ -25,7 +24,7 @@ public class Guards : MonoBehaviour, IGravityControl
     // Reference to the NavMeshAgent component
     public NavMeshAgent navMeshAgent;
     private Vector3 targetPosition;
-    private int state = 0;
+    private int playerCounter = 0; // 기본 패트롤 상태가 0, 플레이어 찾으면 1
     private float nextPatrolTime;
     public CharacterController controller; // 컨트롤러
 
@@ -99,9 +98,7 @@ public class Guards : MonoBehaviour, IGravityControl
     // Update is called once per frame
     void Update()
     {
-        
-        // 이거, 그냥 이벤트 쓰지 말고 여기서 판단하는 식으로 바꾸기.
-
+       
         if (isGroundChecker != controller.isGrounded) // 변화가 생겼다면
         {
             isGroundChecker = controller.isGrounded; // 똑같이 맞춰준다
@@ -118,9 +115,8 @@ public class Guards : MonoBehaviour, IGravityControl
         if (!isGravity) // 중력 받는 상태가 아니라면 
         {
             // If the player is in sight, set the target position to the player's position
-            if (PlayerInSight())
+            if (playerCounter > 0)
             {
-                state = 1; // Change to stare at player state
                 StareAtPlayer();
                 if (PlayerInAdressRange()) // address 범위 내라면
                 {
@@ -137,7 +133,7 @@ public class Guards : MonoBehaviour, IGravityControl
             }
             else // Move towards the target position using NavMeshAgent
             {
-                state = 0; // Change to patrol state
+                playerCounter = 0; // Change to patrol state
                 if (Time.time >= nextPatrolTime)
                 {
                     Patrol();
@@ -150,9 +146,8 @@ public class Guards : MonoBehaviour, IGravityControl
         else // 중력 받는 상태라면 
         {
             ApplyGravity();
-            if (PlayerInSight())
+            if (playerCounter>0) // 누구 하나라도 범위 안이면 
             {
-                state = 1; // Change to stare at player state
                 StareAtPlayer();
      
                 if (PlayerInAdressRange())
@@ -160,36 +155,30 @@ public class Guards : MonoBehaviour, IGravityControl
                     Fire();
                 }
 
-
             }
         }
 
     }
 
     // Check if the player is in sight
-    bool PlayerInSight()
+    private void OnTriggerEnter(Collider col)
     {
-        // Find all GameObjects with the player tag
-        //GameObject[] players = GameObject.FindGameObjectsWithTag(Player); 이건 직접 연결해주자 
-
-        foreach (GameObject player in players)
+        if(col.gameObject.tag == "Player")
         {
-            Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-
-            // Perform a raycast to check if there are obstacles between the opponent and the player
-            if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, sightRange))
-            {
-                if (hit.collider.CompareTag("Player"))
-                {
-                    // Player is in sight
-                    return true;
-                }
-            }
+            nearestPlayer = col.gameObject;
+            playerCounter += 1; // 플레이어 카운터 
         }
-
-        // Player is not in sight
-        return false;
     }
+
+    private void OnTriggerExit(Collider col)
+    {
+        if (col.gameObject.tag == "Player")
+        {
+            nearestPlayer = col.gameObject;
+            playerCounter -= 1; // 플레이어 카운터 
+        }
+    }
+
 
     bool PlayerInAdressRange()
     {
