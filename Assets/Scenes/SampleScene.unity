@@ -2980,16 +2980,15 @@ MonoBehaviour:
   - {fileID: 1676278159}
   nearestPlayer: {fileID: 0}
   initialPosition: {x: -25, y: 0, z: 0}
-  addressRange: 5
   rotationSpeed: 5
   travelDistance: 2.5
   patrolDelay: 2
-  projectileObj: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
+  bullet: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
+  fireRange: 5
   fireDelay: 1.2
   fireOffset: {x: 0, y: 1.11, z: 0}
-  navMeshAgent: {fileID: 0}
+  navMeshAgent: {fileID: 1386907267}
   controller: {fileID: 1386907265}
-  isGroundChecker: 0
   gravity: -9.81
 --- !u!143 &1386907265
 CharacterController:

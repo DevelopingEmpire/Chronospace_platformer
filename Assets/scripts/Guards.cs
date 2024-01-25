@@ -9,14 +9,15 @@ public class Guards : MonoBehaviour, IGravityControl
     public GameObject[] players; // 이거 자주 쓰길래 일단 전역으로 빼 봄 
     public GameObject nearestPlayer;
 
+    [Header("기본")]
     public Vector3 initialPosition; // 초기 위치
-    public float addressRange = 5f;
     public float rotationSpeed = 5f;
-
     public float travelDistance = 5f;
     public float patrolDelay = 2f;
 
-    public GameObject projectileObj;
+    [Header("bullet")]
+    public GameObject bullet; // 총알 
+    public float fireRange = 5f; // 공격 사거리
     public float fireDelay = 1f;
     private float fireTimer = 0f;
     public Vector3 fireOffset;
@@ -28,9 +29,9 @@ public class Guards : MonoBehaviour, IGravityControl
     private float nextPatrolTime;
     public CharacterController controller; // 컨트롤러
 
+    // 중력 관련 변수들 
     bool isGravity; // 중력을 받는 상태인가? 
-
-    public bool isGroundChecker; //is Grounded 상태가 변했는지 추적  
+    bool isGroundChecker; //is Grounded 상태가 변했는지 추적  
 
 
     /// <summary>
@@ -88,7 +89,6 @@ public class Guards : MonoBehaviour, IGravityControl
     void Start()
     {
         // Initialize the NavMeshAgent component
-        navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
         targetPosition = initialPosition;
         nextPatrolTime = Time.time + patrolDelay;
@@ -183,11 +183,10 @@ public class Guards : MonoBehaviour, IGravityControl
     bool PlayerInAdressRange()
     {
         // Find all GameObjects with the player tag
-        //GameObject[] players = GameObject.FindGameObjectsWithTag(Player);
 
         foreach (GameObject player in players)
         {
-            if (Vector3.Distance(transform.position, player.transform.position) < addressRange)
+            if (Vector3.Distance(transform.position, player.transform.position) < fireRange)
             {
                 // Player is in address range
                 return true;
@@ -201,7 +200,6 @@ public class Guards : MonoBehaviour, IGravityControl
     // Stare at the player by rotating the opponent's direction
     void StareAtPlayer()
     {
-        //GameObject[] players = GameObject.FindGameObjectsWithTag(Player);
 
         if (players.Length > 0)
         {
@@ -233,7 +231,7 @@ public class Guards : MonoBehaviour, IGravityControl
         // Check if enough time has passed to fire a bullet
         if (Time.time >= fireTimer)
         {
-            GameObject projectileIns = Instantiate(projectileObj);
+            GameObject projectileIns = Instantiate(bullet);
             projectileIns.transform.position = transform.position + fireOffset;
             // Reset the timer for the next bullet
             fireTimer = Time.time + fireDelay;
@@ -243,15 +241,11 @@ public class Guards : MonoBehaviour, IGravityControl
     // Patrol by setting a new random target within the travel distance
     void Patrol()
     {
-        SetRandomPatrolTarget();
-    }
-
-    // Set a new random target within the travel distance
-    void SetRandomPatrolTarget()
-    {
+        //범위내에서 랜덤하게 patrol 
         Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * travelDistance;
         targetPosition = initialPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
     }
+
 
     // Move the opponent towards the target position using NavMeshAgent
     void MoveTowardsTarget()
