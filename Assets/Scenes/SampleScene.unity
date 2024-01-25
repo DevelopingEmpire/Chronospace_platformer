@@ -2974,8 +2974,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f57437e4677927f4395024ba70c51532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTag: Player
-  player1: {fileID: 0}
+  players:
+  - {fileID: 1676278159}
+  nearestPlayer: {fileID: 0}
   initialPosition: {x: -25, y: 0, z: 0}
   sightRange: 12
   addressRange: 5
@@ -2985,8 +2986,9 @@ MonoBehaviour:
   projectileObj: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
   fireDelay: 1.2
   fireOffset: {x: 0, y: 1.11, z: 0}
+  navMeshAgent: {fileID: 0}
   controller: {fileID: 1386907265}
-  ISGROUNDEDEVENT: 0
+  isGroundChecker: 0
   gravity: -9.81
 --- !u!143 &1386907265
 CharacterController:
@@ -3141,6 +3143,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1563982325}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1676278159 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5360781343035164231, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+  m_PrefabInstance: {fileID: 491093702755824568}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1684632355
 GameObject:
   m_ObjectHideFlags: 0

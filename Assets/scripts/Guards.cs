@@ -6,9 +6,10 @@ using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 public class Guards : MonoBehaviour, IGravityControl
 {
     // The tag of the player object
-    public string playerTag = "Player";
-    public GameObject player1;
-    public Vector3 initialPosition;
+    //public string Player = "Player";
+    public GameObject[] players; // 플레이어 두마리 등록해놓자 
+    public GameObject nearestPlayer;
+    public Vector3 initialPosition; // 초기 위치
     public float sightRange = 10f;
     public float addressRange = 5f;
     public float rotationSpeed = 5f;
@@ -22,7 +23,7 @@ public class Guards : MonoBehaviour, IGravityControl
     public Vector3 fireOffset;
 
     // Reference to the NavMeshAgent component
-    private NavMeshAgent navMeshAgent;
+    public NavMeshAgent navMeshAgent;
     private Vector3 targetPosition;
     private int state = 0;
     private float nextPatrolTime;
@@ -128,7 +129,7 @@ public class Guards : MonoBehaviour, IGravityControl
                 else // 시야 안, 사거리 밖이라면 
                 {
                     //그쪽으로 움직이기 
-                    targetPosition = (GameObject.FindGameObjectWithTag(playerTag).transform.position);
+                    targetPosition = nearestPlayer.transform.position;
                     MoveTowardsTarget();
                 }
                 
@@ -169,7 +170,7 @@ public class Guards : MonoBehaviour, IGravityControl
     bool PlayerInSight()
     {
         // Find all GameObjects with the player tag
-        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+        //GameObject[] players = GameObject.FindGameObjectsWithTag(Player); 이건 직접 연결해주자 
 
         foreach (GameObject player in players)
         {
@@ -178,7 +179,7 @@ public class Guards : MonoBehaviour, IGravityControl
             // Perform a raycast to check if there are obstacles between the opponent and the player
             if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, sightRange))
             {
-                if (hit.collider.CompareTag(playerTag))
+                if (hit.collider.CompareTag("Player"))
                 {
                     // Player is in sight
                     return true;
@@ -193,7 +194,7 @@ public class Guards : MonoBehaviour, IGravityControl
     bool PlayerInAdressRange()
     {
         // Find all GameObjects with the player tag
-        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+        //GameObject[] players = GameObject.FindGameObjectsWithTag(Player);
 
         foreach (GameObject player in players)
         {
@@ -211,11 +212,11 @@ public class Guards : MonoBehaviour, IGravityControl
     // Stare at the player by rotating the opponent's direction
     void StareAtPlayer()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+        //GameObject[] players = GameObject.FindGameObjectsWithTag(Player);
 
         if (players.Length > 0)
         {
-            GameObject nearestPlayer = players[0];
+            nearestPlayer = players[0];
             float minDistance = Vector3.Distance(transform.position, nearestPlayer.transform.position);
 
             // Find the nearest player
