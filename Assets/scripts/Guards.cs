@@ -9,13 +9,14 @@ public class Guards : MonoBehaviour, IGravityControl
     public GameObject[] players; // 이거 자주 쓰길래 일단 전역으로 빼 봄 
     public GameObject nearestPlayer;
 
-    [Header("기본")]
+    [Header("Basic value")]
     public Vector3 initialPosition; // 초기 위치
     public float rotationSpeed = 5f;
     public float travelDistance = 5f;
     public float patrolDelay = 2f;
+    public float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
 
-    [Header("bullet")]
+    [Header("Bullet")]
     public GameObject bullet; // 총알 
     public float fireRange = 5f; // 공격 사거리
     public float fireDelay = 1f;
@@ -25,7 +26,7 @@ public class Guards : MonoBehaviour, IGravityControl
     // Reference to the NavMeshAgent component
     public NavMeshAgent navMeshAgent;
     private Vector3 targetPosition;
-    private int playerCounter = 0; // 기본 패트롤 상태가 0, 플레이어 찾으면 1
+    public int detectState = 0; // 기본 패트롤 상태가 0, 플레이어 찾으면 1
     private float nextPatrolTime;
     public CharacterController controller; // 컨트롤러
 
@@ -37,23 +38,15 @@ public class Guards : MonoBehaviour, IGravityControl
     /// <summary>
     /// 중력 인터페이스 구현부 
     /// 
-    bool isInRange = false; // 중력 범위 내에 있는가 
-    public bool IsInRange
-    {
-        get { return isInRange; }
-        set { isInRange = value; }
-    }
 
-    public float gravity = -9.81f;
+    // 중력 범위 내에 있는가 
+    public bool IsInRange {get; set;} 
 
-    public float Gravity {
-        get { return gravity; }
-        set { gravity = value; }
-    }
+    public float Gravity {get;set;}
 
     public void AntiGravity() // 중력 반전 함수 
     {
-        isInRange = true;
+        IsInRange = true;
         isGravity = true;
 
         // nav 비활 
@@ -64,7 +57,7 @@ public class Guards : MonoBehaviour, IGravityControl
     }
     public void AntiGravityEnd()
     {
-        isInRange = false;
+        IsInRange = false;
         Gravity = -9.81f; // 반전 해제 
         Debug.Log("AntiGravity Off.");
 
@@ -98,7 +91,14 @@ public class Guards : MonoBehaviour, IGravityControl
     // Update is called once per frame
     void Update()
     {
-       
+        detectionTimer += Time.deltaTime;
+        if(detectionTimer > 0.5)
+        {
+            // 탐지 실행
+            DetectPlayer();
+            detectionTimer = 0;
+        }
+
         if (isGroundChecker != controller.isGrounded) // 변화가 생겼다면
         {
             isGroundChecker = controller.isGrounded; // 똑같이 맞춰준다
@@ -115,7 +115,7 @@ public class Guards : MonoBehaviour, IGravityControl
         if (!isGravity) // 중력 받는 상태가 아니라면 
         {
             // If the player is in sight, set the target position to the player's position
-            if (playerCounter > 0)
+            if (detectState > 0)
             {
                 StareAtPlayer();
                 if (PlayerInAdressRange()) // address 범위 내라면
@@ -133,7 +133,7 @@ public class Guards : MonoBehaviour, IGravityControl
             }
             else // Move towards the target position using NavMeshAgent
             {
-                playerCounter = 0; // Change to patrol state
+                //detectState = 0; // Change to patrol state
                 if (Time.time >= nextPatrolTime)
                 {
                     Patrol();
@@ -146,7 +146,7 @@ public class Guards : MonoBehaviour, IGravityControl
         else // 중력 받는 상태라면 
         {
             ApplyGravity();
-            if (playerCounter>0) // 누구 하나라도 범위 안이면 
+            if (detectState>0) // 누구 하나라도 범위 안이면 
             {
                 StareAtPlayer();
      
@@ -160,25 +160,32 @@ public class Guards : MonoBehaviour, IGravityControl
 
     }
 
-    // Check if the player is in sight
-    private void OnTriggerEnter(Collider col)
+    // 탐지 범위 내, 가장 가까운 플레이어를 탐색해 냄 ( 추적 대상)
+    private void DetectPlayer()
     {
-        if(col.gameObject.tag == "Player")
-        {
-            nearestPlayer = col.gameObject;
-            playerCounter += 1; // 플레이어 카운터 
-        }
-    }
+        //주변 col들 추출해서 배열에 저장
+        Collider[] hitColls = Physics.OverlapSphere(transform.position,10f); // 시작 지점, 반지름, 레이어 
+        
+        detectState = 0;
+        nearestPlayer = null; // 
 
-    private void OnTriggerExit(Collider col)
-    {
-        if (col.gameObject.tag == "Player")
+        //,LayerMask.NameToLayer("Player")
+        foreach (Collider col in hitColls)
         {
-            nearestPlayer = col.gameObject;
-            playerCounter -= 1; // 플레이어 카운터 
-        }
-    }
+            if (col.gameObject.CompareTag("Player"))
+            {
+                Debug.Log("탐지 됨 ");
+                detectState = 1;
+                nearestPlayer = hitColls[0].gameObject;
+                if (hitColls.Length == 2)
+                {
+                    nearestPlayer = Vector3.Distance(transform.position, nearestPlayer.transform.position) < Vector3.Distance(transform.position, hitColls[1].gameObject.transform.position) ? nearestPlayer : hitColls[1].gameObject;
+                }
 
+            }
+        }
+
+    }
 
     bool PlayerInAdressRange()
     {
