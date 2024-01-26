@@ -26,9 +26,9 @@ public class Guards : MonoBehaviour, IGravityControl
     // Reference to the NavMeshAgent component
     public NavMeshAgent navMeshAgent;
     private Vector3 targetPosition;
-    public int detectState = 0; // 기본 패트롤 상태가 0, 플레이어 찾으면 1
+    public bool detectState = false; // 기본 패트롤 상태가 0, 플레이어 찾으면 1
     private float nextPatrolTime;
-    public CharacterController controller; // 컨트롤러
+    public CharacterController _controller; // 컨트롤러
 
     // 중력 관련 변수들 
     bool isGravity; // 중력을 받는 상태인가? 
@@ -70,10 +70,10 @@ public class Guards : MonoBehaviour, IGravityControl
         Vector3 gravityVector = new Vector3(0, Gravity, 0);
 
         // 경박스런 움직임. Lerp으로 퇴마  
-        gravityVector = Vector3.Lerp(controller.velocity, gravityVector, Time.deltaTime);
+        gravityVector = Vector3.Lerp(_controller.velocity, gravityVector, Time.deltaTime);
 
         // 중력 벡터를 현재 위치에 적용
-        controller.Move(gravityVector * Time.deltaTime);
+        _controller.Move(gravityVector * Time.deltaTime);
     }
 
     /// </summary>
@@ -85,23 +85,24 @@ public class Guards : MonoBehaviour, IGravityControl
         initialPosition = transform.position;
         targetPosition = initialPosition;
         nextPatrolTime = Time.time + patrolDelay;
-        isGroundChecker = controller.isGrounded;
+        isGroundChecker = _controller.isGrounded;
+        _controller.detectCollisions = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         detectionTimer += Time.deltaTime;
-        if(detectionTimer > 0.5)
+        if(detectionTimer >= 0.5f)
         {
             // 탐지 실행
             DetectPlayer();
             detectionTimer = 0;
         }
 
-        if (isGroundChecker != controller.isGrounded) // 변화가 생겼다면
+        if (isGroundChecker != _controller.isGrounded) // 변화가 생겼다면
         {
-            isGroundChecker = controller.isGrounded; // 똑같이 맞춰준다
+            isGroundChecker = _controller.isGrounded; // 똑같이 맞춰준다
             // 만약 공중에 뜬 거라면? 머.. 알빠없음. 그래비티 true 됐을거임
             // 만약 착지 한다면? 그래비티 false하고 nav 켜줘야함 
             if(isGroundChecker)
@@ -115,7 +116,7 @@ public class Guards : MonoBehaviour, IGravityControl
         if (!isGravity) // 중력 받는 상태가 아니라면 
         {
             // If the player is in sight, set the target position to the player's position
-            if (detectState > 0)
+            if (detectState)
             {
                 StareAtPlayer();
                 if (PlayerInAdressRange()) // address 범위 내라면
@@ -146,7 +147,7 @@ public class Guards : MonoBehaviour, IGravityControl
         else // 중력 받는 상태라면 
         {
             ApplyGravity();
-            if (detectState>0) // 누구 하나라도 범위 안이면 
+            if (detectState) // 누구 하나라도 범위 안이면 
             {
                 StareAtPlayer();
      
@@ -166,16 +167,22 @@ public class Guards : MonoBehaviour, IGravityControl
         //주변 col들 추출해서 배열에 저장
         Collider[] hitColls = Physics.OverlapSphere(transform.position,10f); // 시작 지점, 반지름, 레이어 
         
-        detectState = 0;
+        detectState = false;
         nearestPlayer = null; // 
 
-        //,LayerMask.NameToLayer("Player")
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
         foreach (Collider col in hitColls)
         {
-            if (col.gameObject.CompareTag("Player"))
+            if (col == _controller) Debug.Log("같다 ");
+            CharacterController characterController = col as CharacterController;
+            if (characterController != null && col.gameObject.CompareTag("Player")) // 캐릭터 콜라이더만 인식 
             {
-                Debug.Log("탐지 됨 ");
-                detectState = 1;
+                Debug.Log(col.gameObject.name);
+                //Debug.Log(col.gameObject);
+                Debug.Log(Time.realtimeSinceStartup); 
+                detectState = true;
                 nearestPlayer = hitColls[0].gameObject;
                 if (hitColls.Length == 2)
                 {
@@ -184,6 +191,9 @@ public class Guards : MonoBehaviour, IGravityControl
 
             }
         }
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
+        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
 
     }
 
