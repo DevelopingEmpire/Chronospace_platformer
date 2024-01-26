@@ -169,10 +169,6 @@ public class Guards : MonoBehaviour, IGravityControl
         
         detectState = false;
         nearestPlayer = null; // 
-
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
         foreach (Collider col in hitColls)
         {
             if (col == _controller) Debug.Log("같다 ");
@@ -191,9 +187,6 @@ public class Guards : MonoBehaviour, IGravityControl
 
             }
         }
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
-        Debug.Log("@@@@@@@@@@@@@@@@@@@@@");
 
     }
 
