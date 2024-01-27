@@ -14,7 +14,8 @@ public class Guards : MonoBehaviour, IGravityControl
     public float rotationSpeed = 5f;
     public float travelDistance = 5f;
     public float patrolDelay = 2f;
-    public float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
+    public float detectionDelay = 0.5f;
+    float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
 
     [Header("Bullet")]
     public GameObject bullet; // 총알 
@@ -25,8 +26,8 @@ public class Guards : MonoBehaviour, IGravityControl
 
     // Reference to the NavMeshAgent component
     public NavMeshAgent navMeshAgent;
-    private Vector3 targetPosition;
-    public bool detectState = false; // 기본 패트롤 상태가 0, 플레이어 찾으면 1
+    private Vector3 targetPosition; // nav의 목표지점 
+    public bool detectState = false; // 사람 발견시 true 
     private float nextPatrolTime;
     public CharacterController _controller; // 컨트롤러
 
@@ -34,12 +35,11 @@ public class Guards : MonoBehaviour, IGravityControl
     bool isGravity; // 중력을 받는 상태인가? 
     bool isGroundChecker; //is Grounded 상태가 변했는지 추적  
 
-
     /// <summary>
     /// 중력 인터페이스 구현부 
     /// 
 
-    // 중력 범위 내에 있는가 
+    // 중력탬 범위 내에 있는가 
     public bool IsInRange {get; set;} 
 
     public float Gravity {get;set;}
@@ -93,7 +93,7 @@ public class Guards : MonoBehaviour, IGravityControl
     void Update()
     {
         detectionTimer += Time.deltaTime;
-        if(detectionTimer >= 0.5f)
+        if(detectionTimer >= detectionDelay)
         {
             // 탐지 실행
             DetectPlayer();
@@ -115,138 +115,69 @@ public class Guards : MonoBehaviour, IGravityControl
 
         if (!isGravity) // 중력 받는 상태가 아니라면 
         {
+            MoveTowardsTarget();
             // If the player is in sight, set the target position to the player's position
-            if (detectState)
+            if (detectState == true)// 범위 안이면 
             {
-                StareAtPlayer();
-                if (PlayerInAdressRange()) // address 범위 내라면
+                // Move towards the target position using NavMeshAgent
+                targetPosition = nearestPlayer.transform.position;
+
+                
+                if (PlayerInFireRange()) // 사거리 내라면
                 {
                     Fire();
                 }
-                else // 시야 안, 사거리 밖이라면 
-                {
-                    //그쪽으로 움직이기 
-                    targetPosition = nearestPlayer.transform.position;
-                    MoveTowardsTarget();
-                }
                 
-                
+                //Fire();
             }
-            else // Move towards the target position using NavMeshAgent
+            else // 평화로운 상태
             {
-                //detectState = 0; // Change to patrol state
                 if (Time.time >= nextPatrolTime)
                 {
                     Patrol();
                     // Set the next patrol time
                     nextPatrolTime = Time.time + patrolDelay;
-                    MoveTowardsTarget();
                 }
             }
+            
+            
         }
         else // 중력 받는 상태라면 
         {
             ApplyGravity();
-            if (detectState) // 누구 하나라도 범위 안이면 
+            if (detectState == true) // 범위 안이면 
             {
                 StareAtPlayer();
-     
-                if (PlayerInAdressRange())
+                
+                if (PlayerInFireRange())
                 {
                     Fire();
                 }
+                
+                //Fire();
 
             }
+            
         }
 
     }
 
-    // 탐지 범위 내, 가장 가까운 플레이어를 탐색해 냄 ( 추적 대상)
-    private void DetectPlayer()
-    {
-        //주변 col들 추출해서 배열에 저장
-        Collider[] hitColls = Physics.OverlapSphere(transform.position,10f); // 시작 지점, 반지름, 레이어 
-        
-        detectState = false;
-        nearestPlayer = null; // 
-        foreach (Collider col in hitColls)
-        {
-            if (col == _controller) Debug.Log("같다 ");
-            CharacterController characterController = col as CharacterController;
-            if (characterController != null && col.gameObject.CompareTag("Player")) // 캐릭터 콜라이더만 인식 
-            {
-                Debug.Log(col.gameObject.name);
-                //Debug.Log(col.gameObject);
-                Debug.Log(Time.realtimeSinceStartup); 
-                detectState = true;
-                nearestPlayer = hitColls[0].gameObject;
-                if (hitColls.Length == 2)
-                {
-                    nearestPlayer = Vector3.Distance(transform.position, nearestPlayer.transform.position) < Vector3.Distance(transform.position, hitColls[1].gameObject.transform.position) ? nearestPlayer : hitColls[1].gameObject;
-                }
+    
 
-            }
-        }
-
-    }
-
-    bool PlayerInAdressRange()
-    {
-        // Find all GameObjects with the player tag
-
-        foreach (GameObject player in players)
-        {
-            if (Vector3.Distance(transform.position, player.transform.position) < fireRange)
-            {
-                // Player is in address range
-                return true;
-            }
-        }
-
-        // No players in address range
-        return false;
-    }
+    
 
     // Stare at the player by rotating the opponent's direction
+    
     void StareAtPlayer()
     {
-
-        if (players.Length > 0)
-        {
-            nearestPlayer = players[0];
-            float minDistance = Vector3.Distance(transform.position, nearestPlayer.transform.position);
-
-            // Find the nearest player
-            foreach (GameObject player in players)
-            {
-                float distance = Vector3.Distance(transform.position, player.transform.position);
-
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    nearestPlayer = player;
-                }
-            }
-
             // Rotate towards the nearest player
             Vector3 directionToPlayer = (nearestPlayer.transform.position - transform.position).normalized;
             Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-        }
     }
-
-    //Fire projectile into player
-    void Fire()
-    {
-        // Check if enough time has passed to fire a bullet
-        if (Time.time >= fireTimer)
-        {
-            GameObject projectileIns = Instantiate(bullet);
-            projectileIns.transform.position = transform.position + fireOffset;
-            // Reset the timer for the next bullet
-            fireTimer = Time.time + fireDelay;
-        }
-    }
+    
+    
+    
 
     // Patrol by setting a new random target within the travel distance
     void Patrol()
@@ -256,12 +187,68 @@ public class Guards : MonoBehaviour, IGravityControl
         targetPosition = initialPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
     }
 
+    // 탐지 범위 내, 가장 가까운 플레이어를 탐색해 냄 ( 추적 대상 nearestPlayer) 
+    private void DetectPlayer()
+    {
+        //주변 col들 추출해서 배열에 저장
+        Collider[] hitColls = Physics.OverlapSphere(transform.position, 10f); // 시작 지점, 반지름, 레이어 
+
+        detectState = false;
+        nearestPlayer = null; // 
+        foreach (Collider col in hitColls)
+        {
+            //if (col == _controller) Debug.Log("같다 ");
+            CharacterController characterController = col as CharacterController;
+            if (characterController != null && col.gameObject.CompareTag("Player")) // 캐릭터 콜라이더만 인식 
+            {
+                //Debug.Log(col.gameObject.name);
+                //Debug.Log(col.gameObject);
+                //Debug.Log(Time.realtimeSinceStartup); 
+                detectState = true;
+
+                if (nearestPlayer == null) // 아직 nearest가 없다면 
+                {
+                    nearestPlayer = characterController.gameObject;
+                }
+                else
+                {
+                    nearestPlayer = Vector3.Distance(transform.position, nearestPlayer.transform.position) < Vector3.Distance(transform.position, characterController.gameObject.transform.position) ? nearestPlayer : characterController.gameObject;
+                }
+
+            }
+        }
+
+    }
 
     // Move the opponent towards the target position using NavMeshAgent
     void MoveTowardsTarget()
     {
+        
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
         
+    }
+    
+    bool PlayerInFireRange()
+    {
+        // 쿨타임 돌았고 사거리 안이면 
+        if (fireTimer >= fireDelay && Vector3.Distance(transform.position, nearestPlayer.transform.position) < fireRange)
+        {
+            return true;
+        }
+
+        fireTimer += Time.deltaTime;
+        return false;
+    }
+    
+
+    //Fire projectile into player
+    void Fire()
+    {
+        // Check if enough time has passed to fire a bullet
+        GameObject projectileIns = Instantiate(bullet);
+        projectileIns.transform.position = transform.position + fireOffset;
+        // Reset the timer for the next bullet
+        fireTimer = 0f; // 초기화 
     }
 }
