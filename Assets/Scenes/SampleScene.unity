@@ -2981,7 +2981,7 @@ MonoBehaviour:
   rotationSpeed: 5
   travelDistance: 2.5
   patrolDelay: 2
-  detectionTimer: 0
+  detectionDelay: 0.5
   bullet: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
   fireRange: 5
   fireDelay: 1.2
@@ -4257,6 +4257,10 @@ PrefabInstance:
       propertyPath: textMeshProUGUI
       value: 
       objectReference: {fileID: 2710176443536761295}
+    - target: {fileID: 5360781343035164253, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: hasItems.Array.data[2]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5360781343035164254, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: timerBar
       value: 

@@ -35,7 +35,8 @@ public class Player : MonoBehaviour, IGravityControl
     private bool inputKeyButton1; // 템 스왑 1
     private bool inputKeyButton2; // 템 스왑 2
     private bool inputKeyButton3; // 템 스왑 3
-    private bool inputKeyR;
+    private bool inputKeyR; // 탬사용1
+    private bool inputKeyF; // 탬사용2
 
     bool isSwaping = false; //사용하고 있는 변수. Console에 사용하지 않는다고 뜬다. 
 
@@ -94,16 +95,16 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Update()
     {
+        GetInput();
         if (!isAlive)  return;
         if (isWinding) return; // 와인딩 중엔 암것도 못해! 
 
-        if (inputInteraction)
-        {
-            Interaction();
-        }
-        Swap();
-        UseItem();
-        GetInput();
+        if (inputInteraction) Interaction();
+        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton1) Swap();
+        if (inputKeyR) UseItemR();
+        if (inputKeyF) UseItemF();
+
+
     }
     void FixedUpdate()
     {
@@ -126,6 +127,7 @@ public class Player : MonoBehaviour, IGravityControl
         inputKeyButton2 = Input.GetButtonDown("Swap2");
         inputKeyButton3 = Input.GetButtonDown("Swap3");
         inputKeyR = Input.GetButtonDown("Effect1"); //r
+        inputKeyF = Input.GetButtonDown("Effect2"); //f
     }
 
     void Move()
@@ -218,10 +220,8 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItem()
+    void UseItemR()
     {
-        if (!inputKeyR) return;
-
         switch (equipItemIndex)
         {
             case Item.Type.Gravity:
@@ -270,7 +270,6 @@ public class Player : MonoBehaviour, IGravityControl
     public void OnCallBackTweakTimeStart() // CallBack을 그냥 Method Call로 대체 
     {
         anim.speed = 1.0f / Time.timeScale; // 애니메이션 속도도 바꿔준다
-        Time.timeScale = timeScaleMultiplier;
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
     public void OnCallBackTweakTimeEnd() // CallBack을 그냥 Method Call로 대체 
@@ -278,7 +277,37 @@ public class Player : MonoBehaviour, IGravityControl
         anim.speed = 1.0f;
         Time.fixedDeltaTime = 0.02f;
         // 추가적으로 처리해줘야 할 부분들
+        // 추가 처리 더 없다면, 위 함수와 합쳐줘도 될듯 
     }
+
+    //f 키 눌렀을때 아이템 
+    void UseItemF()
+    {
+        switch (equipItemIndex)
+        {
+            case Item.Type.Gravity:
+                Debug.Log("중력");
+                break;
+
+            case Item.Type.TimeStop:
+                Debug.Log("시간");
+                StartCoroutine(TweakTimeEffect(0, 5)); // timeScale 0 
+                //Time.timeScale = 0;
+                break;
+
+            case Item.Type.WindKey:
+                Debug.Log("태엽");
+                break;
+
+            case Item.Type.Null:
+                // Handle no item selected
+                break;
+            default:
+                Debug.LogError("Unknown item type: " + equipItemIndex);
+                break;
+        }
+    }
+
 
     //Winding
     public void WindKeyActivate() // 활성화되면서 
