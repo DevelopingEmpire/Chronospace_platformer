@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System; // 이벤트 쓰기 위해 가져옴 
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 using UnityEngine.Diagnostics;
 
 public class Guards : MonoBehaviour, IGravityControl
 {
-    public GameObject[] players; // 이거 자주 쓰길래 일단 전역으로 빼 봄 
     public GameObject nearestPlayer;
 
     [Header("Basic value")]
@@ -14,7 +12,7 @@ public class Guards : MonoBehaviour, IGravityControl
     public float rotationSpeed = 5f;
     public float travelDistance = 5f;
     public float patrolDelay = 2f;
-    public float detectionDelay = 0.5f;
+    public float detectionInterval = 0.5f;
     float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
 
     [Header("Bullet")]
@@ -27,7 +25,7 @@ public class Guards : MonoBehaviour, IGravityControl
     // Reference to the NavMeshAgent component
     public NavMeshAgent navMeshAgent;
     private Vector3 targetPosition; // nav의 목표지점 
-    public bool detectState = false; // 사람 발견시 true 
+    public bool isPlayerDetected = false; // 사람 발견시 true 
     private float nextPatrolTime;
     public CharacterController _controller; // 컨트롤러
 
@@ -93,7 +91,7 @@ public class Guards : MonoBehaviour, IGravityControl
     void Update()
     {
         detectionTimer += Time.deltaTime;
-        if(detectionTimer >= detectionDelay)
+        if(detectionTimer >= detectionInterval)
         {
             // 탐지 실행
             DetectPlayer();
@@ -117,7 +115,7 @@ public class Guards : MonoBehaviour, IGravityControl
         {
             MoveTowardsTarget();
             // If the player is in sight, set the target position to the player's position
-            if (detectState == true)// 범위 안이면 
+            if (isPlayerDetected)// 범위 안이면 
             {
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
@@ -127,8 +125,6 @@ public class Guards : MonoBehaviour, IGravityControl
                 {
                     Fire();
                 }
-                
-                //Fire();
             }
             else // 평화로운 상태
             {
@@ -145,7 +141,7 @@ public class Guards : MonoBehaviour, IGravityControl
         else // 중력 받는 상태라면 
         {
             ApplyGravity();
-            if (detectState == true) // 범위 안이면 
+            if (isPlayerDetected) // 범위 안이면 
             {
                 StareAtPlayer();
                 
@@ -154,7 +150,6 @@ public class Guards : MonoBehaviour, IGravityControl
                     Fire();
                 }
                 
-                //Fire();
 
             }
             
@@ -170,10 +165,10 @@ public class Guards : MonoBehaviour, IGravityControl
     
     void StareAtPlayer()
     {
-            // Rotate towards the nearest player
-            Vector3 directionToPlayer = (nearestPlayer.transform.position - transform.position).normalized;
-            Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        // Rotate towards the nearest player
+        Vector3 directionToPlayer = (nearestPlayer.transform.position - transform.position).normalized;
+        Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
     
     
@@ -193,7 +188,7 @@ public class Guards : MonoBehaviour, IGravityControl
         //주변 col들 추출해서 배열에 저장
         Collider[] hitColls = Physics.OverlapSphere(transform.position, 10f); // 시작 지점, 반지름, 레이어 
 
-        detectState = false;
+        isPlayerDetected = false;
         nearestPlayer = null; // 
         foreach (Collider col in hitColls)
         {
@@ -204,7 +199,7 @@ public class Guards : MonoBehaviour, IGravityControl
                 //Debug.Log(col.gameObject.name);
                 //Debug.Log(col.gameObject);
                 //Debug.Log(Time.realtimeSinceStartup); 
-                detectState = true;
+                isPlayerDetected = true;
 
                 if (nearestPlayer == null) // 아직 nearest가 없다면 
                 {
@@ -214,7 +209,6 @@ public class Guards : MonoBehaviour, IGravityControl
                 {
                     nearestPlayer = Vector3.Distance(transform.position, nearestPlayer.transform.position) < Vector3.Distance(transform.position, characterController.gameObject.transform.position) ? nearestPlayer : characterController.gameObject;
                 }
-
             }
         }
 
@@ -223,7 +217,6 @@ public class Guards : MonoBehaviour, IGravityControl
     // Move the opponent towards the target position using NavMeshAgent
     void MoveTowardsTarget()
     {
-        
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
         
