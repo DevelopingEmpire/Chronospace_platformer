@@ -2974,20 +2974,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f57437e4677927f4395024ba70c51532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  players:
-  - {fileID: 1676278159}
   nearestPlayer: {fileID: 0}
   initialPosition: {x: -25, y: 0, z: 0}
   rotationSpeed: 5
   travelDistance: 2.5
   patrolDelay: 2
-  detectionDelay: 0.5
+  detectionInterval: 0.5
   bullet: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
   fireRange: 5
   fireDelay: 1.2
   fireOffset: {x: 0, y: 1.11, z: 0}
   navMeshAgent: {fileID: 1386907267}
-  detectState: 0
+  isPlayerDetected: 0
   _controller: {fileID: 1386907265}
 --- !u!143 &1386907265
 CharacterController:
@@ -3142,11 +3140,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1563982325}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1676278159 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5360781343035164231, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
-  m_PrefabInstance: {fileID: 491093702755824568}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1684632355
 GameObject:
   m_ObjectHideFlags: 0
@@ -4197,6 +4190,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1090306087314541017, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_Name
+      value: GravityItemPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090306087766506786, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_Name
+      value: TimeItemPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 1090306088576203712, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_Name
+      value: WindKeyItemPoint
+      objectReference: {fileID: 0}
     - target: {fileID: 5360781343035164088, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -4269,6 +4274,10 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 1684632357}
+    - target: {fileID: 5360781343125228327, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_Name
+      value: ItemPoints
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
 --- !u!1 &2710176443287944468

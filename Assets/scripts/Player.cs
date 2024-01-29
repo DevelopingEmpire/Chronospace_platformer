@@ -84,7 +84,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Start()
     {
-        Application.targetFrameRate = 60; // 서주민 전용코드 
+        Application.targetFrameRate = 50; // 서주민 전용코드 
 
         //set framerate
 
@@ -101,9 +101,17 @@ public class Player : MonoBehaviour, IGravityControl
 
         if (inputInteraction) Interaction();
         if(inputKeyButton1 || inputKeyButton2 || inputKeyButton1) Swap();
-        if (inputKeyR) UseItemR();
-        if (inputKeyF) UseItemF();
-
+        if (inputKeyR)
+        {
+            timeScaleMultiplier = 0.25f;
+            UseItem();
+        }
+        if (inputKeyF)
+        {
+            timeScaleMultiplier = 0.005f;// roh 가라사대 감으로 값을 정했다 하시느니라 
+            UseItem();
+        }
+        //Debug.Log("R"+inputKeyR); Debug.Log("F" + inputKeyF);
 
     }
     void FixedUpdate()
@@ -220,7 +228,7 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItemR()
+    void UseItem()
     {
         switch (equipItemIndex)
         {
@@ -232,7 +240,6 @@ public class Player : MonoBehaviour, IGravityControl
             case Item.Type.TimeStop:
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
                 break;
-
             case Item.Type.WindKey:
                 if (nearObject != null && isPlayerNear == true)  
                 {
@@ -280,33 +287,7 @@ public class Player : MonoBehaviour, IGravityControl
         // 추가 처리 더 없다면, 위 함수와 합쳐줘도 될듯 
     }
 
-    //f 키 눌렀을때 아이템 
-    void UseItemF()
-    {
-        switch (equipItemIndex)
-        {
-            case Item.Type.Gravity:
-                Debug.Log("중력");
-                break;
-
-            case Item.Type.TimeStop:
-                Debug.Log("시간");
-                StartCoroutine(TweakTimeEffect(0, 5)); // timeScale 0 
-                //Time.timeScale = 0;
-                break;
-
-            case Item.Type.WindKey:
-                Debug.Log("태엽");
-                break;
-
-            case Item.Type.Null:
-                // Handle no item selected
-                break;
-            default:
-                Debug.LogError("Unknown item type: " + equipItemIndex);
-                break;
-        }
-    }
+    
 
 
     //Winding
