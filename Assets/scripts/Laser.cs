@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Razer : MonoBehaviour
+public class Laser : MonoBehaviour
 {
     RaycastHit hit;
     public LineRenderer lineRenderer; // 얘가 선을 그어줄거야! 
