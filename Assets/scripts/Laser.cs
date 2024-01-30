@@ -5,16 +5,45 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
     RaycastHit hit;
-    public LineRenderer lineRenderer; // 얘가 선을 그어줄거야! 
+    public LineRenderer lr; // 얘가 선을 그어줄거야! 
+    public Vector3 newPosition;
+    public Vector3 newDir;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        lineRenderer.SetPosition(0, transform.position); // 초기 위치 
+        List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
+        
+        newPosition = transform.position;
+        newDir = transform.forward;
 
-        if(Physics.Raycast(transform.position,transform.forward, out hit))
+        positions.Add(newPosition);
+
+
+        while (true)
         {
-            lineRenderer.SetPosition(1, hit.point); // ray 맞은 정점까지 쏴  
+            Physics.Raycast(newPosition, newDir, out hit);
+            positions.Add(hit.point);
+            if (hit.collider.gameObject.CompareTag("mirror"))
+            {
+                newPosition = hit.point;
+                newDir = Vector3.Reflect(newDir, hit.normal); // 반사! 
+            }
+            else
+            {
+                if (hit.collider.gameObject.CompareTag("LaserButton") && hit.collider.gameObject.GetComponent<PressureLaserButtonController>())
+                {
+                    hit.collider.gameObject.GetComponent<PressureLaserButtonController>().OnButtonPressed(); // 버튼 누르기 
+                }
+                break; 
+            }
+            
         }
+        lr.positionCount = positions.Count; // 정점 추가 
+        for (int i = 0; i < positions.Count; i++)
+        {
+            lr.SetPosition(i, positions[i]);
+        }
+        
     }
+     
 }
