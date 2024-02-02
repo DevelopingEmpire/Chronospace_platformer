@@ -1107,6 +1107,55 @@ Transform:
   m_Father: {fileID: 617957801}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
+--- !u!1 &1057866161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1057866163}
+  - component: {fileID: 1057866162}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1057866162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057866161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 5d44f4e12ba23c541b9f95eae8a0cd89, type: 2}
+--- !u!4 &1057866163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057866161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.114074, y: 0.43568897, z: 0.36574554}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1138482114
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1591,6 +1640,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1510511879229059012, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5360781343035164230, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -3279,6 +3332,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4372827539607414337, guid: 25a4a071298cc3849b07c8654b8befae, type: 3}
+      propertyPath: buttonMat
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099823743240176145, guid: 25a4a071298cc3849b07c8654b8befae, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099823743240176145, guid: 25a4a071298cc3849b07c8654b8befae, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: abb5fda102ba6b04c9996616b158a607, type: 2}
     - target: {fileID: 8099823743623213324, guid: 25a4a071298cc3849b07c8654b8befae, type: 3}
       propertyPath: m_Name
       value: LaserButton
@@ -3509,12 +3574,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 8897125789238277896, guid: fe800798902828449a8ed8a34aace3ee, type: 3}
+      propertyPath: m_Parameters.numCapVertices
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897125789238277896, guid: fe800798902828449a8ed8a34aace3ee, type: 3}
       propertyPath: m_Positions.Array.data[0].z
       value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 8897125789238277896, guid: fe800798902828449a8ed8a34aace3ee, type: 3}
       propertyPath: m_Positions.Array.data[1].z
       value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897125789238277896, guid: fe800798902828449a8ed8a34aace3ee, type: 3}
+      propertyPath: m_Parameters.numCornerVertices
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 8897125789238277896, guid: fe800798902828449a8ed8a34aace3ee, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
@@ -3546,6 +3619,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8897125789238277898, guid: fe800798902828449a8ed8a34aace3ee, type: 3}
       propertyPath: newPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897125789685667425, guid: fe800798902828449a8ed8a34aace3ee, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8897125789916457603, guid: fe800798902828449a8ed8a34aace3ee, type: 3}

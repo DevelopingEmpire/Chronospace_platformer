@@ -108,7 +108,6 @@ GameObject:
   - component: {fileID: 8099823743240176143}
   - component: {fileID: 8099823743240176144}
   - component: {fileID: 8099823743240176145}
-  - component: {fileID: 8099823743240176147}
   m_Layer: 0
   m_Name: button
   m_TagString: Untagged
@@ -160,6 +159,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 4c6cc0e0fe0699a45a481bc68f978112, type: 2}
+  - {fileID: 2100000, guid: abb5fda102ba6b04c9996616b158a607, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -181,19 +181,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8099823743240176147
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8099823743240176140}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
-  m_Center: {x: 0.000000059604645, y: 0.0000019073486, z: -0.00000008940697}
 --- !u!1 &8099823743623213324
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,11 +224,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8099823743623213324}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 0.6, z: 1.5}
-  m_Center: {x: 0, y: 0.3, z: 0}
+  m_Size: {x: 1.5, y: 0.2, z: 1.5}
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!114 &4372827539607414337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,3 +243,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: 8099823743240176140}
   isPressed: 0
+  mat:
+  - {fileID: 0}
+  - {fileID: 0}

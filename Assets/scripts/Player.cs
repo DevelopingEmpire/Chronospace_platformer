@@ -90,7 +90,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         Gravity = -9.81f;
 
-        controller.detectCollisions = false;
+        //controller.detectCollisions = false; // 이거 끄면.. 플레이어가 발판을 못 밟음 
     }
 
     void Update()

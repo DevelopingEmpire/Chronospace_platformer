@@ -9,6 +9,8 @@ public class Laser : MonoBehaviour
     public Vector3 newPosition;
     public Vector3 newDir;
 
+    public GameObject lastPressedButton;
+
     private void Update()
     {
         List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
@@ -17,7 +19,6 @@ public class Laser : MonoBehaviour
         newDir = transform.forward;
 
         positions.Add(newPosition);
-
 
         while (true)
         {
@@ -30,9 +31,22 @@ public class Laser : MonoBehaviour
             }
             else
             {
+                //버튼에 닿았다면!! 
                 if (hit.collider.gameObject.CompareTag("LaserButton") && hit.collider.gameObject.GetComponent<PressureLaserButtonController>())
                 {
-                    hit.collider.gameObject.GetComponent<PressureLaserButtonController>().OnButtonPressed(); // 버튼 누르기 
+                    lastPressedButton = hit.collider.gameObject;
+                    lastPressedButton.GetComponent<PressureLaserButtonController>().OnButtonPressed(); // 버튼 누르기 
+                }
+                // 버튼에 닿지 않았다면~ 
+                else
+                {
+                    // 이전에 버튼에 닿았었다면, 그 버튼 꺼주고 null 
+                    if(lastPressedButton != null)
+                    {
+                        lastPressedButton.GetComponent<PressureLaserButtonController>().OnButtonUp(); // 눌린거 꺼주기 
+                        lastPressedButton = null;
+                    }
+
                 }
                 break; 
             }
