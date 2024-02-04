@@ -11,7 +11,8 @@ public class Player : MonoBehaviour, IGravityControl
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽 
-    public GameObject throwGravityItem;    // 던질 중력탬  
+    public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
+    public float[] timeScaleMultiplier = new float[] {0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
     public Transform itemPointTransform; // 탬 생성 위치
 
     [Header("PhysicsValue")]
@@ -55,7 +56,6 @@ public class Player : MonoBehaviour, IGravityControl
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     public Item.Type equipItemIndex = Item.Type.Null; // 현재 손에 있는 탬 종류 
-    public float timeScaleMultiplier = 0.05f; // 타임 스케일 계수 
 
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
@@ -103,13 +103,11 @@ public class Player : MonoBehaviour, IGravityControl
         if(inputKeyButton1 || inputKeyButton2 || inputKeyButton1) Swap();
         if (inputKeyR)
         {
-            timeScaleMultiplier = 0.25f;
-            UseItem();
+            UseItem(0);
         }
         if (inputKeyF)
         {
-            timeScaleMultiplier = 0.005f;// roh 가라사대 감으로 값을 정했다 하시느니라 
-            UseItem();
+            UseItem(1);
         }
         //Debug.Log("R"+inputKeyR); Debug.Log("F" + inputKeyF);
 
@@ -228,17 +226,17 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItem()
+    void UseItem(int RFnum) // r이면 0, f면 1 이 전달됨 
     {
         switch (equipItemIndex)
         {
             case Item.Type.Gravity:
-                Instantiate(throwGravityItem, itemPointTransform.position + itemPointTransform.forward
+                Instantiate(gravityPrefebs[RFnum], itemPointTransform.position + itemPointTransform.forward
                     , itemPointTransform.rotation);
                 break;
 
             case Item.Type.TimeStop:
-                StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
+                StartCoroutine(TweakTimeEffect(timeScaleMultiplier[RFnum], 5));
                 break;
             case Item.Type.WindKey:
                 if (nearObject != null && isPlayerNear == true)  

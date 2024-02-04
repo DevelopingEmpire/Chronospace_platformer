@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2530671327733074968}
   - component: {fileID: 7507105716042323706}
   m_Layer: 0
-  m_Name: GravityItemOnUse
+  m_Name: GravitatyFieldOnUse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6392574276357548630}
   - component: {fileID: 5301808902168989873}
-  - component: {fileID: 1093993489854197702}
+  - component: {fileID: 9175461275404524892}
   - component: {fileID: 5200842809795117333}
   - component: {fileID: 5919514510702078409}
   - component: {fileID: 4582597488759237696}
@@ -197,10 +197,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemMeshObj: {fileID: 6392574275968018039}
   rb: {fileID: 7507105716042323706}
-  colliderRange: {fileID: 1093993489854197702}
+  colliderRange: {fileID: 0}
   meshRenderer: {fileID: 5919514510702078409}
---- !u!65 &1093993489854197702
-BoxCollider:
+--- !u!135 &9175461275404524892
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -210,7 +210,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &5200842809795117333
 BoxCollider:
@@ -274,4 +274,4 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6392574276357548969}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
