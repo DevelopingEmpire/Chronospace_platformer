@@ -20,6 +20,16 @@ public class MapManager : MonoBehaviour
     }
     #endregion
 
+    public bool[] buttons = new bool[2]; // 기본값이 원래 false라네요? 개꿀 
 
-    
+
+    public void OnButtonActive(int buttonID)
+    {
+        buttons[buttonID] = true;
+    }
+
+    public void OnButtonInactive(int buttonID)
+    {
+        buttons[buttonID] = false;
+    }
 }

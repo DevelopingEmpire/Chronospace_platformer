@@ -9,6 +9,7 @@ public class PressureButtonController : MonoBehaviour
     CharacterController controller;
     public GameObject mesh;// 버튼 부분 메시 
     public Material buttonMat; // 버튼 부분 머티리얼 
+    public int buttonID = 0; // 구분용 아이디
 
     private void Start()
     {
@@ -30,7 +31,8 @@ public class PressureButtonController : MonoBehaviour
             buttonMat.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5f)); //2f == intensity 값 
 
             // 모종의 동작 하기. 문열거나.. 뭐.. 
-            Debug.Log("밟힘!");
+            //Debug.Log("밟힘!");
+            MapManager.instance.OnButtonActive(buttonID);
 
         }
     }
@@ -49,7 +51,8 @@ public class PressureButtonController : MonoBehaviour
             buttonMat.SetColor("_EmissionColor", Color.black); // emission 색 검정이면 빛 안남 
 
             // 모종의 동작 하기. 문열거나.. 뭐.. 
-            Debug.Log("나감!");
+            //Debug.Log("나감!");
+            MapManager.instance.OnButtonInactive(buttonID);
         }
     }
 }

@@ -11,6 +11,7 @@ public class PressureLaserButtonController : MonoBehaviour
     //public bool isPressed = false; // 눌렸는가? 
 
     public Material buttonMat; // 버튼 부분 머티리얼 
+    public int buttonID= 1; // 구분용 아이디
 
     public void Start()
     {
@@ -28,7 +29,8 @@ public class PressureLaserButtonController : MonoBehaviour
         buttonMat.SetColor("_EmissionColor", new Color(24,118,191) * Mathf.LinearToGammaSpace(0.001f)); //2f == intensity 값 
 
         // 모종의 동작 하기. 문열거나.. 뭐.. 
-        Debug.Log("밟힘!");
+        //Debug.Log("밟힘!");
+        MapManager.instance.OnButtonActive(buttonID); 
 
     }
 
@@ -42,8 +44,9 @@ public class PressureLaserButtonController : MonoBehaviour
         buttonMat.SetColor("_EmissionColor", Color.black); // emission 색 검정이면 빛 안남 
 
         // 모종의 동작 하기. 문열거나.. 뭐.. 
-        Debug.Log("나감!");
-        
+        //Debug.Log("나감!");
+        MapManager.instance.OnButtonInactive(buttonID);
+
     }
 
 }

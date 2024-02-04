@@ -13,8 +13,27 @@ public class Laser : MonoBehaviour
 
     private void Update()
     {
+        if (MapManager.instance.buttons[0]) //이게 켜지면 
+        {
+            LaserOn();
+        }
+        else
+        {
+            // 이전에 버튼에 닿았었다면, 그 버튼 꺼주고 null 
+            if (lastPressedButton != null)
+            {
+                lastPressedButton.GetComponent<PressureLaserButtonController>().OnButtonUp(); // 눌린거 꺼주기 
+                lastPressedButton = null;
+            }
+            lr.positionCount = 0;
+        }
+    }
+     
+
+    public void LaserOn()
+    {
         List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
-        
+
         newPosition = transform.position;
         newDir = transform.forward;
 
@@ -41,23 +60,21 @@ public class Laser : MonoBehaviour
                 else
                 {
                     // 이전에 버튼에 닿았었다면, 그 버튼 꺼주고 null 
-                    if(lastPressedButton != null)
+                    if (lastPressedButton != null)
                     {
                         lastPressedButton.GetComponent<PressureLaserButtonController>().OnButtonUp(); // 눌린거 꺼주기 
                         lastPressedButton = null;
                     }
 
                 }
-                break; 
+                break;
             }
-            
+
         }
         lr.positionCount = positions.Count; // 정점 추가 
         for (int i = 0; i < positions.Count; i++)
         {
             lr.SetPosition(i, positions[i]);
         }
-        
     }
-     
 }
