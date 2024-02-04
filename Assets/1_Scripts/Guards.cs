@@ -244,4 +244,14 @@ public class Guards : MonoBehaviour, IGravityControl
         // Reset the timer for the next bullet
         fireTimer = 0f; // 초기화 
     }
+
+    public void GravityField(Vector3 fieldCenter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void GravityFieldEnd()
+    {
+        throw new NotImplementedException();
+    }
 }

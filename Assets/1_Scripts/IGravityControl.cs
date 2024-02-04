@@ -12,4 +12,8 @@ interface IGravityControl
 
     void AntiGravityEnd(); // 중력 반전 끝나는 함수 
 
+    
+    void GravityField(Vector3 fieldCenter);//중력장 중심으로 끌려가는 함수
+
+    void GravityFieldEnd(); // 끝나는 함수 
 }

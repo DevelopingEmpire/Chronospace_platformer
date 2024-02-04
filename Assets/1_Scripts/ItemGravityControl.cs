@@ -45,4 +45,13 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
         controller.Move(gravityVector * Time.deltaTime);
     }
 
+    public void GravityField(Vector3 fieldCenter)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void GravityFieldEnd()
+    {
+        throw new System.NotImplementedException();
+    }
 }

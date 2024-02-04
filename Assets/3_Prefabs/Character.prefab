@@ -1359,8 +1359,12 @@ MonoBehaviour:
   anim: {fileID: 5360781344219856064}
   controller: {fileID: 5360781343035164252}
   windKey: {fileID: 6193106206675415697}
-  throwAntiGravity: {fileID: 5706759120963266375, guid: 88860d988fdded54ca31519c3f005852, type: 3}
-  throwGravityField: {fileID: 5706759120963266375, guid: 67d90a657b91f534483257b8b07f9b1c, type: 3}
+  gravityPrefebs:
+  - {fileID: 5706759120963266375, guid: 88860d988fdded54ca31519c3f005852, type: 3}
+  - {fileID: 5706759120963266375, guid: 67d90a657b91f534483257b8b07f9b1c, type: 3}
+  timeScaleMultiplier:
+  - 0.25
+  - 0.005
   itemPointTransform: {fileID: 1090306087314540582}
   Items:
   - {fileID: 1090306087314541017}
@@ -1370,7 +1374,6 @@ MonoBehaviour:
   isAlive: 1
   nearObject: {fileID: 0}
   equipItemIndex: 3
-  timeScaleMultiplier: 0.05
   textMeshProUGUI: {fileID: 0}
 --- !u!143 &5360781343035164252
 CharacterController:
