@@ -11,7 +11,7 @@ public class PressureLaserButtonController : MonoBehaviour
     //public bool isPressed = false; // 눌렸는가? 
 
     public Material buttonMat; // 버튼 부분 머티리얼 
-    public int buttonID= 1; // 구분용 아이디
+    public int buttonID; // 구분용 아이디
 
     public void Start()
     {

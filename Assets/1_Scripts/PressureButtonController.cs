@@ -9,7 +9,7 @@ public class PressureButtonController : MonoBehaviour
     CharacterController controller;
     public GameObject mesh;// 버튼 부분 메시 
     public Material buttonMat; // 버튼 부분 머티리얼 
-    public int buttonID = 0; // 구분용 아이디
+    public int buttonID; // 구분용 아이디
 
     private void Start()
     {
