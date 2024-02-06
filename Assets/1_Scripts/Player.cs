@@ -60,27 +60,7 @@ public class Player : MonoBehaviour, IGravityControl
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
-    /// <summary>
-    /// 중력 인터페이스 구현부 
-    public bool IsInRange { get; set; }
-
-    public float Gravity { get; set; }
-
     
-    public void AntiGravity() // 중력 반전 함수 
-    {
-        IsInRange = true;
-        Gravity = 9.81f;
-        //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
-        Debug.Log("AntiGravity On.");
-    }
-    public void AntiGravityEnd()
-    {
-        IsInRange = false;
-        Gravity = -9.81f; // 반전 해제 
-        Debug.Log("AntiGravity Off.");
-    }
-    /// </summary>
 
     void Start()
     {
@@ -253,6 +233,28 @@ public class Player : MonoBehaviour, IGravityControl
                 break;
         }
     }
+
+    /// 중력 인터페이스 구현부 
+    public bool IsInRange { get; set; }
+
+    public float Gravity { get; set; }
+
+
+    public void AntiGravity() // 중력 반전 함수 
+    {
+        IsInRange = true;
+        Gravity = 9.81f;
+        //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+        Debug.Log("AntiGravity On.");
+    }
+    public void AntiGravityEnd()
+    {
+        IsInRange = false;
+        Gravity = -9.81f; // 반전 해제 
+        Debug.Log("AntiGravity Off.");
+    }
+    /// </summary>
+
     IEnumerator TweakTimeEffect(float scale, float duration)
     {
         TweakTimeStart(scale);
@@ -284,8 +286,6 @@ public class Player : MonoBehaviour, IGravityControl
         // 추가적으로 처리해줘야 할 부분들
         // 추가 처리 더 없다면, 위 함수와 합쳐줘도 될듯 
     }
-
-    
 
 
     //Winding
@@ -331,13 +331,13 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    public void GravityField(Vector3 fieldCenter)
+    public void BlackHole(Vector3 fieldCenter)
     {
-        /*
+        
         Vector3 direction = fieldCenter - transform.position;
         direction = Vector3.Normalize(direction); // 방향만 구함 
-        controller.Move(direction); // lerp 로 움직여보자! 
-        */
+        controller.Move(direction*Time.unscaledDeltaTime); // lerp 로 움직여보자! 
+        
     }
 
 

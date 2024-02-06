@@ -196,9 +196,6 @@ public class Guards : MonoBehaviour, IGravityControl
             CharacterController characterController = col as CharacterController;
             if (characterController != null && col.gameObject.CompareTag("Player")) // 캐릭터 콜라이더만 인식 
             {
-                //Debug.Log(col.gameObject.name);
-                //Debug.Log(col.gameObject);
-                //Debug.Log(Time.realtimeSinceStartup); 
                 isPlayerDetected = true;
 
                 if (nearestPlayer == null) // 아직 nearest가 없다면 
@@ -245,7 +242,7 @@ public class Guards : MonoBehaviour, IGravityControl
         fireTimer = 0f; // 초기화 
     }
 
-    public void GravityField(Vector3 fieldCenter)
+    public void BlackHole(Vector3 fieldCenter)
     {
         throw new NotImplementedException();
     }

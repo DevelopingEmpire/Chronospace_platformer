@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GravityFieldItem : MonoBehaviour
+public class BlackHoleItem : MonoBehaviour
 {
     public GameObject itemMeshObj; // 이름이 아이템 어쩌구로 수정
     //public GameObject effectObj; // 폭발 효과 
@@ -48,7 +48,7 @@ public class GravityFieldItem : MonoBehaviour
         if (iGravityControl != null)
         {
             //해당 스크립트가 있는 놈이면?
-            iGravityControl.GravityField(transform.position);
+            iGravityControl.BlackHole(transform.position);
         }
     }
 
