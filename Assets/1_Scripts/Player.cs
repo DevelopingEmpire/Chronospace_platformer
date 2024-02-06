@@ -333,15 +333,13 @@ public class Player : MonoBehaviour, IGravityControl
 
     public void GravityField(Vector3 fieldCenter)
     {
+        /*
         Vector3 direction = fieldCenter - transform.position;
         direction = Vector3.Normalize(direction); // 방향만 구함 
         controller.Move(direction); // lerp 로 움직여보자! 
+        */
     }
 
-    public void GravityFieldEnd()
-    {
-        throw new System.NotImplementedException();
-    }
 
     #endregion
 }

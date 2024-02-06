@@ -47,11 +47,9 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
 
     public void GravityField(Vector3 fieldCenter)
     {
-        throw new System.NotImplementedException();
+        Vector3 direction = fieldCenter - transform.position;
+        direction = Vector3.Normalize(direction); // 방향만 구함 
+        controller.Move(direction * Time.deltaTime); // lerp 로 움직여보자! 
     }
 
-    public void GravityFieldEnd()
-    {
-        throw new System.NotImplementedException();
-    }
 }

@@ -250,8 +250,4 @@ public class Guards : MonoBehaviour, IGravityControl
         throw new NotImplementedException();
     }
 
-    public void GravityFieldEnd()
-    {
-        throw new NotImplementedException();
-    }
 }

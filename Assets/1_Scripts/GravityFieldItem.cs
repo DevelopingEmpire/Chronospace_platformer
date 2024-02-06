@@ -13,9 +13,6 @@ public class GravityFieldItem : MonoBehaviour
     // 적용 당할 오브젝트의 itemGravityControl
     IGravityControl iGravityControl;
 
-    // colliderRange 내의 col 들 모아두는 list 
-    private List<Collider> colInRange = new List<Collider>();
-
 
     private void Awake()
     {
@@ -40,47 +37,20 @@ public class GravityFieldItem : MonoBehaviour
 
         yield return new WaitForSeconds(3f); // 4초 대기 
 
-        // 남은 놈들도 싹 정리해주기 
-        foreach (Collider col in colInRange)
-        {
-            iGravityControl = col.GetComponent<IGravityControl>();
-            if (iGravityControl != null)
-            {
-                iGravityControl.AntiGravityEnd();
-            }
-        }
-
         Destroy(transform.parent.gameObject); // 아이템 clone 삭제 
     }
 
-    private void OnTriggerEnter(Collider col)
-    {
-        iGravityControl = col.GetComponent<IGravityControl>();
-
-        // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
-        if (iGravityControl != null && iGravityControl.IsInRange == false)
-        {
-            //해당 스크립트가 있고 또한 이미 범위에 추가된 것이 아니라면
-            colInRange.Add(col); // 추가함 
-            iGravityControl.GravityField(transform.position);
-        }
-    }
-
-    private void OnTriggerExit(Collider col)
-    {
-        ColAntiGravityEnd(col);
-    }
-
-    private void ColAntiGravityEnd(Collider col)
+    private void OnTriggerStay(Collider col) // 매 프레임 실행되도록 이렇게 해줘봄 
     {
         iGravityControl = col.GetComponent<IGravityControl>();
 
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
         if (iGravityControl != null)
         {
-            iGravityControl.GravityFieldEnd();
-            colInRange.Remove(col);
+            //해당 스크립트가 있는 놈이면?
+            iGravityControl.GravityField(transform.position);
         }
     }
+
 
 }
