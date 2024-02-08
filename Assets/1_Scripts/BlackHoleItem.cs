@@ -48,6 +48,7 @@ public class BlackHoleItem : MonoBehaviour
         if (iGravityControl != null)
         {
             //해당 스크립트가 있는 놈이면?
+
             iGravityControl.BlackHole(transform.position);
         }
     }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System; // 이벤트 쓰기 위해 가져옴 
 using UnityEngine.Diagnostics;
+using UnityEngine.InputSystem.XR;
 
 public class Guards : MonoBehaviour, IGravityControl
 {
@@ -30,7 +31,7 @@ public class Guards : MonoBehaviour, IGravityControl
     public CharacterController _controller; // 컨트롤러
 
     // 중력 관련 변수들 
-    bool isGravity; // 중력을 받는 상태인가? 
+    public bool isGravity; // 중력을 받는 상태인가? 
     bool isGroundChecker; //is Grounded 상태가 변했는지 추적  
 
     /// <summary>
@@ -38,8 +39,7 @@ public class Guards : MonoBehaviour, IGravityControl
     /// 
 
     // 중력탬 범위 내에 있는가 
-    public bool IsInRange {get; set;} 
-
+    public bool IsInRange {get; set;}
     public float Gravity {get;set;}
 
     public void AntiGravity() // 중력 반전 함수 
@@ -84,12 +84,14 @@ public class Guards : MonoBehaviour, IGravityControl
         targetPosition = initialPosition;
         nextPatrolTime = Time.time + patrolDelay;
         isGroundChecker = _controller.isGrounded;
-        _controller.detectCollisions = false;
+        //_controller.detectCollisions = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        this.navMeshAgent.velocity = this._controller.velocity;
+
         detectionTimer += Time.deltaTime;
         if(detectionTimer >= detectionInterval)
         {
@@ -158,9 +160,6 @@ public class Guards : MonoBehaviour, IGravityControl
     }
 
     
-
-    
-
     // Stare at the player by rotating the opponent's direction
     
     void StareAtPlayer()
@@ -244,7 +243,12 @@ public class Guards : MonoBehaviour, IGravityControl
 
     public void BlackHole(Vector3 fieldCenter)
     {
-        throw new NotImplementedException();
+
+        Vector3 direction = fieldCenter - transform.position;
+        direction = Vector3.Normalize(direction); // 방향만 구함 
+        _controller.Move(direction * Time.deltaTime); // lerp 로 움직여보자! 
+        //transform.position = Vector3.Lerp(transform.position, fieldCenter, Time.deltaTime);
+
     }
 
 }

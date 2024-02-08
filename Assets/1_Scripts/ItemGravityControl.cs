@@ -8,7 +8,6 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     public bool IsInRange { get; set; }
 
     // 인터페이스 구현 
-
     public float Gravity { get; set; }
     public CharacterController controller; // 컨트롤러
 
