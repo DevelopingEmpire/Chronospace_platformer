@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PressureButtonController : MonoBehaviour
+public class ButtonController : MonoBehaviour
 {
     [SerializeField]
     CharacterController controller;
@@ -54,5 +54,35 @@ public class PressureButtonController : MonoBehaviour
             //Debug.Log("나감!");
             MapManager.instance.OnButtonInactive(buttonID);
         }
+    }
+
+    public void OnButtonPressed()
+    {
+        // 밟혔다면~ 
+        // mesh 움직이는 모습 보여줘! 
+        mesh.transform.DOLocalMoveY(0f, 0.1f);
+
+        // Material 교체
+        buttonMat.SetColor("_EmissionColor", new Color(24, 118, 191) * Mathf.LinearToGammaSpace(0.001f)); //2f == intensity 값 
+
+        // 모종의 동작 하기. 문열거나.. 뭐.. 
+        Debug.Log("밟힘!");
+        MapManager.instance.OnButtonActive(buttonID);
+
+    }
+
+    public void OnButtonUp()
+    {
+        // 눌림 해제~ 
+        // mesh 움직이는 모습 보여줘! 
+        mesh.transform.DOLocalMoveY(0.1f, 0.1f);
+
+        // Material 교체
+        buttonMat.SetColor("_EmissionColor", Color.black); // emission 색 검정이면 빛 안남 
+
+        // 모종의 동작 하기. 문열거나.. 뭐.. 
+        //Debug.Log("나감!");
+        MapManager.instance.OnButtonInactive(buttonID);
+
     }
 }
