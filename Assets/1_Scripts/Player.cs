@@ -7,8 +7,7 @@ using Unity.VisualScripting;
 
 public class Player : MonoBehaviour, IGravityControl
 {
-    //game object elements
-    [Header("Component")]
+    [Header("Component")] //플레이어 외부 컴포넌트 변수
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽 
@@ -16,21 +15,21 @@ public class Player : MonoBehaviour, IGravityControl
     public float[] timeScaleMultiplier = new float[] {0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
     public Transform itemPointTransform; // 탬 생성 위치
 
-    [Header("PhysicsValue")]
-    //physical param variables
-    float jumpForce = 8f;    
-    float movSpeed = 5f; 
-    float rotSpeed = 300f;
+    [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
+    public float jumpForce = 8f;
+    public float movSpeed = 5f;
+    public float rotSpeed = 300f;
 
-    [Header("InputValue")]
+    [Header("InputValue")] //플레이어 이동 사용 변수
     Vector3 moveDirection;
     private float inputV;
     private float inputH;
     private float rotateX;
     private bool inputWalk;
     private bool inputJump;
+    private float directionInput;
 
-    [Header("Item")]   
+    [Header("Item")] //플레이어 아이템 사용 변수
     bool inputInteraction; // interaction키 down. 아이템 줍는 입력 e 
     public GameObject[] Items; 
     public bool[] hasItems; // 아이템 가졌는지
@@ -42,6 +41,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     bool isSwaping = false; //사용하고 있는 변수. Console에 사용하지 않는다고 뜬다. 
 
+    //플레이어 애니메이션 작동 변수
     #region animValue
     //character status
     bool isJumping = false;
@@ -49,11 +49,12 @@ public class Player : MonoBehaviour, IGravityControl
     bool isWinding = false; 
     #endregion
 
+    //플레이어 상태 변수
     bool isPlayerNear = false; // 주변에 동료가 있는가 
     public bool isAlive = true;
     public bool isBlackHoling; // 블랙홀에 잡혀있는 중 
 
-    //주변 템
+    //주변 아이템 변수
     [SerializeField]
     GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
@@ -63,27 +64,45 @@ public class Player : MonoBehaviour, IGravityControl
     public TextMeshProUGUI textMeshProUGUI;
 
     private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
+    /// <summary>
+    /// 중력 인터페이스 구현부 
+    public bool IsInRange { get; set; }
+
+    public float Gravity { get; set; }
+
+    
+    public void AntiGravity() // 중력 반전 함수 
+    {
+        IsInRange = true;
+        Gravity = 9.81f;
+        //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
+        Debug.Log("AntiGravity On.");
+    }
+    public void AntiGravityEnd() //중력 반전 종료 함수
+    {
+        IsInRange = false;
+        Gravity = -9.81f; // 반전 해제 
+        Debug.Log("AntiGravity Off.");
+    }
+    /// </summary>
 
     void Start()
     {
         Application.targetFrameRate = 50; // 서주민 전용코드 
-
-        //set framerate
-
         Gravity = -9.81f;
-
         //controller.detectCollisions = false; // 이거 끄면.. 플레이어가 발판을 못 밟음 
     }
 
-    void Update()
+    void Update() //플레이어 상태 관리 함수
     {
         GetInput();
         if (!isAlive)  return;
-        if (isWinding) return; // 와인딩 중엔 암것도 못해! 
+        if (isWinding) return; //플레이어가 살아있지 않거나, 플레이어가 윈드 업 중일 때에는 동작 불가능
 
-        if (inputInteraction) Interaction();
-        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton1) Swap();
-        if (inputKeyR)
+        SetDir();
+        if (inputInteraction) Interaction(); //interaction item이 주변에 있을 때 상호작용 활성화
+        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton1) Swap(); //input key 버튼으로 아이템 선택 활성화
+        if (inputKeyR) //아이템 사용(모드 0, 모드 1로 이원화)
         {
             UseItem(0);
         }
@@ -91,19 +110,18 @@ public class Player : MonoBehaviour, IGravityControl
         {
             UseItem(1);
         }
-        //Debug.Log("R"+inputKeyR); Debug.Log("F" + inputKeyF);
-
+        //Debug.Log("R"+inputKeyR); Debug.Log("F" + inputKeyF); //디버깅
     }
-    void FixedUpdate()
+    void FixedUpdate() //플레이어 행동 관리 함수
     {
         if (!isAlive)  return;
-        if (isWinding) return; // 와인딩 중엔 암것도 못해! 
-        
+        if (isWinding) return; //플레이어가 살아있지 않거나, 플레이어가 윈드 업 중일 때에는 동작 불가능
+
         Rotate();
         Move();
         
     }
-    void GetInput() //method which is used in getting input
+    void GetInput() //인풋 받는 함수
     {
         inputH = Input.GetAxisRaw("Horizontal");
         inputV = Input.GetAxisRaw("Vertical"); 
@@ -119,7 +137,27 @@ public class Player : MonoBehaviour, IGravityControl
         inputKeyF = Input.GetButtonDown("Effect2"); //f
     }
 
-    void Move()
+    void SetDir()
+    {
+        float targetDirectionInput = 0f;
+
+        if (inputV > 0.1 && inputH == 0) targetDirectionInput = 0f;
+        else if (inputV > 0.1 && inputH < 0) targetDirectionInput = 0.125f;
+        else if (inputV == 0 && inputH < 0) targetDirectionInput = 0.25f;
+        else if (inputV < -0.1 && inputH > 0) targetDirectionInput = 0.375f;
+        else if (inputV < -0.1 && inputH == 0) targetDirectionInput = 0.5f;
+        else if (inputV < -0.1 && inputH < 0) targetDirectionInput = 0.625f;
+        else if (inputV == 0 && inputH > 0) targetDirectionInput = 0.75f;
+        else if (inputV > 0.1 && inputH > 0) targetDirectionInput = 0.875f;
+
+        // Smoothly interpolate the current value to the target value
+        float smoothness = 0.1f; // Adjust this value for the desired smoothness
+        directionInput = Mathf.Lerp(directionInput, targetDirectionInput, smoothness);
+
+        anim.SetFloat("blendvarRun", directionInput);
+    }
+
+    void Move() //이동 함수
     {
         if (controller.isGrounded || isBlackHoling)
         {
@@ -158,17 +196,18 @@ public class Player : MonoBehaviour, IGravityControl
     {
         transform.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
     }
-
+    //아이템 사용 함수
     #region Item
 
-    void Swap()
+    void Swap() //아이템 스왑 함수
     {
         if ((inputKeyButton1 && hasItems[0]) || (inputKeyButton2 && hasItems[1]) || (inputKeyButton3 && hasItems[2]))
+            //아이템 선택 키를 눌렀음&아이템이 있을 때에만 아이템 꺼내 주기
         {
             // Deactivate current equipItem
-            if (equipItem != null) equipItem.SetActive(false);
+            if (equipItem != null) equipItem.SetActive(false); //없으면 안 꺼내주기
 
-            // Update equipItem based on input
+            // 각 번호에 맞는 아이템 꺼내주기
             if (inputKeyButton1)
             {
                 equipItemIndex = Item.Type.Gravity;
@@ -182,7 +221,7 @@ public class Player : MonoBehaviour, IGravityControl
                 equipItemIndex = Item.Type.WindKey;
             }
 
-            // Activate new equipItem and store its reference
+            //아이템 인덱스에 따라서 아이템을 지정해 줌
             equipItem = Items[(int)equipItemIndex];
             equipItem.SetActive(true);
 
@@ -191,51 +230,46 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    //swap() 끝날때 
-    void SwapOut()
+    void SwapOut() //스왑 끝내기
     {
         isSwaping = false;
     }
 
-    //interaction . 아이템 상호작용 키 
-    void Interaction()
+    void Interaction() //아이템 줍기
     {
         if (nearObject != null && nearObject.tag == "Item")
         {
-
             textMeshProUGUI.enabled = false; // ui 끄기 
             Item item = nearObject.GetComponent<Item>();
             int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
             Debug.Log("itemIndex" + itemIndex);
-            hasItems[itemIndex] = true;
-            Destroy(nearObject);
-            
+            hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
+            Destroy(nearObject); //지역에 떨어진 아이템 삭제하기
         }
     }
 
-    void UseItem(int RFnum) // r이면 0, f면 1 이 전달됨 
+    void UseItem(int RFnum) // R이면 0, F면 1 이 전달됨 
     {
         switch (equipItemIndex)
         {
-            case Item.Type.Gravity:
-                Instantiate(gravityPrefebs[RFnum], itemPointTransform.position + itemPointTransform.forward
-                    , itemPointTransform.rotation);
+            case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
+                Instantiate(gravityPrefebs[RFnum], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
                 break;
 
-            case Item.Type.TimeStop:
+            case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier[RFnum], 5));
                 break;
-            case Item.Type.WindKey:
+            case Item.Type.WindKey: //윈드 키(다른 플레이어가 존재할 때에만 활성화됨
                 if (nearObject != null && isPlayerNear == true)  
                 {
                     nearObject.GetComponent<Player>().WindKeyActivate();
                 }
                 break;
 
-            case Item.Type.Null:
+            case Item.Type.Null: //없음
                 // Handle no item selected
                 break;
-            default:
+            default: //모든 확인할 수 없는 아이템이 잡혀 있는 경우 에러 메시지 전달
                 Debug.LogError("Unknown item type: " + equipItemIndex);
                 break;
         }
@@ -265,18 +299,18 @@ public class Player : MonoBehaviour, IGravityControl
 
     IEnumerator TweakTimeEffect(float scale, float duration)
     {
-        TweakTimeStart(scale);
-        yield return new WaitForSecondsRealtime(duration); // Unscaled time을 사용
+        TweakTimeStart(scale); //지정된 값만큼 시간 속도를 조절
+        yield return new WaitForSecondsRealtime(duration); // Unscaled time을 사용해 실제 흐르는 시간을 측정하고 이후에 시간 조작 비활성화
         TweakTimeEnd();
     }
 
-    public void TweakTimeStart(float timeScaleMultiplier)
+    public void TweakTimeStart(float timeScaleMultiplier) //시간 조작 활성화
     {
         Time.timeScale = timeScaleMultiplier;
         //Time.fixedDeltaTime = Time.timeScale * (1 / Application.targetFrameRate);
         OnCallBackTweakTimeStart();
     }
-    public void TweakTimeEnd()
+    public void TweakTimeEnd() //시간 조작 비활성화
     {
         Time.timeScale = 1.0f;
 
@@ -300,22 +334,21 @@ public class Player : MonoBehaviour, IGravityControl
     public void WindKeyActivate() // 활성화되면서 
     {
         windKey.SetActive(true); 
-        
     }
 
     // 필수 조건 
     // 1. 둘 중에 하나에 무조건 rigidbody
     // 2. 둘 중에 하나에 무조건 isTrigger 체크 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위에 있을 때
     {
-        if (other.CompareTag("Item"))
+        if (other.CompareTag("Item")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
         {
             //UI 켜기
             textMeshProUGUI.enabled = true;
             nearObject = other.gameObject;
         }
 
-        if (other.CompareTag("Player")) //플레이어면 
+        if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
         {
             nearObject = other.gameObject;
             isPlayerNear = true;
@@ -323,7 +356,7 @@ public class Player : MonoBehaviour, IGravityControl
             
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위를 벗어났을 때
     {
         if (other.CompareTag("Item"))
         {
