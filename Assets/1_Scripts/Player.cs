@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -50,6 +51,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     bool isPlayerNear = false; // 주변에 동료가 있는가 
     public bool isAlive = true;
+    public bool isBlackHoling; // 블랙홀에 잡혀있는 중 
 
     //주변 템
     [SerializeField]
@@ -60,7 +62,7 @@ public class Player : MonoBehaviour, IGravityControl
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
-    
+    private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
 
     void Start()
     {
@@ -99,6 +101,7 @@ public class Player : MonoBehaviour, IGravityControl
         
         Rotate();
         Move();
+        
     }
     void GetInput() //method which is used in getting input
     {
@@ -118,14 +121,14 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Move()
     {
-        if (controller.isGrounded)
+        if (controller.isGrounded || isBlackHoling)
         {
             isJumping = false;
             moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
 
             if (inputJump)
             {
-                moveDirection.y = jumpForce;
+                moveDirection.y += jumpForce;
                 isJumping = true;
                 anim.SetTrigger("doJump");
             }
@@ -139,14 +142,16 @@ public class Player : MonoBehaviour, IGravityControl
             // 대각선 노말라이제이션 
             
             // 추가 중력 적용
-            moveDirection.y += Gravity * 2 * Time.unscaledDeltaTime; // 중력 적용에도 Time.deltaTime을 사용
+            moveDirection.y += Gravity *2* Time.unscaledDeltaTime; // 중력 적용에도 Time.deltaTime을 사용
         }
-
         moveDirection = transform.TransformDirection(moveDirection);
         controller.Move(moveDirection * Time.unscaledDeltaTime); // 이동 명령에 Time.deltaTime 적용
 
         bool isRunning = Mathf.Abs(inputH) > 0f || Mathf.Abs(inputV) > 0f; // 입력에 따른 달리기 상태 결정
         anim.SetBool("isRunning", isRunning); // Animator에 달리기 상태 전달
+
+        // 끌어당김 상태 업데이트
+        isBlackHoling = false;
     }
 
     void Rotate()
@@ -242,6 +247,7 @@ public class Player : MonoBehaviour, IGravityControl
     public float Gravity { get; set; }
 
 
+
     public void AntiGravity() // 중력 반전 함수 
     {
         IsInRange = true;
@@ -335,11 +341,12 @@ public class Player : MonoBehaviour, IGravityControl
 
     public void BlackHole(Vector3 fieldCenter)
     {
-        Vector3 direction = fieldCenter - transform.position;
-        direction = Vector3.Normalize(direction); // 방향만 구함 
-        controller.Move(direction*Time.unscaledDeltaTime); // lerp 로 움직여보자! 
-    }
+        isBlackHoling = true;
+        blackholeVector = fieldCenter - transform.position; // + new Vector3(0f,1.3f,0f)
+        //blackholeVector = Vector3.Normalize(blackholeVector); // 방향만 구함 
+        controller.Move(blackholeVector* Time.deltaTime); //* blackholeStrength *Time.unscaledDeltaTime
 
+    }
 
     #endregion
 }

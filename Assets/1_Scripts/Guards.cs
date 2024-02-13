@@ -49,14 +49,14 @@ public class Guards : MonoBehaviour, IGravityControl
 
         // nav 비활 
         navMeshAgent.enabled = false;
-        Gravity = 9.81f;
+        Gravity *= -1; // 중력반전 
 
         Debug.Log("AntiGravity On.");
     }
     public void AntiGravityEnd()
     {
         IsInRange = false;
-        Gravity = -9.81f; // 반전 해제 
+        Gravity *= -1; // 반전 해제 
         Debug.Log("AntiGravity Off.");
 
     }
@@ -85,12 +85,13 @@ public class Guards : MonoBehaviour, IGravityControl
         nextPatrolTime = Time.time + patrolDelay;
         isGroundChecker = _controller.isGrounded;
         //_controller.detectCollisions = false;
+        Gravity = -9.81f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.navMeshAgent.velocity = this._controller.velocity;
+        //this.navMeshAgent.velocity = this._controller.velocity;
 
         detectionTimer += Time.deltaTime;
         if(detectionTimer >= detectionInterval)
@@ -243,11 +244,14 @@ public class Guards : MonoBehaviour, IGravityControl
 
     public void BlackHole(Vector3 fieldCenter)
     {
-
+        navMeshAgent.enabled = false;
+        isGravity = true;
         Vector3 direction = fieldCenter - transform.position;
-        direction = Vector3.Normalize(direction); // 방향만 구함 
-        _controller.Move(direction * Time.deltaTime); // lerp 로 움직여보자! 
-        //transform.position = Vector3.Lerp(transform.position, fieldCenter, Time.deltaTime);
+        //direction = Vector3.Normalize(direction); // 방향만 구함 
+        _controller.Move(direction * 2.0f * Time.deltaTime);
+        //navMeshAgent.enabled = true;
+        //transform.position = Vector3.Lerp(transform.position, fieldCenter, Time.deltaTime); // lerp 로 움직여보자! 
+        //targetPosition = fieldCenter;
 
     }
 
