@@ -275,27 +275,6 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    /// 중력 인터페이스 구현부 
-    public bool IsInRange { get; set; }
-
-    public float Gravity { get; set; }
-
-
-
-    public void AntiGravity() // 중력 반전 함수 
-    {
-        IsInRange = true;
-        Gravity = 9.81f;
-        //Invoke("AntiGravity_End", 3f); // 3초뒤 해제 
-        //Debug.Log("AntiGravity On.");
-    }
-    public void AntiGravityEnd()
-    {
-        IsInRange = false;
-        Gravity = -9.81f; // 반전 해제 
-        //Debug.Log("AntiGravity Off.");
-    }
-    /// </summary>
 
     IEnumerator TweakTimeEffect(float scale, float duration)
     {
