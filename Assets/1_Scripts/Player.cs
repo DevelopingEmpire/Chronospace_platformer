@@ -327,12 +327,13 @@ public class Player : MonoBehaviour, IGravityControl
             nearObject = other.gameObject;
         }
 
-        if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
+        else if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
         {
             nearObject = other.gameObject;
             isPlayerNear = true;
         }
-            
+
+
     }
 
     private void OnTriggerExit(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위를 벗어났을 때
@@ -351,6 +352,15 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
+    // 상자 밀기 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        CharacterController ctrl = hit.gameObject.GetComponent(typeof(CharacterController)) as CharacterController;
+        if (ctrl)
+        {
+            ctrl.SimpleMove(moveDirection);
+        }
+    }
     public void BlackHole(Vector3 fieldCenter)
     {
         isBlackHoling = true;
