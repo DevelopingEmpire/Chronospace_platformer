@@ -8,9 +8,10 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     public bool IsInRange { get; set; }
 
     // 인터페이스 구현 
-
     public float Gravity { get; set; }
     public CharacterController controller; // 컨트롤러
+
+    public Vector3 gravityVector;
 
     public void AntiGravity() // 중력 반전 함수 
     {
@@ -27,7 +28,10 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
         Debug.Log("AntiGravity Off.");
     }
 
-
+    private void Start()
+    {
+        Gravity = -9.81f;
+    }
     private void Update()
     {
         ApplyGravity();
@@ -36,22 +40,21 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     void ApplyGravity()
     {
         // 수직 방향으로 중력을 적용.
-        Vector3 gravityVector = new Vector3(0, Gravity, 0);
+        gravityVector = new Vector3(0f, Gravity, 0f);
 
         // 경박스런 움직임. Lerp으로 퇴마  
         gravityVector = Vector3.Lerp(controller.velocity, gravityVector, Time.deltaTime);
 
         // 중력 벡터를 현재 위치에 적용
         controller.Move(gravityVector * Time.deltaTime);
+
     }
 
-    public void GravityField(Vector3 fieldCenter)
+    public void BlackHole(Vector3 fieldCenter)
     {
-        throw new System.NotImplementedException();
+        Vector3 direction = fieldCenter - transform.position;
+        direction = Vector3.Normalize(direction); // 방향만 구함 
+        controller.Move(direction * Time.deltaTime); // lerp 로 움직여보자! 
     }
 
-    public void GravityFieldEnd()
-    {
-        throw new System.NotImplementedException();
-    }
 }

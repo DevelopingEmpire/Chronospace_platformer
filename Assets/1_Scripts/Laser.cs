@@ -22,7 +22,7 @@ public class Laser : MonoBehaviour
             // 이전에 버튼에 닿았었다면, 그 버튼 꺼주고 null 
             if (lastPressedButton != null)
             {
-                lastPressedButton.GetComponent<PressureLaserButtonController>().OnButtonUp(); // 눌린거 꺼주기 
+                lastPressedButton.GetComponent<ButtonController>().OnButtonUp(); // 눌린거 꺼주기 
                 lastPressedButton = null;
             }
             lr.positionCount = 0;
@@ -51,10 +51,10 @@ public class Laser : MonoBehaviour
             else
             {
                 //버튼에 닿았다면!! 
-                if (hit.collider.gameObject.CompareTag("LaserButton") && hit.collider.gameObject.GetComponent<PressureLaserButtonController>())
+                if (hit.collider.gameObject.CompareTag("LaserButton") && hit.collider.gameObject.GetComponent<ButtonController>())
                 {
                     lastPressedButton = hit.collider.gameObject;
-                    lastPressedButton.GetComponent<PressureLaserButtonController>().OnButtonPressed(); // 버튼 누르기 
+                    lastPressedButton.GetComponent<ButtonController>().OnButtonPressed(); // 버튼 누르기 
                 }
                 // 버튼에 닿지 않았다면~ 
                 else
@@ -62,7 +62,7 @@ public class Laser : MonoBehaviour
                     // 이전에 버튼에 닿았었다면, 그 버튼 꺼주고 null 
                     if (lastPressedButton != null)
                     {
-                        lastPressedButton.GetComponent<PressureLaserButtonController>().OnButtonUp(); // 눌린거 꺼주기 
+                        lastPressedButton.GetComponent<ButtonController>().OnButtonUp(); // 눌린거 꺼주기 
                         lastPressedButton = null;
                     }
 

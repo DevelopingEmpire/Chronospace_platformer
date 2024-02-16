@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System; // 이벤트 쓰기 위해 가져옴 
 using UnityEngine.Diagnostics;
+using UnityEngine.InputSystem.XR;
 
 public class Guards : MonoBehaviour, IGravityControl
 {
@@ -30,7 +31,7 @@ public class Guards : MonoBehaviour, IGravityControl
     public CharacterController _controller; // 컨트롤러
 
     // 중력 관련 변수들 
-    bool isGravity; // 중력을 받는 상태인가? 
+    public bool isGravity; // 중력을 받는 상태인가? 
     bool isGroundChecker; //is Grounded 상태가 변했는지 추적  
 
     /// <summary>
@@ -38,8 +39,7 @@ public class Guards : MonoBehaviour, IGravityControl
     /// 
 
     // 중력탬 범위 내에 있는가 
-    public bool IsInRange {get; set;} 
-
+    public bool IsInRange {get; set;}
     public float Gravity {get;set;}
 
     public void AntiGravity() // 중력 반전 함수 
@@ -49,14 +49,14 @@ public class Guards : MonoBehaviour, IGravityControl
 
         // nav 비활 
         navMeshAgent.enabled = false;
-        Gravity = 9.81f;
+        Gravity *= -1; // 중력반전 
 
         Debug.Log("AntiGravity On.");
     }
     public void AntiGravityEnd()
     {
         IsInRange = false;
-        Gravity = -9.81f; // 반전 해제 
+        Gravity *= -1; // 반전 해제 
         Debug.Log("AntiGravity Off.");
 
     }
@@ -84,12 +84,15 @@ public class Guards : MonoBehaviour, IGravityControl
         targetPosition = initialPosition;
         nextPatrolTime = Time.time + patrolDelay;
         isGroundChecker = _controller.isGrounded;
-        _controller.detectCollisions = false;
+        //_controller.detectCollisions = false;
+        Gravity = -9.81f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //this.navMeshAgent.velocity = this._controller.velocity;
+
         detectionTimer += Time.deltaTime;
         if(detectionTimer >= detectionInterval)
         {
@@ -158,9 +161,6 @@ public class Guards : MonoBehaviour, IGravityControl
     }
 
     
-
-    
-
     // Stare at the player by rotating the opponent's direction
     
     void StareAtPlayer()
@@ -196,9 +196,6 @@ public class Guards : MonoBehaviour, IGravityControl
             CharacterController characterController = col as CharacterController;
             if (characterController != null && col.gameObject.CompareTag("Player")) // 캐릭터 콜라이더만 인식 
             {
-                //Debug.Log(col.gameObject.name);
-                //Debug.Log(col.gameObject);
-                //Debug.Log(Time.realtimeSinceStartup); 
                 isPlayerDetected = true;
 
                 if (nearestPlayer == null) // 아직 nearest가 없다면 
@@ -245,13 +242,17 @@ public class Guards : MonoBehaviour, IGravityControl
         fireTimer = 0f; // 초기화 
     }
 
-    public void GravityField(Vector3 fieldCenter)
+    public void BlackHole(Vector3 fieldCenter)
     {
-        throw new NotImplementedException();
+        navMeshAgent.enabled = false;
+        isGravity = true;
+        Vector3 direction = fieldCenter - transform.position;
+        //direction = Vector3.Normalize(direction); // 방향만 구함 
+        _controller.Move(direction * 2.0f * Time.deltaTime);
+        //navMeshAgent.enabled = true;
+        //transform.position = Vector3.Lerp(transform.position, fieldCenter, Time.deltaTime); // lerp 로 움직여보자! 
+        //targetPosition = fieldCenter;
+
     }
 
-    public void GravityFieldEnd()
-    {
-        throw new NotImplementedException();
-    }
 }

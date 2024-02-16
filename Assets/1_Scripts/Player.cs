@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour, IGravityControl
     public float jumpForce = 8f;
     public float movSpeed = 5f;
     public float rotSpeed = 300f;
+    public float pushPower = 0.03f;
 
     [Header("InputValue")] //플레이어 이동 사용 변수
     Vector3 moveDirection;
@@ -51,6 +53,7 @@ public class Player : MonoBehaviour, IGravityControl
     //플레이어 상태 변수
     bool isPlayerNear = false; // 주변에 동료가 있는가 
     public bool isAlive = true;
+    public bool isBlackHoling; // 블랙홀에 잡혀있는 중 
 
     //주변 아이템 변수
     [SerializeField]
@@ -61,6 +64,7 @@ public class Player : MonoBehaviour, IGravityControl
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
+    private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
     /// <summary>
     /// 중력 인터페이스 구현부 
     public bool IsInRange { get; set; }
@@ -116,6 +120,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         Rotate();
         Move();
+        
     }
     void GetInput() //인풋 받는 함수
     {
@@ -133,7 +138,9 @@ public class Player : MonoBehaviour, IGravityControl
         inputKeyF = Input.GetButtonDown("Effect2"); //f
     }
 
-    void SetDir()
+    void Move() //이동 함수
+=======
+>>>>>>> fe06f8b90be6d1f3b55aff7c3f8227fcfd7540f1
     {
         float targetDirectionInput = 0f;
 
@@ -155,14 +162,14 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Move() //이동 함수
     {
-        if (controller.isGrounded)
+        if (controller.isGrounded || isBlackHoling)
         {
             isJumping = false;
             moveDirection = new Vector3(inputH * movSpeed * (inputWalk ? 0.3f : 1f), 0f, inputV * movSpeed * (inputWalk ? 0.3f : 1f));
 
             if (inputJump)
             {
-                moveDirection.y = jumpForce;
+                moveDirection.y += jumpForce;
                 isJumping = true;
                 anim.SetTrigger("doJump");
             }
@@ -173,15 +180,19 @@ public class Player : MonoBehaviour, IGravityControl
             moveDirection.x = inputH * movSpeed * (inputWalk ? 0.3f : 1f);
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
+            // 대각선 노말라이제이션 
+            
             // 추가 중력 적용
-            moveDirection.y += Gravity * 2 * Time.unscaledDeltaTime; // 중력 적용에도 Time.deltaTime을 사용
+            moveDirection.y += Gravity *2* Time.unscaledDeltaTime; // 중력 적용에도 Time.deltaTime을 사용
         }
-
         moveDirection = transform.TransformDirection(moveDirection);
         controller.Move(moveDirection * Time.unscaledDeltaTime); // 이동 명령에 Time.deltaTime 적용
 
         bool isRunning = Mathf.Abs(inputH) > 0f || Mathf.Abs(inputV) > 0f; // 입력에 따른 달리기 상태 결정
         anim.SetBool("isRunning", isRunning); // Animator에 달리기 상태 전달
+
+        // 끌어당김 상태 업데이트
+        isBlackHoling = false;
     }
 
     void Rotate()
@@ -266,6 +277,8 @@ public class Player : MonoBehaviour, IGravityControl
                 break;
         }
     }
+
+
     IEnumerator TweakTimeEffect(float scale, float duration)
     {
         TweakTimeStart(scale); //지정된 값만큼 시간 속도를 조절
@@ -317,12 +330,13 @@ public class Player : MonoBehaviour, IGravityControl
             nearObject = other.gameObject;
         }
 
-        if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
+        else if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
         {
             nearObject = other.gameObject;
             isPlayerNear = true;
         }
-            
+
+
     }
 
     private void OnTriggerExit(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위를 벗어났을 때
@@ -341,16 +355,25 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    public void GravityField(Vector3 fieldCenter)
+    // 상자 밀기 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Vector3 direction = fieldCenter - transform.position;
-        direction = Vector3.Normalize(direction); // 방향만 구함 
-        controller.Move(direction); // lerp 로 움직여보자! 
+        CharacterController hitController = hit.gameObject.GetComponent(typeof(CharacterController)) as CharacterController;
+        
+        if (hitController)
+        {
+            // hitController.SimpleMove(moveDirection);
+            Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            hitController.Move(pushDirection * pushPower); // * Time.deltaTime
+        }
     }
-
-    public void GravityFieldEnd()
+    public void BlackHole(Vector3 fieldCenter)
     {
-        throw new System.NotImplementedException();
+        isBlackHoling = true;
+        blackholeVector = fieldCenter - transform.position; // + new Vector3(0f,1.3f,0f)
+        //blackholeVector = Vector3.Normalize(blackholeVector); // 방향만 구함 
+        controller.Move(blackholeVector* Time.deltaTime); //* blackholeStrength *Time.unscaledDeltaTime
+
     }
 
     #endregion
