@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 6998938147204669258}
   - component: {fileID: 9100508473314530437}
   - component: {fileID: 3680637757323486530}
+  - component: {fileID: 5746279665385528807}
   m_Layer: 0
   m_Name: button_plate
   m_TagString: Untagged
@@ -147,6 +148,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5746279665385528807
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5175653411828698465}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4123778907576653529, guid: 926cbbbeab6b2cb4384537a0db3c6f61, type: 3}
 --- !u!1 &8131197304791075113
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,6 +173,7 @@ GameObject:
   - component: {fileID: 8034993324537396993}
   - component: {fileID: 5181345044069893600}
   - component: {fileID: 7203749125394475131}
+  - component: {fileID: 7372359538248571893}
   m_Layer: 0
   m_Name: button_base
   m_TagString: Untagged
@@ -230,3 +246,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7372359538248571893
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8131197304791075113}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6285565591548356222, guid: 926cbbbeab6b2cb4384537a0db3c6f61, type: 3}

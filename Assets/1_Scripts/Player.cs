@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IGravityControl
     public float jumpForce = 8f;
     public float movSpeed = 5f;
     public float rotSpeed = 300f;
+    public float pushPower = 0.03f;
 
     [Header("InputValue")] //플레이어 이동 사용 변수
     Vector3 moveDirection;
@@ -355,10 +356,13 @@ public class Player : MonoBehaviour, IGravityControl
     // 상자 밀기 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        CharacterController ctrl = hit.gameObject.GetComponent(typeof(CharacterController)) as CharacterController;
-        if (ctrl)
+        CharacterController hitController = hit.gameObject.GetComponent(typeof(CharacterController)) as CharacterController;
+        
+        if (hitController)
         {
-            ctrl.SimpleMove(moveDirection);
+            // hitController.SimpleMove(moveDirection);
+            Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            hitController.Move(pushDirection * pushPower); // * Time.deltaTime
         }
     }
     public void BlackHole(Vector3 fieldCenter)
