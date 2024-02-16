@@ -138,9 +138,7 @@ public class Player : MonoBehaviour, IGravityControl
         inputKeyF = Input.GetButtonDown("Effect2"); //f
     }
 
-    void Move() //이동 함수
-=======
->>>>>>> fe06f8b90be6d1f3b55aff7c3f8227fcfd7540f1
+    void SetDir() //이동 함수
     {
         float targetDirectionInput = 0f;
 
