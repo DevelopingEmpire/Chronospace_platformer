@@ -24,6 +24,18 @@ public class UIManager : MonoBehaviour
     public GameObject settingScreen;
     public GameObject battleHUDScreen;
 
+    public bool isPause; // 일시정지 상태를 나타낸다 
+
+    private void Update()
+    {
+        // 뒤로가기 키를 누르면 일시정지
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isPause = !isPause;
+            settingScreen.SetActive(isPause);
+        }
+    }
+
     public void OnClickStartButton()
     {
         startScreen.SetActive(false);
