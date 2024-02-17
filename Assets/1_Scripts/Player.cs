@@ -102,7 +102,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         SetDir();
         if (inputInteraction) Interaction(); //interaction item이 주변에 있을 때 상호작용 활성화
-        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton1) Swap(); //input key 버튼으로 아이템 선택 활성화
+        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton3) Swap(); //input key 버튼으로 아이템 선택 활성화
         if (inputKeyR) //아이템 사용(모드 0, 모드 1로 이원화)
         {
             UseItem(0);
@@ -205,6 +205,7 @@ public class Player : MonoBehaviour, IGravityControl
         if ((inputKeyButton1 && hasItems[0]) || (inputKeyButton2 && hasItems[1]) || (inputKeyButton3 && hasItems[2]))
             //아이템 선택 키를 눌렀음&아이템이 있을 때에만 아이템 꺼내 주기
         {
+            Debug.Log("스왑 눌림");
             // Deactivate current equipItem
             if (equipItem != null) equipItem.SetActive(false); //없으면 안 꺼내주기
 
@@ -255,25 +256,38 @@ public class Player : MonoBehaviour, IGravityControl
         {
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 Instantiate(gravityPrefebs[RFnum], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                hasItems[(int)equipItemIndex] = false;
+                equipItem.SetActive(false);
+                equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier[RFnum], 5));
+                hasItems[(int)equipItemIndex] = false;
+                equipItem.SetActive(false);
+                equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
                 break;
+
             case Item.Type.WindKey: //윈드 키(다른 플레이어가 존재할 때에만 활성화됨
                 if (nearObject != null && isPlayerNear == true)  
                 {
                     nearObject.GetComponent<Player>().WindKeyActivate();
                 }
+                hasItems[(int)equipItemIndex] = false;
+                equipItem.SetActive(false);
+                equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
                 break;
 
             case Item.Type.Null: //없음
                 // Handle no item selected
                 break;
+
             default: //모든 확인할 수 없는 아이템이 잡혀 있는 경우 에러 메시지 전달
                 Debug.LogError("Unknown item type: " + equipItemIndex);
                 break;
         }
+        
+
     }
 
 
