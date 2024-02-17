@@ -731,6 +731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 463651107}
+  gravityVector: {x: 0, y: 0, z: 0}
 --- !u!143 &463651107
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1222,6 +1223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 627313896}
+  gravityVector: {x: 0, y: 0, z: 0}
 --- !u!143 &627313896
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1679,6 +1681,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807954636}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &941510888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5360781343035164255, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+  m_PrefabInstance: {fileID: 491093702755824568}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466d1ed4bd96c2341ae4e222c676447c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &964076479
 GameObject:
   m_ObjectHideFlags: 0
@@ -1713,6 +1726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 964076481}
+  gravityVector: {x: 0, y: 0, z: 0}
 --- !u!143 &964076481
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2704,6 +2718,7 @@ MonoBehaviour:
   navMeshAgent: {fileID: 1386907267}
   isPlayerDetected: 0
   _controller: {fileID: 1386907265}
+  isGravity: 0
 --- !u!143 &1386907265
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3203,6 +3218,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820007261}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1858574698 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1250917886015011593, guid: abac6a90d2202e54495c07d1ef2b8646, type: 3}
+  m_PrefabInstance: {fileID: 1250917886460088234}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1918915603
 GameObject:
   m_ObjectHideFlags: 0
@@ -3237,6 +3257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1918915605}
+  gravityVector: {x: 0, y: 0, z: 0}
 --- !u!143 &1918915605
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3852,6 +3873,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5360781343035164253, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: timer
+      value: 
+      objectReference: {fileID: 941510888}
+    - target: {fileID: 5360781343035164253, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: textMeshProUGUI
       value: 
       objectReference: {fileID: 2710176443536761295}
@@ -3871,11 +3896,20 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 1684632357}
+    - target: {fileID: 5360781343035164255, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: timerUI
+      value: 
+      objectReference: {fileID: 1858574698}
+    - target: {fileID: 5360781343035164255, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: timeLimit
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5360781343125228327, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: m_Name
       value: ItemPoints
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5360781343035164254, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
 --- !u!1001 &1250917886460088234
 PrefabInstance:

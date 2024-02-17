@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, IGravityControl
     public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
     public float[] timeScaleMultiplier = new float[] {0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
     public Transform itemPointTransform; // 탬 생성 위치
+    public PlayerTimer timer;
 
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
@@ -269,6 +270,7 @@ public class Player : MonoBehaviour, IGravityControl
                 break;
 
             case Item.Type.WindKey: //윈드 키(다른 플레이어가 존재할 때에만 활성화됨
+                timer.TimeChange(30f); // 30초 추가 
                 if (nearObject != null && isPlayerNear == true)  
                 {
                     nearObject.GetComponent<Player>().WindKeyActivate();
