@@ -245,8 +245,10 @@ public class Player : MonoBehaviour, IGravityControl
             textMeshProUGUI.enabled = false; // ui 끄기 
             Item item = nearObject.GetComponent<Item>();
             int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
-            Debug.Log("itemIndex" + itemIndex);
+            //Debug.Log("itemIndex" + itemIndex);
             hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
+            UIManager.instance.hasItemUI(item.type, true);
+
             Destroy(nearObject); //지역에 떨어진 아이템 삭제하기
         }
     }
@@ -257,39 +259,37 @@ public class Player : MonoBehaviour, IGravityControl
         {
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 Instantiate(gravityPrefebs[RFnum], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
-                hasItems[(int)equipItemIndex] = false;
-                equipItem.SetActive(false);
-                equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
+
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier[RFnum], 5));
-                hasItems[(int)equipItemIndex] = false;
-                equipItem.SetActive(false);
-                equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
                 break;
 
             case Item.Type.WindKey: //윈드 키(다른 플레이어가 존재할 때에만 활성화됨
                 timer.TimeChange(30f); // 30초 추가 
+                /*
                 if (nearObject != null && isPlayerNear == true)  
                 {
                     nearObject.GetComponent<Player>().WindKeyActivate();
-                }
-                hasItems[(int)equipItemIndex] = false;
-                equipItem.SetActive(false);
-                equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
+                }*/
+                
                 break;
 
             case Item.Type.Null: //없음
                 // Handle no item selected
-                break;
+                return;
 
             default: //모든 확인할 수 없는 아이템이 잡혀 있는 경우 에러 메시지 전달
                 Debug.LogError("Unknown item type: " + equipItemIndex);
-                break;
+                return;
         }
-        
 
+        //사용 후 처리들 
+        UIManager.instance.hasItemUI(equipItemIndex, false);
+        hasItems[(int)equipItemIndex] = false;
+        equipItem.SetActive(false);
+        equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
     }
 
 

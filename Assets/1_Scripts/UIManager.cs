@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     public GameObject startScreen;
     public GameObject settingScreen;
     public GameObject battleHUDScreen;
+    public GameObject itemLayOut; // 아이템 가진 현황 
 
     public bool isPause; // 일시정지 상태를 나타낸다 
 
@@ -44,5 +45,20 @@ public class UIManager : MonoBehaviour
         startScreen.SetActive(false);
     }
 
+    public void hasItemUI(Item.Type useItem, bool has)
+    {
+        Image itemImage = itemLayOut.transform.GetChild((int)useItem).GetComponent<Image>(); // 0중력, 1시간, 2 태엽 
+        if (has)
+        {
+            itemImage.color = Color.white; // 활 
+        }
+        else
+        {
+            itemImage.color = Color.gray; // 비활
+        }
+
+
+
+    }
     
 }
