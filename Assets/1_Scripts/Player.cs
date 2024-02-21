@@ -228,6 +228,9 @@ public class Player : MonoBehaviour, IGravityControl
             equipItem = Items[(int)equipItemIndex];
             equipItem.SetActive(true);
 
+            // 아이템 UI에 장착 장비 표시
+            UIManager.instance.equipItemUI(equipItemIndex); // 해당하는 아이템 장착 ui 표시 
+
             isSwaping = true;
             Invoke("SwapOut", 0.4f); // Assuming you want to perform some post-swap logic
         }
@@ -286,10 +289,12 @@ public class Player : MonoBehaviour, IGravityControl
         }
 
         //사용 후 처리들 
+        
         UIManager.instance.hasItemUI(equipItemIndex, false);
         hasItems[(int)equipItemIndex] = false;
         equipItem.SetActive(false);
         equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
+        UIManager.instance.equipItemUI(equipItemIndex); // itemFrame 꺼진다 
     }
 
 

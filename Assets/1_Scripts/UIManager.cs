@@ -57,8 +57,22 @@ public class UIManager : MonoBehaviour
             itemImage.color = Color.gray; // 비활
         }
 
-
-
     }
-    
+
+    public void equipItemUI(Item.Type useItem)
+    {
+        Image itemFrame = itemLayOut.transform.GetChild(3).GetComponent<Image>();
+        if (useItem == Item.Type.Null)
+        {
+            itemFrame.color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 0f); // 투명 
+        }
+        else
+        {
+            itemFrame.color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 1f); // 보임
+            itemFrame.transform.position = itemLayOut.transform.GetChild((int)useItem).GetComponent<Image>().transform.position; // 0중력, 1시간, 2 태엽
+
+        }
+        
+    }
+
 }
