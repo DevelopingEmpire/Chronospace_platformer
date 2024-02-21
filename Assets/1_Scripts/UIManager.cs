@@ -28,16 +28,12 @@ public class UIManager : MonoBehaviour
     public GameObject battleHUDScreen;
     public GameObject itemLayOut; // 아이템 가진 현황 
 
-    public bool isPause; // 일시정지 상태를 나타낸다 
+    
 
-    private void Update()
+
+    public void OnClickEscButton(bool isPause)
     {
-        // 뒤로가기 키를 누르면 일시정지
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            isPause = !isPause;
-            settingScreen.SetActive(isPause);
-        }
+        settingScreen.SetActive(isPause);
     }
 
     public void OnClickStartButton()
