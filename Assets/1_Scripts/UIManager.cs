@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+//using UnityEngine.SceneManagement; // 씬 매니지먼트 
 
 public class UIManager : MonoBehaviour
 {
@@ -28,19 +29,13 @@ public class UIManager : MonoBehaviour
     public GameObject battleHUDScreen;
     public GameObject itemLayOut; // 아이템 가진 현황 
 
-    
-
 
     public void OnClickEscButton(bool isPause)
     {
         settingScreen.SetActive(isPause);
     }
 
-    public void OnClickStartButton()
-    {
-        startScreen.SetActive(false);
-    }
-
+    #region HUD Screen 
     public void hasItemUI(Item.Type useItem, bool has)
     {
         Image itemImage = itemLayOut.transform.GetChild((int)useItem).GetComponent<Image>(); // 0중력, 1시간, 2 태엽 
@@ -70,5 +65,5 @@ public class UIManager : MonoBehaviour
         }
         
     }
-
+    #endregion
 }
