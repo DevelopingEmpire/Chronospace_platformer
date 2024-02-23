@@ -28,7 +28,7 @@ public class MapManager : MonoBehaviour
 
     private void Start() // 일단 시작시 브금 재생으로 해뒀는데, 다른사람 보니 시작 함수를 다른데서 호출하도록 만들더라 
     {
-        AudioManager.instance.playBgm(true); // bgm 재생 
+        AudioManager.instance.PlayBgm(AudioManager.BGM.BGM_Lobby); // bgm 재생 
     }
 
     private void Update()
@@ -53,7 +53,7 @@ public class MapManager : MonoBehaviour
 
     public void GameClear()
     {
-        AudioManager.instance.playBgm(false); // bgm 중지 
+        AudioManager.instance.StopBgm(); // bgm 중지 
     }
 
     public void OnButtonActive(int buttonID)
