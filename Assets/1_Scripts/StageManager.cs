@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapManager : MonoBehaviour
+public class StageManager : MonoBehaviour
 {
     #region SingleTon Pattern
-    public static MapManager instance;  // Singleton instance
+    public static StageManager instance;  // Singleton instance
     void Awake() // SingleTon
     {
         // 이미 인스턴스가 존재하면서 이게 아니면 파괴 반환

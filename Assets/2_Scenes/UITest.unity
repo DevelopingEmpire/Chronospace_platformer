@@ -171,7 +171,7 @@ GameObject:
   - component: {fileID: 113271011}
   - component: {fileID: 113271010}
   m_Layer: 0
-  m_Name: MapManager
+  m_Name: StageManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -189,7 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1766280bb03c68e4e846a046403ac57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons: 000000
+  buttons: 
   isPause: 0
   timeScale: 0
 --- !u!4 &113271011
@@ -2962,13 +2962,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03cf14056bc2434aaf4f1d602fbbd78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmClip: {fileID: 8300000, guid: 2e1ca89534b7d094488b4d95e8a0ee41, type: 3}
+  bgmClips:
+  - {fileID: 8300000, guid: 2e1ca89534b7d094488b4d95e8a0ee41, type: 3}
   bgmVolume: 0.2
   bgmPlayer: {fileID: 2058688872}
   sfxClips:
   - {fileID: 8300000, guid: 5d757e2a259358d438de39a7db922ab1, type: 3}
   - {fileID: 8300000, guid: ad732945c72da804c9ec346c3308d9ed, type: 3}
   sfxVolume: 0.5
+  channels: 0
   sfxPlayers:
   - {fileID: 2077662555}
 --- !u!1 &1988416252
