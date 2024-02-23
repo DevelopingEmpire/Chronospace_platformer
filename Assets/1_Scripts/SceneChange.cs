@@ -9,6 +9,7 @@ public class SceneChange : MonoBehaviour
     public void LoadMainScene()
     {
         SceneManager.LoadScene("UITest");
+        Debug.Log("Hii");
     }
 
     /*
@@ -17,6 +18,7 @@ public class SceneChange : MonoBehaviour
 
     }
     */
+
     public void LoadTitleScene()
     {
         SceneManager.LoadScene("TestTitle"); // 타이틀 씬 불러오기 

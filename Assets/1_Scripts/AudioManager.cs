@@ -53,11 +53,12 @@ public class AudioManager : MonoBehaviour
         {
             int loopIndex =  (index + channelIndex) % sfxPlayers.Length; // 마지막 재생한 플레이어 부터 탐색한다 . 갯수 넘어가면 0부터 다시 
 
-            if (sfxPlayers[loopIndex].isPlaying) // 재생중이 아니라면 
+            if (sfxPlayers[loopIndex].isPlaying) 
             {
                 continue;
             }
-            
+
+            // 재생중이 아니라면 
             channelIndex = loopIndex; // 마지막으로 재생한 플레이어를 기억해둔다
             sfxPlayers[loopIndex].clip = sfxClips[(int)sfx];
             sfxPlayers[loopIndex].Play();
