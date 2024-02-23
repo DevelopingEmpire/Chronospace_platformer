@@ -22,6 +22,8 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (MapManager.instance.isPause) return; // 일시 정지상태면 무시 
+        
         mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
 
         // Calculate new rotation, clamping in the process
@@ -32,5 +34,7 @@ public class PlayerCamera : MonoBehaviour
         // while keeping the current Y (horizontal) and Z (roll) angles the same.
         transform.position = target.transform.position; // Follow the target
         transform.rotation = Quaternion.Euler(-rotationY, target.transform.eulerAngles.y, 0);
+        
+        
     }
 }
