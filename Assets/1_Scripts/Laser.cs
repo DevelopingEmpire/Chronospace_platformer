@@ -13,7 +13,7 @@ public class Laser : MonoBehaviour
 
     private void Update()
     {
-        if (MapManager.instance.buttons[0]) //이게 켜지면 
+        if (StageManager.instance.buttons[0]) //이게 켜지면 
         {
             LaserOn();
         }

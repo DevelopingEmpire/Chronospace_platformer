@@ -32,7 +32,7 @@ public class ButtonController : MonoBehaviour
 
             // 모종의 동작 하기. 문열거나.. 뭐.. 
             //Debug.Log("밟힘!");
-            MapManager.instance.OnButtonActive(buttonID);
+            StageManager.instance.OnButtonActive(buttonID);
 
         }
     }
@@ -52,7 +52,7 @@ public class ButtonController : MonoBehaviour
 
             // 모종의 동작 하기. 문열거나.. 뭐.. 
             //Debug.Log("나감!");
-            MapManager.instance.OnButtonInactive(buttonID);
+            StageManager.instance.OnButtonInactive(buttonID);
         }
     }
 
@@ -67,7 +67,7 @@ public class ButtonController : MonoBehaviour
 
         // 모종의 동작 하기. 문열거나.. 뭐.. 
         Debug.Log("밟힘!");
-        MapManager.instance.OnButtonActive(buttonID);
+        StageManager.instance.OnButtonActive(buttonID);
 
     }
 
@@ -82,7 +82,7 @@ public class ButtonController : MonoBehaviour
 
         // 모종의 동작 하기. 문열거나.. 뭐.. 
         //Debug.Log("나감!");
-        MapManager.instance.OnButtonInactive(buttonID);
+        StageManager.instance.OnButtonInactive(buttonID);
 
     }
 }
