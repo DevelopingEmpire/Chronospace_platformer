@@ -57,7 +57,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     //주변 아이템 변수
     [SerializeField]
-    GameObject nearObject;
+    public GameObject nearObject;
     GameObject equipItem; // 현재 손에 들고있는 아이템 
     public Item.Type equipItemIndex = Item.Type.Null; // 현재 손에 있는 탬 종류 
 
@@ -247,6 +247,19 @@ public class Player : MonoBehaviour, IGravityControl
             hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
             Destroy(nearObject); //지역에 떨어진 아이템 삭제하기
         }
+        else if (nearObject != null && nearObject.tag == "Switch")
+        {
+            textMeshProUGUI.enabled = false; // ui 끄기 
+            SwitchTrigger targetSwitchScript = nearObject.GetComponent<SwitchTrigger>();
+            if (targetSwitchScript != null)
+            {
+                targetSwitchScript.Activate();
+            }
+            else
+            {
+                Debug.LogError("Switch Object" + nearObject + "Has no script for functioning.");
+            }
+        }
     }
 
     void UseItem(int RFnum) // R이면 0, F면 1 이 전달됨 
@@ -327,7 +340,11 @@ public class Player : MonoBehaviour, IGravityControl
             textMeshProUGUI.enabled = true;
             nearObject = other.gameObject;
         }
-
+        else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
+        {
+            textMeshProUGUI.enabled = true;
+            nearObject = other.gameObject;
+        }
         else if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
         {
             nearObject = other.gameObject;
@@ -344,9 +361,12 @@ public class Player : MonoBehaviour, IGravityControl
             textMeshProUGUI.enabled = false; // ui 끄기 
             nearObject = null;
         }
-
-
-        if (other.CompareTag("Player"))
+        else if (other.CompareTag("Switch")) //플레이어면 플레이어임을 확인하고 true
+        {
+            textMeshProUGUI.enabled = false; // ui 끄기 
+            nearObject = null;
+        }
+        else if(other.CompareTag("Player"))
         {
             nearObject = null;
             isPlayerNear = false;

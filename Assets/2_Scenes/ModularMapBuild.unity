@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 113583631}
   m_Layer: 0
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -233,11 +233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3157ceff8240b439152a339b8ce631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetObject: {fileID: 0}
-  targetObjectElement: 
-  targetObjectMode:
-  - 0
-  - 0
+  targetObject: {fileID: 1043604188}
+  targetObjectElement: InteractionObject
   hasTimer: 0
   timerValue: 0
 --- !u!1 &268773312
@@ -791,6 +788,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d9c81952ef05734b9b003d416a4724d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetObject:
+  - {fileID: 268773312}
+  - {fileID: 1408142231}
+  duration: 1
+  transitionLoc:
+  - {x: -1, y: 0, z: 0}
+  - {x: 1, y: 0, z: 0}
+  transitionRotToggle: 0
+  transitionRot:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  transitionScaleToggle: 0
+  transitionScale:
+  - {x: 1, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
 --- !u!1 &1090017053
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,8 +880,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1090017053}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 3.25}
+  m_LocalRotation: {x: -0.2553019, y: 0.34552488, z: -0.09828603, w: -0.8976488}
+  m_LocalPosition: {x: 2.3741074, y: 2.9810076, z: -1.0875053}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
