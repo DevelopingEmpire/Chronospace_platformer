@@ -21,6 +21,7 @@ public class InteractionObject : MonoBehaviour
 
     [Header("Material Changes")]
     public GameObject selfMesh;
+    public GameObject selfMeshLight;
     public int selfRecoloredMaterials;
     public int selfRecoloredMaterialsGlow;
     //other vars are granted from switch
@@ -92,7 +93,7 @@ public class InteractionObject : MonoBehaviour
         }
     }
 
-    public void SetActive()
+    public void Activate()
     {
         StartCoroutine(SetActiveCoroutine());
     }
@@ -145,7 +146,7 @@ public class InteractionObject : MonoBehaviour
         }
     }
 
-    public void SetDisactive()
+    public void Disactivate()
     {
         StartCoroutine(SetDisactiveCoroutine());
     }

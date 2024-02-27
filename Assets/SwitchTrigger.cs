@@ -7,7 +7,7 @@ using UnityEngine;
 public class SwitchTrigger : MonoBehaviour
 {
     [Header("Interaction Object")]
-    public GameObject targetObject;
+    public GameObject[] targetObjects;
     public string targetObjectElement = "InteractionObject";
     InteractionObject targetFuncScript;
     bool activated;
@@ -19,72 +19,92 @@ public class SwitchTrigger : MonoBehaviour
     [Header("Material Changes")]
     public Color selfColor;
     public GameObject selfMesh;
+    public GameObject selfMeshLight;
     public int[] selfRecoloredMaterials;
     public int[] selfRecoloredMaterialsGlow;
     public Material selfRefMaterial;
     public Material selfRefMaterialGlow;
     //private
     private MeshRenderer meshRenderer;
+    private Light meshRendererLight;
     private MeshRenderer meshRendererTarget;
+    private Light meshRendererLightTarget;
     private Material[] originalMaterials;
     private Material[] originalMaterialsTarget;
     private Material newMaterial;
     private Material newGlowMaterial;
     private GameObject selfMeshTarget;
+    private GameObject selfMeshLightTarget;
     private int selfRecoloredMaterialsTarget;
     private int selfRecoloredMaterialsGlowTarget;
 
     void Start()
     {
         activated = false;
-        if (targetObject != null)
+        if (targetObjects != null)
         {
-            targetFuncScript = targetObject.GetComponent<InteractionObject>();
+            targetFuncScript = targetObjects[0].GetComponent<InteractionObject>();
         }
         RecolorMaterials();
-        RecolorTargetObject();
+        foreach (GameObject targetObject in targetObjects)
+        {
+            if (targetObject != null)
+            {
+                RecolorTargetObject(targetObject);
+            }
+        }
     }
 
     public void Activate()
     {
-        if (!activated) 
+        if (!activated)
         {
-            if (targetFuncScript != null)
+            if (targetObjects != null && targetObjects.Length > 0)
             {
-                foreach (int index in selfRecoloredMaterialsGlow)
+                foreach (GameObject targetObject in targetObjects)
                 {
-                    if (index >= 0 && index < originalMaterials.Length)
+                    targetFuncScript = targetObject.GetComponent<InteractionObject>();
+                    if (targetObject != null)
                     {
-                        originalMaterials[index] = newGlowMaterial;
+                        // Update the materials for each target object
+                        Renderer targetRenderer = targetObject.GetComponent<Renderer>();
+                        if (targetRenderer != null)
+                        {
+                            Material[] originalMaterials = targetRenderer.sharedMaterials;
+                            // Make changes to originalMaterials using newGlowMaterial
+                            targetRenderer.sharedMaterials = originalMaterials;
+                        }
                     }
+                    targetFuncScript.Activate();
                 }
-                originalMaterialsTarget[selfRecoloredMaterialsTarget] = newGlowMaterial;
-                meshRenderer.sharedMaterials = originalMaterials;
-                meshRendererTarget.sharedMaterials = originalMaterialsTarget;
-                targetFuncScript.SetActive();
+                // Other actions when activated
                 activated = true;
             }
         }
         else
         {
-            if (targetFuncScript != null)
+            if (targetObjects != null && targetObjects.Length > 0)
             {
-                foreach (int index in selfRecoloredMaterialsGlow)
+                foreach (GameObject targetObject in targetObjects)
                 {
-                    if (index >= 0 && index < originalMaterials.Length)
+                    targetFuncScript = targetObject.GetComponent<InteractionObject>();
+                    if (targetObject != null)
                     {
-                        originalMaterials[index] = newMaterial;
+                        // Update the materials for each target object
+                        Renderer targetRenderer = targetObject.GetComponent<Renderer>();
+                        if (targetRenderer != null)
+                        {
+                            Material[] originalMaterials = targetRenderer.sharedMaterials;
+                            // Make changes to originalMaterials using newMaterial
+                            targetRenderer.sharedMaterials = originalMaterials;
+                        }
                     }
+                    targetFuncScript.Disactivate();
                 }
-                originalMaterialsTarget[selfRecoloredMaterialsTarget] = newMaterial;
-                meshRenderer.sharedMaterials = originalMaterials;
-                meshRendererTarget.sharedMaterials = originalMaterialsTarget;
-                targetFuncScript.SetDisactive();
+                // Other actions when deactivated
                 activated = false;
             }
         }
-
-        //Input.GetKeyDown("a") == true
     }
 
     void RecolorMaterials()
@@ -129,27 +149,42 @@ public class SwitchTrigger : MonoBehaviour
         {
             Debug.LogError("selfMesh not assigned.");
         }
+
+        meshRendererLight = selfMeshLight.GetComponent<Light>();
+        meshRendererLight.color = selfColor;
+        selfMeshLight.Activate(false);
     }
 
-    void RecolorTargetObject()
+    void RecolorTargetObject(GameObject targetObjectEach)
     {
+        selfMeshTarget = targetObjectEach;
         selfMeshTarget = (targetFuncScript.selfMesh);
+        selfMeshLightTarget = (targetFuncScript.selfMeshLight);
+
         meshRendererTarget = selfMeshTarget.GetComponent<MeshRenderer>();
+        meshRendererLightTarget = selfMeshLightTarget.GetComponent<Light>();
         if (meshRendererTarget != null)
         {
             originalMaterialsTarget = meshRendererTarget.sharedMaterials;
+
             selfRecoloredMaterialsTarget = targetFuncScript.selfRecoloredMaterials;
             selfRecoloredMaterialsGlowTarget = targetFuncScript.selfRecoloredMaterialsGlow;
+
             if (selfRecoloredMaterialsTarget >= 0 && (selfRecoloredMaterialsTarget <= originalMaterialsTarget.Length))
             {
                 originalMaterialsTarget[selfRecoloredMaterialsTarget] = newMaterial;
             }
             if (selfRecoloredMaterialsGlowTarget >= 0 && (selfRecoloredMaterialsGlowTarget <= originalMaterialsTarget.Length))
             {
-                originalMaterialsTarget[selfRecoloredMaterialsTarget] = newGlowMaterial;
+                originalMaterialsTarget[selfRecoloredMaterialsGlowTarget] = newMaterial;
             }
-
             meshRendererTarget.sharedMaterials = originalMaterialsTarget;
         }
+        if (meshRendererLightTarget != null)
+        {
+            meshRendererLightTarget.color = selfColor;
+            selfMeshLightTarget.Activate(false);
+        }
+
     }
 }
