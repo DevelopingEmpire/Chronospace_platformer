@@ -19,6 +19,12 @@ public class InteractionObject : MonoBehaviour
     private Vector3[] originalRot;
     private Vector3[] originalScale;
 
+    [Header("Material Changes")]
+    public GameObject selfMesh;
+    public int selfRecoloredMaterials;
+    public int selfRecoloredMaterialsGlow;
+    //other vars are granted from switch
+
     void Start()
     {
         // Initialize the arrays
