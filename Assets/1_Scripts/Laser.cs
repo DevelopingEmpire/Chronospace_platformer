@@ -52,7 +52,7 @@ public class Laser : MonoBehaviour
             else
             {
                 //버튼에 닿았다면!! 
-                if (hit.collider.gameObject.CompareTag("LaserButton") && hit.collider.gameObject.GetComponent<ButtonController>())
+                if (hit.collider.gameObject.CompareTag("Button") && hit.collider.gameObject.GetComponent<ButtonController>())
                 {
                     lastPressedButton = hit.collider.gameObject;
                     lastPressedButton.GetComponent<ButtonController>().OnButtonPressed(); // 버튼 누르기 
