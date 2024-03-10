@@ -8,12 +8,13 @@ public class Laser : MonoBehaviour
     public LineRenderer lr; // 얘가 선을 그어줄거야! 
     public Vector3 newPosition;
     public Vector3 newDir;
+    public int laserID; // 인스펙터에서 정해주기  
 
     public GameObject lastPressedButton;
 
     private void Update()
     {
-        if (StageManager.instance.buttons[0]) //이게 켜지면 
+        if (StageManager.instance.buttons[laserID]) //이게 켜지면 
         {
             LaserOn();
         }
