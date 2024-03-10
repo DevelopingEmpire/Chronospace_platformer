@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &173764844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 173764845}
+  m_Layer: 6
+  m_Name: eyePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &173764845
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173764844}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0.00323}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3345525707660524125}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &569661914696758820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,7 +1396,7 @@ MonoBehaviour:
   - 0.25
   - 0.005
   itemPointTransform: {fileID: 1090306087314540582}
-  timer: {fileID: 0}
+  timer: {fileID: 5360781343035164255}
   jumpForce: 8
   movSpeed: 5
   rotSpeed: 300
@@ -1374,7 +1405,7 @@ MonoBehaviour:
   - {fileID: 1090306087314541017}
   - {fileID: 1090306087766506786}
   - {fileID: 1090306088576203712}
-  hasItems: 010100
+  hasItems: 000000
   isAlive: 1
   isBlackHoling: 0
   nearObject: {fileID: 0}
@@ -1426,7 +1457,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 5360781343035164231}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -1489,7 +1520,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5360781344053464988}
   m_LocalRotation: {x: -4.9604765e-10, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2007,6 +2038,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1849291180535551106}
+  - {fileID: 173764845}
   m_Father: {fileID: 3800446807052294815}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
