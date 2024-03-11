@@ -25,6 +25,15 @@ public class StageManager : MonoBehaviour
     public bool isPause; // 일시정지 상태를 나타낸다 
     public float timeScale; // 타임 스케일 임시저장할 변수 
 
+    /* 동작할 버튼들~ 에 대한 논의중..~~ 
+    public GameObject stage_1_Laser_1;
+    public GameObject stage_1_Laser_2;
+
+    */
+
+    // stage 1 -> 레이저 키고 -> 레이저 키고 -> 문열어
+    // stage 2 -> 레이저 키고 -> 문열고 -> 문열고 -> 레이저 키고 -> 엘레베이터 타 
+    // 
 
     private void Start() // 일단 시작시 브금 재생으로 해뒀는데, 다른사람 보니 시작 함수를 다른데서 호출하도록 만들더라 
     {
@@ -59,6 +68,12 @@ public class StageManager : MonoBehaviour
     public void OnButtonActive(int buttonID)
     {
         buttons[buttonID] = true;
+        /*
+        if (buttons[0] == true )
+        {
+            // 장치 켜기 함수 () 
+            
+        }*/
     }
 
     public void OnButtonInactive(int buttonID)
