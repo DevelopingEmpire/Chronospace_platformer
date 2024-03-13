@@ -8,27 +8,35 @@ public class NPCInteractionDialogue : MonoBehaviour
 {
     bool isPlayerDetected = false;
     public TextAsset dialogueSource;
+    private string[] dialogueList;
+    private int dialogueLnNumber;
     public TextMeshProUGUI dialogueInstrument;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if(dialogueSource != null)
+        {
+            dialogueList = dialogueSource.text.Split('\n'); // Split text into lines
+            Debug.Log("Interaction with NPC content loaded.");
+        }
+        else
+        {
+            Debug.LogError("Dialogue file is not defined.");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isPlayerDetected && Input.GetButtonDown("Interaction"))
-        {
-            Debug.Log("Interaction with NPC has called.");
-        }
+        showDialogue();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
+            dialogueLnNumber = 0;
             isPlayerDetected = true;
             Debug.Log("Interaction with NPC will be started.");
             dialogueInstrument.enabled = true; // ui 끄기 
@@ -40,4 +48,22 @@ public class NPCInteractionDialogue : MonoBehaviour
         Debug.Log("Interaction with NPC has ended.");
         dialogueInstrument.enabled = false; // ui 끄기 
     }
+
+    void showDialogue()
+    {
+        if (isPlayerDetected){
+            if (Input.GetButtonDown("Interaction"))
+            {
+                if (dialogueLnNumber<dialogueList.Length) {
+                    Debug.Log(dialogueList[dialogueLnNumber]);
+                    dialogueLnNumber++;
+                }
+                else 
+                {
+                    dialogueLnNumber = 0;
+                }
+            }
+        }
+    }
+
 }
