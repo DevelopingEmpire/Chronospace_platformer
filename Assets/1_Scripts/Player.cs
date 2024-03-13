@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, IGravityControl
     public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
     public float[] timeScaleMultiplier = new float[] {0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
     public Transform itemPointTransform; // 탬 생성 위치
+    public PlayerTimer timer;
 
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
@@ -102,7 +103,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         SetDir();
         if (inputInteraction) Interaction(); //interaction item이 주변에 있을 때 상호작용 활성화
-        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton1) Swap(); //input key 버튼으로 아이템 선택 활성화
+        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton3) Swap(); //input key 버튼으로 아이템 선택 활성화
         if (inputKeyR) //아이템 사용(모드 0, 모드 1로 이원화)
         {
             UseItem(0);
@@ -205,6 +206,7 @@ public class Player : MonoBehaviour, IGravityControl
         if ((inputKeyButton1 && hasItems[0]) || (inputKeyButton2 && hasItems[1]) || (inputKeyButton3 && hasItems[2]))
             //아이템 선택 키를 눌렀음&아이템이 있을 때에만 아이템 꺼내 주기
         {
+            Debug.Log("스왑 눌림");
             // Deactivate current equipItem
             if (equipItem != null) equipItem.SetActive(false); //없으면 안 꺼내주기
 
@@ -226,6 +228,9 @@ public class Player : MonoBehaviour, IGravityControl
             equipItem = Items[(int)equipItemIndex];
             equipItem.SetActive(true);
 
+            // 아이템 UI에 장착 장비 표시
+            UIManager.instance.equipItemUI(equipItemIndex); // 해당하는 아이템 장착 ui 표시 
+
             isSwaping = true;
             Invoke("SwapOut", 0.4f); // Assuming you want to perform some post-swap logic
         }
@@ -243,8 +248,10 @@ public class Player : MonoBehaviour, IGravityControl
             textMeshProUGUI.enabled = false; // ui 끄기 
             Item item = nearObject.GetComponent<Item>();
             int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
-            Debug.Log("itemIndex" + itemIndex);
+            //Debug.Log("itemIndex" + itemIndex);
             hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
+            UIManager.instance.hasItemUI(item.type, true);
+
             Destroy(nearObject); //지역에 떨어진 아이템 삭제하기
         }
         else if (nearObject != null && nearObject.tag == "Switch")
@@ -268,25 +275,39 @@ public class Player : MonoBehaviour, IGravityControl
         {
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 Instantiate(gravityPrefebs[RFnum], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier[RFnum], 5));
                 break;
+
             case Item.Type.WindKey: //윈드 키(다른 플레이어가 존재할 때에만 활성화됨
+                timer.TimeChange(30f); // 30초 추가 
+                /*
                 if (nearObject != null && isPlayerNear == true)  
                 {
                     nearObject.GetComponent<Player>().WindKeyActivate();
-                }
+                }*/
+                
                 break;
 
             case Item.Type.Null: //없음
                 // Handle no item selected
-                break;
+                return;
+
             default: //모든 확인할 수 없는 아이템이 잡혀 있는 경우 에러 메시지 전달
                 Debug.LogError("Unknown item type: " + equipItemIndex);
-                break;
+                return;
         }
+
+        //사용 후 처리들 
+        
+        UIManager.instance.hasItemUI(equipItemIndex, false);
+        hasItems[(int)equipItemIndex] = false;
+        equipItem.SetActive(false);
+        equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
+        UIManager.instance.equipItemUI(equipItemIndex); // itemFrame 꺼진다 
     }
 
 
