@@ -6,15 +6,19 @@ using UnityEngine;
 
 public class NPCInteractionDialogue : MonoBehaviour
 {
-    bool isPlayerDetected = false;
+    public string npcName = "NPC";
     public TextAsset dialogueSource;
-    private string[] dialogueList;
-    private int dialogueLnNumber;
     public TextMeshProUGUI dialogueInstrument;
+
+    bool isPlayerDetected = false;
+    private string dialogueInstrumentInitialVal;
+    private string[] dialogueList;
+    public int dialogueLnNumber;
 
     // Start is called before the first frame update
     void Start()
     {
+        dialogueInstrumentInitialVal = dialogueInstrument.text;
         if(dialogueSource != null)
         {
             dialogueList = dialogueSource.text.Split('\n'); // Split text into lines
@@ -39,13 +43,16 @@ public class NPCInteractionDialogue : MonoBehaviour
             dialogueLnNumber = 0;
             isPlayerDetected = true;
             Debug.Log("Interaction with NPC will be started.");
+            dialogueInstrument.text = "To talk with " + npcName + ", press [E] to continue.";
             dialogueInstrument.enabled = true; // ui 끄기 
         }
     }
     private void OnTriggerExit(Collider other)
     {
+        dialogueLnNumber = 0;
         isPlayerDetected = false;
         Debug.Log("Interaction with NPC has ended.");
+        dialogueInstrument.text = dialogueInstrumentInitialVal;
         dialogueInstrument.enabled = false; // ui 끄기 
     }
 
@@ -55,12 +62,14 @@ public class NPCInteractionDialogue : MonoBehaviour
             if (Input.GetButtonDown("Interaction"))
             {
                 if (dialogueLnNumber<dialogueList.Length) {
-                    Debug.Log(dialogueList[dialogueLnNumber]);
+                    dialogueInstrument.text = npcName + " : " + dialogueList[dialogueLnNumber];
+                    //Debug.Log(dialogueList[dialogueLnNumber]);
                     dialogueLnNumber++;
                 }
-                else 
-                {
+                else {
                     dialogueLnNumber = 0;
+                    dialogueInstrument.text = dialogueList[dialogueLnNumber];
+                    dialogueInstrument.enabled = false; // ui 끄기 
                 }
             }
         }
