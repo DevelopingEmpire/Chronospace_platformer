@@ -3,22 +3,34 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using DG.Tweening; // dot ween 사용 
 
 public class NPCInteractionDialogue : MonoBehaviour
 {
+    [Header("NPC & Dialogue Content")]
     public string npcName = "NPC";
     public TextAsset dialogueSource;
-    public TextMeshProUGUI dialogueInstrument;
 
+    [Header("Content Display")]
+    public GameObject dialogueUI;
+    public TextMeshProUGUI dialogueUIName;
+    public TextMeshProUGUI dialogueUIContent;
+
+    [Header("External-Content Display")]
+    public GameObject extUI;
+    public TextMeshProUGUI dialogueUIExt;
+
+    [Header("Dialog Status")]
     bool isPlayerDetected = false;
-    private string dialogueInstrumentInitialVal;
+    private string dialogueUIContentInitialVal;
     private string[] dialogueList;
-    public int dialogueLnNumber;
+    private int dialogueLnNumber;
 
     // Start is called before the first frame update
     void Start()
     {
-        dialogueInstrumentInitialVal = dialogueInstrument.text;
+        dialogueUI.SetActive(false);
+        dialogueUIContentInitialVal = dialogueUIExt.text;
         if(dialogueSource != null)
         {
             dialogueList = dialogueSource.text.Split('\n'); // Split text into lines
@@ -43,8 +55,10 @@ public class NPCInteractionDialogue : MonoBehaviour
             dialogueLnNumber = 0;
             isPlayerDetected = true;
             Debug.Log("Interaction with NPC will be started.");
-            dialogueInstrument.text = "To talk with " + npcName + ", press [E] to continue.";
-            dialogueInstrument.enabled = true; // ui 끄기 
+
+            //dialogueUIName.text = npcName;
+            dialogueUIExt.text = "To talk with " + npcName + ", press [E] to continue.";
+            dialogueUIExt.enabled = true; // ui 끄기 
         }
     }
     private void OnTriggerExit(Collider other)
@@ -52,8 +66,12 @@ public class NPCInteractionDialogue : MonoBehaviour
         dialogueLnNumber = 0;
         isPlayerDetected = false;
         Debug.Log("Interaction with NPC has ended.");
-        dialogueInstrument.text = dialogueInstrumentInitialVal;
-        dialogueInstrument.enabled = false; // ui 끄기 
+
+        dialogueUI.SetActive(false); // ui 끄기 
+        extUI.SetActive(true);
+        //dialogueUIName.text = "";
+        dialogueUIExt.text = dialogueUIContentInitialVal;
+        dialogueUIExt.enabled = false; // ui 끄기 
     }
 
     void showDialogue()
@@ -62,14 +80,18 @@ public class NPCInteractionDialogue : MonoBehaviour
             if (Input.GetButtonDown("Interaction"))
             {
                 if (dialogueLnNumber<dialogueList.Length) {
-                    dialogueInstrument.text = npcName + " : " + dialogueList[dialogueLnNumber];
+                    if(dialogueLnNumber == 0){
+                        extUI.SetActive(false);
+                        dialogueUI.SetActive(true);
+                    }
+                    dialogueUIContent.text = dialogueList[dialogueLnNumber];
                     //Debug.Log(dialogueList[dialogueLnNumber]);
                     dialogueLnNumber++;
                 }
                 else {
                     dialogueLnNumber = 0;
-                    dialogueInstrument.text = dialogueList[dialogueLnNumber];
-                    dialogueInstrument.enabled = false; // ui 끄기 
+                    dialogueUIContent.text = dialogueList[dialogueLnNumber];
+                    //dialogueUIContent.enabled = false; // ui 끄기 
                 }
             }
         }
