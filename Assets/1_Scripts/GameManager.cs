@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,14 +11,23 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined; // 마우스 커서 이탈 방지 
     }
 
-    // Update is called once per frame
-    void Update()
+    // 타이틀 씬에서 쓰레기장 씬으로 이동 
+    public void LoadMainScene()
     {
-        
+        SceneManager.LoadScene("UITest");
+        Debug.Log("Hii");
     }
 
-    public void sdklsa()
+    /*
+    public void LoadGameScence() // stage 의 번호를 int로 받고, stage1 stage2 요런식으로 구분하면 좋을듯..!  
     {
-        Debug.Log("Sds");
+
     }
+    */
+
+    public void LoadTitleScene()
+    {
+        SceneManager.LoadScene("TestTitle"); // 타이틀 씬 불러오기 
+    }
+
 }
