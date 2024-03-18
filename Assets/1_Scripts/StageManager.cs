@@ -22,6 +22,8 @@ public class StageManager : MonoBehaviour
 
     public bool[] buttons = new bool[3]; // 기본값이 원래 false라네요? 개꿀 
 
+    public InteractionObject[] interactionObjects; // 동작할 놈들 여기 저장 
+
     public bool isPause; // 일시정지 상태를 나타낸다 
     public float timeScale; // 타임 스케일 임시저장할 변수 
 
@@ -68,16 +70,14 @@ public class StageManager : MonoBehaviour
     public void OnButtonActive(int buttonID)
     {
         buttons[buttonID] = true;
-        /*
-        if (buttons[0] == true )
-        {
-            // 장치 켜기 함수 () 
-            
-        }*/
+
+        //interactionObjects[buttonID].Activate(); //켜기 
     }
 
     public void OnButtonInactive(int buttonID)
     {
         buttons[buttonID] = false;
+
+        //interactionObjects[buttonID].Disactivate(); // 끄기 
     }
 }
