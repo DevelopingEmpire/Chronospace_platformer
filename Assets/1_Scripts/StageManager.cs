@@ -20,19 +20,21 @@ public class StageManager : MonoBehaviour
 
         // Initialize other components or variables if needed
         stageClearStatus = new Dictionary<string, bool>();
+
     }
 
     #endregion
 
     [SerializeField]
     public Dictionary<string, bool> stageClearStatus;
-
-
     public string currentStageName; // 이 변수에 꼭 현재 진행중인 스테이지를 넣어줘야한다. 
-
     public int idx = 0;
-    
+    public GameObject npcDialogueUI;
 
+    void Start()
+    {
+        npcDialogueUI.SetActive(true);
+    }
     public void InitializeStageClearStatus()
     {
         stageClearStatus = new Dictionary<string, bool>();

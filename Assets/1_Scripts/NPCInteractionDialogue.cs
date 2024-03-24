@@ -67,8 +67,10 @@ public class NPCInteractionDialogue : MonoBehaviour
         isPlayerDetected = false;
         Debug.Log("Interaction with NPC has ended.");
 
-        dialogueUI.SetActive(false); // ui 끄기 
-        extUI.SetActive(true);
+        dialogueUI.SetActive(false); // ui 끄기
+        if(extUI != null){
+            extUI.SetActive(true);
+        }
         //dialogueUIName.text = "";
         dialogueUIExt.text = dialogueUIContentInitialVal;
         dialogueUIExt.enabled = false; // ui 끄기 
@@ -81,7 +83,9 @@ public class NPCInteractionDialogue : MonoBehaviour
             {
                 if (dialogueLnNumber<dialogueList.Length) {
                     if(dialogueLnNumber == 0){
-                        extUI.SetActive(false);
+                        if(extUI != null){
+                            extUI.SetActive(false);
+                        }
                         dialogueUI.SetActive(true);
                     }
                     dialogueUIContent.text = dialogueList[dialogueLnNumber];
