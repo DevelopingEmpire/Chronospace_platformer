@@ -26,6 +26,7 @@ public class PlayerTimer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (StageManager.instance.isPause) return; // 일시정지한 동안 시간초도 멈춤 
 
         if (player.isAlive) 
         {

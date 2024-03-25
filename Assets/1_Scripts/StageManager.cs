@@ -1,77 +1,83 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
     #region SingleTon Pattern
-    public static StageManager Instance { get; private set; }
-    private void Awake()
+    public static StageManager instance;  // Singleton instance
+    void Awake() // SingleTon
     {
-        // If an instance already exists and it's not this one, destroy this one
-        if (Instance != null && Instance != this)
+        // 이미 인스턴스가 존재하면서 이게 아니면 파괴 반환
+        if (instance != null && instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
-
-        // Set this as the instance and ensure it persists across scenes
-        Instance = this;
-        DontDestroyOnLoad(this.gameObject);
-
-        // Initialize other components or variables if needed
-        stageClearStatus = new Dictionary<string, bool>();
+        // Set the instance to this object and make sure it persists between scene loads
+        instance = this;
+        DontDestroyOnLoad(gameObject);
     }
-
     #endregion
 
-    [SerializeField]
-    public Dictionary<string, bool> stageClearStatus;
+    public bool[] buttons = new bool[3]; // 기본값이 원래 false라네요? 개꿀 
 
+    public InteractionObject[] interactionObjects; // 동작할 놈들 여기 저장 
 
-    public string currentStageName; // 이 변수에 꼭 현재 진행중인 스테이지를 넣어줘야한다. 
+    public bool isPause; // 일시정지 상태를 나타낸다 
+    public float timeScale; // 타임 스케일 임시저장할 변수 
 
-    public int idx = 0;
-    
+    /* 동작할 버튼들~ 에 대한 논의중..~~ 
+    public GameObject stage_1_Laser_1;
+    public GameObject stage_1_Laser_2;
 
-    public void InitializeStageClearStatus()
+    */
+
+    // stage 1 -> 레이저 키고 -> 레이저 키고 -> 문열어
+    // stage 2 -> 레이저 키고 -> 문열고 -> 문열고 -> 레이저 키고 -> 엘레베이터 타 
+    // 
+
+    private void Start() // 일단 시작시 브금 재생으로 해뒀는데, 다른사람 보니 시작 함수를 다른데서 호출하도록 만들더라 
     {
-        stageClearStatus = new Dictionary<string, bool>();
+        AudioManager.instance.PlayBgm(AudioManager.BGM.BGM_Lobby); // bgm 재생 
+    }
 
-        for (int i = 1; i <= 10; i++)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) // esc 눌림! 
         {
-            stageClearStatus.Add("Stage" + i, false);
-        }
-    }
-
-    public bool CanEnterStage(string stageName)
-    {
-        if (stageName.StartsWith("Stage1")) // 첫 스테이지는 그냥 들어가게 해야하고 그 뒤 스테이지는 체크가 필요하다. 
-        {
-            int stageNumber = int.Parse(stageName.Replace("Stage", ""));
-            // 일반 스테이지 1은 항상 진입 가능
-            if (stageNumber == 1)
+            isPause = !isPause;
+            if (isPause) // 일시 정지된 상황이면 
             {
-                return true;
+                timeScale = Time.timeScale; // 현재 timeScale 을 임시 저장 
+                Time.timeScale = 0f; // 일시정지 
             }
-            // 그 외의 일반 스테이지는 이전 스테이지 클리어 여부 확인
-            else if (stageNumber > 1)
+            else // 일시정지가 해제된 상황이면 
             {
-                return IsStageCleared("Stage" + (stageNumber - 1));
+                Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
             }
+            UIManager.instance.OnClickEscButton(isPause); 
+
         }
-        return false; // 기본적으로는 진입 불가능
+
     }
 
-    // 게임 클리어 하면 이 함수를 실행.
-    public void SetStageCleared()
+    public void GameClear()
     {
-        stageClearStatus[currentStageName] = true;
-        DataManager.Instance.SaveJson();
+        AudioManager.instance.StopBgm(); // bgm 중지 
     }
 
-    public bool IsStageCleared(string stageName)
+    public void OnButtonActive(int buttonID)
     {
-        return stageClearStatus.TryGetValue(stageName, out bool cleared) && cleared;
+        buttons[buttonID] = true;
+
+        //interactionObjects[buttonID].Activate(); //켜기 
+    }
+
+    public void OnButtonInactive(int buttonID)
+    {
+        buttons[buttonID] = false;
+
+        //interactionObjects[buttonID].Disactivate(); // 끄기 
     }
 }
-

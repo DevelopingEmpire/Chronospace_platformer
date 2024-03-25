@@ -14,7 +14,20 @@ public class Laser : MonoBehaviour
 
     private void Update()
     {
-
+        if (StageManager.instance.buttons[laserID]) //이게 켜지면 
+        {
+            LaserOn();
+        }
+        else
+        {
+            // 이전에 버튼에 닿았었다면, 그 버튼 꺼주고 null 
+            if (lastPressedButton != null)
+            {
+                lastPressedButton.GetComponent<ButtonController>().OnButtonUp(); // 눌린거 꺼주기 
+                lastPressedButton = null;
+            }
+            lr.positionCount = 0;
+        }
     }
      
 
