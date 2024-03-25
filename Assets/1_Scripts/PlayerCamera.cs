@@ -22,7 +22,6 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (StageManager.instance.isPause) return; // 일시 정지상태면 무시 
         
         mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
 
