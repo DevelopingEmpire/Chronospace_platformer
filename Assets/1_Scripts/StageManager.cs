@@ -30,6 +30,12 @@ public class StageManager : MonoBehaviour
     public string currentStageName; // 이 변수에 꼭 현재 진행중인 스테이지를 넣어줘야한다. 
     public int idx = 0;
     public GameObject npcDialogueUI;
+    //private static SceneTransitionManager instance;
+
+    //박강 작성 구간:
+
+
+    //roh 작성 구간:
 
     void Start()
     {
