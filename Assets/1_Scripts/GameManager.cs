@@ -12,10 +12,38 @@ public class GameManager : MonoBehaviour
     }
 
     // 타이틀 씬에서 쓰레기장 씬으로 이동 
-    public void LoadMainScene()
+    public IEnumerator LoadMainScene(string sceneName)
     {
-        SceneManager.LoadScene("UITest");
-        Debug.Log("Hii");
+        // 비동기적으로 씬 로딩
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+
+
+        // 씬 로딩이 완료될 때까지 대기
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        // 로비로 가는 경우
+        if (sceneName == "Stage0")
+        {
+            /*
+            UIManager.instance.OnClickBattleButton();
+            UIManager.instance.pickUpScreen.SetActive(true);
+            UIManager.instance.selectedStageName = preStageName;
+            */
+
+            //브금 틀기 
+            //AudioManager.instance.PlayBgm(AudioManager.BGM.BGM_Lobby);
+
+        }
+        else
+        {
+            //게임 맵 들어가는 경우 
+
+        }
+
     }
 
     /*

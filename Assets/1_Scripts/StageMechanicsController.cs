@@ -11,6 +11,6 @@ public abstract class StageMechanicsController : MonoBehaviour
     // 버튼이 종료되면
     // 레이저가 특정 영역에서 벗어나면 
 
-    public int Idx { get; set; }
+    public abstract int Idx { get; set; }
     
 }
