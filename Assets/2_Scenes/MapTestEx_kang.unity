@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.031
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0055836937, g: 0.0069910022, b: 0.009511458, a: 0.031}
+  m_IndirectSpecularColor: {r: 0.0055836793, g: 0.0069909845, b: 0.009511429, a: 0.031}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -152,10 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1766280bb03c68e4e846a046403ac57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons: 0000
-  interactionObjects: []
-  isPause: 0
-  timeScale: 0
+  currentStageName: 
+  idx: 0
 --- !u!4 &683248
 Transform:
   m_ObjectHideFlags: 0
@@ -3771,9 +3769,9 @@ MonoBehaviour:
   speed: 1
   currentTime: 0
   player: {fileID: 5360781344194414804}
-  timerUI: {fileID: 0}
-  timerText: {fileID: 0}
-  timerBar: {fileID: 0}
+  timerUI: {fileID: 5371780608814304011}
+  timerText: {fileID: 5371780609849265293}
+  timerBar: {fileID: 5371780608625744811}
 --- !u!1 &5371780607904353063
 GameObject:
   m_ObjectHideFlags: 0
