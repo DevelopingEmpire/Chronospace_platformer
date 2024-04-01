@@ -39,7 +39,7 @@ public class StageManager : MonoBehaviour
 
     void Start()
     {
-        npcDialogueUI.SetActive(true);
+        npcDialogueUI.SetActive(false);
     }
     public void InitializeStageClearStatus()
     {
