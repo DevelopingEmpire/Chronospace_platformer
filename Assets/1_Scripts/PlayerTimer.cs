@@ -19,7 +19,7 @@ public class PlayerTimer : MonoBehaviour
     void Start()
     {
         currentTime = timeLimit;
-        timerText = timerUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+        timerText = timerUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         timerBar = timerUI.transform.GetChild(0).GetComponent<Image>();// 빨간 바 
     }
 
