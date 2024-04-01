@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonController : MonoBehaviour
+public class ButtonController : StageMechanicsController 
 {
     [SerializeField]
     CharacterController controller;
     public GameObject mesh;// 버튼 부분 메시 
     public Material buttonMat; // 버튼 부분 머티리얼 
     public int buttonID; // 구분용 아이디
+
+    public override int Idx { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     private void Start()
     {
@@ -80,5 +82,15 @@ public class ButtonController : MonoBehaviour
         // 모종의 동작 하기. 문열거나.. 뭐.. 
         //Debug.Log("나감!");
 
+    }
+
+    public override void Trigger()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Exit()
+    {
+        throw new System.NotImplementedException();
     }
 }
