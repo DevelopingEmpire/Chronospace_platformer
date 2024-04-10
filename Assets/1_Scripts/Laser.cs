@@ -2,23 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Laser : MonoBehaviour
+public class Laser : StageMechanicsController
 {
     RaycastHit hit;
     public LineRenderer lr; // 얘가 선을 그어줄거야! 
     public Vector3 newPosition;
     public Vector3 newDir;
-    public int laserID; // 인스펙터에서 정해주기  
+    public int idx; // 인스펙터에서 정해주기  
 
     public GameObject lastPressedButton;
 
-    private void Update()
+    public override int Idx { get; set; }
+
+    private void Start()
     {
-
+        Idx = idx; // 인스펙터에서 지정한 값을 Idx에 저장 
     }
-     
 
-    public void LaserOn()
+    public override void Trigger()
     {
         List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
 
@@ -42,7 +43,7 @@ public class Laser : MonoBehaviour
                 if (hit.collider.gameObject.CompareTag("Button") && hit.collider.gameObject.GetComponent<ButtonController>())
                 {
                     lastPressedButton = hit.collider.gameObject;
-                    lastPressedButton.GetComponent<ButtonController>().OnButtonPressed(); // 버튼 누르기 
+                    lastPressedButton.GetComponent<ButtonController>().Trigger(); // 버튼 누르기 
                 }
                 // 버튼에 닿지 않았다면~ 
                 else
@@ -50,7 +51,7 @@ public class Laser : MonoBehaviour
                     // 이전에 버튼에 닿았었다면, 그 버튼 꺼주고 null 
                     if (lastPressedButton != null)
                     {
-                        lastPressedButton.GetComponent<ButtonController>().OnButtonUp(); // 눌린거 꺼주기 
+                        lastPressedButton.GetComponent<ButtonController>().Exit(); // 눌린거 꺼주기 
                         lastPressedButton = null;
                     }
 
@@ -64,5 +65,10 @@ public class Laser : MonoBehaviour
         {
             lr.SetPosition(i, positions[i]);
         }
+    }
+
+    public override void Exit()
+    {
+        
     }
 }

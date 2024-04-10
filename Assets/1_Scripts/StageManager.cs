@@ -28,7 +28,7 @@ public class StageManager : MonoBehaviour
     [SerializeField]
     public Dictionary<string, bool> stageClearStatus;
     public string currentStageName; // 이 변수에 꼭 현재 진행중인 스테이지를 넣어줘야한다. 
-    public int idx = 0;
+    public int idx = 0; // 인덱스 끝 번을 넣어준다. 해당 인덱스가 해결되면 스테이지 클리어 
     public GameObject npcDialogueUI;
     //private static SceneTransitionManager instance;
 
@@ -81,5 +81,6 @@ public class StageManager : MonoBehaviour
     {
         return stageClearStatus.TryGetValue(stageName, out bool cleared) && cleared;
     }
+    
 }
 
