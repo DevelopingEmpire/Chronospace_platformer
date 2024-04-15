@@ -11,15 +11,33 @@ public class Laser : StageMechanicsController
     public int idx; // 인스펙터에서 정해주기  
 
     public GameObject lastPressedButton;
+    public bool activated; // 활성화 여부 
 
     public override int Idx { get; set; }
 
     private void Start()
     {
         Idx = idx; // 인스펙터에서 지정한 값을 Idx에 저장 
+
+        activated = false;
     }
 
+    private void Update()
+    {
+        if (activated) LaserOn();
+    }
     public override void Trigger()
+    {
+        activated = true;
+    }
+
+    public override void Exit()
+    {
+        activated = false;
+        lr.positionCount = 0; // 초기화 
+    }
+
+    public void LaserOn()
     {
         List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
 
@@ -62,21 +80,12 @@ public class Laser : StageMechanicsController
 
         }
 
-        lineDraw(positions); // 레이저 한붓그리기 
-
-    }
-
-    public override void Exit()
-    {
-        
-    }
-
-    public void lineDraw(List<Vector3> positions)
-    {
+        // 레이저 한붓그리기 
         lr.positionCount = positions.Count; // 정점 추가 
         for (int i = 0; i < positions.Count; i++)
         {
             lr.SetPosition(i, positions[i]);
         }
     }
+
 }
