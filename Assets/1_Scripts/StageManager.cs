@@ -81,6 +81,11 @@ public class StageManager : MonoBehaviour
     {
         return stageClearStatus.TryGetValue(stageName, out bool cleared) && cleared;
     }
-    
+
+    //버튼 눌렸을 시 다음 인터랙션 실행 해주는 함수 
+    public void OnButtonPressed()
+    {
+
+    }
 }
 

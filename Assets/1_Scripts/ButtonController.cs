@@ -6,9 +6,10 @@ using UnityEngine;
 public class ButtonController : StageMechanicsController 
 {
     [SerializeField]
-    CharacterController controller;
+    private CharacterController controller; // 컨트롤러 담는 용 변수 
     public GameObject mesh;// 버튼 부분 메시 
     public Material buttonMat; // 버튼 부분 머티리얼 
+    public StageMechanicsController triggerObject; // 작동시킬 무언가 
     public int idx; // 구분용 아이디
 
     public override int Idx { get; set; }
@@ -19,6 +20,7 @@ public class ButtonController : StageMechanicsController
 
         buttonMat = mesh.GetComponent<MeshRenderer>().material;
         buttonMat.SetColor("_EmissionColor", Color.black); // emission 색 검정이면 빛 안남 
+
     }
 
     private void OnTriggerEnter(Collider col)
@@ -53,6 +55,7 @@ public class ButtonController : StageMechanicsController
         // Material 교체
         buttonMat.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5f)); //2f == intensity 값 
 
+        triggerObject.Trigger();
     }
 
     public override void Exit()
@@ -65,5 +68,6 @@ public class ButtonController : StageMechanicsController
 
         buttonMat.SetColor("_EmissionColor", Color.black); // emission 색 검정이면 빛 안남 
 
+        triggerObject.Exit();
     }
 }

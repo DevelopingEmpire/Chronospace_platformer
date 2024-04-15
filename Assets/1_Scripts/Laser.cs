@@ -23,10 +23,11 @@ public class Laser : StageMechanicsController
     {
         List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
 
-        newPosition = transform.position;
+        newPosition = transform.position + transform.forward;
         newDir = transform.forward;
 
         positions.Add(newPosition);
+
 
         while (true)
         {
@@ -60,15 +61,22 @@ public class Laser : StageMechanicsController
             }
 
         }
-        lr.positionCount = positions.Count; // 정점 추가 
-        for (int i = 0; i < positions.Count; i++)
-        {
-            lr.SetPosition(i, positions[i]);
-        }
+
+        lineDraw(positions); // 레이저 한붓그리기 
+
     }
 
     public override void Exit()
     {
         
+    }
+
+    public void lineDraw(List<Vector3> positions)
+    {
+        lr.positionCount = positions.Count; // 정점 추가 
+        for (int i = 0; i < positions.Count; i++)
+        {
+            lr.SetPosition(i, positions[i]);
+        }
     }
 }

@@ -58,4 +58,5 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("TestTitle"); // 타이틀 씬 불러오기 
     }
 
+
 }
