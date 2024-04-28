@@ -8,7 +8,8 @@ public class ButtonController : StageMechanicsController
     [SerializeField]
     [Header("Functions")]
     private CharacterController controller; // 컨트롤러 담는 용 변수 
-    public GameObject mesh;// 버튼 부분 메시 
+    //public GameObject mesh;// 버튼 부분 메시 
+
     public Material buttonMat; // 버튼 부분 머티리얼 
     public StageMechanicsController[] triggerObject; // 작동시킬 무언가 
     public int idx; // 구분용 아이디
@@ -39,6 +40,10 @@ public class ButtonController : StageMechanicsController
         for (int i = 0; i<selfMesh.Length; i++){
             RecolorMaterialsInit(selfMesh[i], selfRecoloredMaterials[i], selfRecoloredMaterialsGlow[i]);
         }
+        meshRendererLight = selfMeshLight.GetComponent<Light>();
+        meshRendererLight.color = selfColor;
+        selfMeshLight.SetActive(false);
+
         //타겟 오브젝트 색 채색하기
         foreach (StageMechanicsController tObj in triggerObject) {
             if(tObj != null) {
@@ -52,6 +57,7 @@ public class ButtonController : StageMechanicsController
     private void OnTriggerEnter(Collider col)
     {
         controller = col.GetComponent<CharacterController>(); // 밟을 수 있는 애들은 다 캐.콘 갖고있음 
+        selfMeshLight.SetActive(true);
 
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
         if (controller != null)
@@ -63,6 +69,7 @@ public class ButtonController : StageMechanicsController
     private void OnTriggerExit(Collider col)
     {
         controller = col.GetComponent<CharacterController>(); // 밟을 수 있는 애들은 다 캐.콘 갖고있음 
+        selfMeshLight.SetActive(false);
 
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
         if (controller != null)
@@ -153,23 +160,5 @@ public class ButtonController : StageMechanicsController
         {
             Debug.LogError("selfMesh not assigned.");
         }
-
-        /*
-        meshRendererLight = selfMeshLight.GetComponent<Light>();
-        meshRendererLight.color = selfColor;
-        selfMeshLight.SetActive(false);
-        */
     }
-
-    /*
-    void RecolorMaterialsTrigger(GameObject targetMesh){
-        matTargetGlow
-        if((matTargetGlow != -1) && (targetMesh != null)) {
-            meshRenderer = targetMesh.GetComponent<MeshRenderer>();
-            originalMaterials = meshRenderer.sharedMaterials;
-            originalMaterials[matTargetGlow] = newGlowMaterial;
-            meshRenderer.sharedMaterials = originalMaterials;
-        }
-    }
-    */
 }

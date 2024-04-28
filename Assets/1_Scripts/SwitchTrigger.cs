@@ -7,7 +7,7 @@ using UnityEngine;
 public class SwitchTrigger : MonoBehaviour
 {
     [Header("Interaction Object")]
-    public GameObject[] targetObjects;
+    public StageMechanicsController[] targetObjects;
     public string targetObjectElement = "InteractionObject";
     public InteractionObject targetFuncScript;
     public bool activated;
@@ -27,27 +27,23 @@ public class SwitchTrigger : MonoBehaviour
     //private
     private MeshRenderer meshRenderer;
     private Light meshRendererLight;
-    private MeshRenderer meshRendererTarget;
-    private Light meshRendererLightTarget;
     private Material[] originalMaterials;
-    private Material[] originalMaterialsTarget;
     private Material newMaterial;
     private Material newGlowMaterial;
-    private GameObject[] targetGameObjects;
-    private GameObject targetLightObject;
-    private int recoloredMaterialsTarget;
-    private int recoloredMaterialsGlowTarget;
 
     void Start()
     {
         activated = false;
+        meshRenderer = selfMesh.GetComponent<MeshRenderer>();
+
         RecolorMaterials();
-        foreach (GameObject targetObject in targetObjects)
+        foreach (StageMechanicsController targetObject in targetObjects)
         {
             if (targetObject != null)
             {
                 targetFuncScript = targetObject.GetComponent<InteractionObject>();
-                RecolorTargetObject(targetObject);
+                //RecolorTargetObject(targetObject);
+                targetObject.SetInitialColor(newMaterial, newGlowMaterial);
             }
         }
         targetFuncScript = null;
@@ -71,36 +67,16 @@ public class SwitchTrigger : MonoBehaviour
 
     private void OnSwitchController()
     {
-        foreach (GameObject targetObject in targetObjects)
+        foreach (StageMechanicsController targetObject in targetObjects)
         {
             if (targetObject != null)
             {
                 //오브젝트 내 메시 오브젝트 지정
                 targetFuncScript = targetObject.GetComponent<InteractionObject>();
-                targetGameObjects = targetFuncScript.selfMesh;
-                int i = 0;
-                foreach (GameObject targetGameObject in targetGameObjects)
-                {
-                    MeshRenderer targetRenderer = targetGameObject.GetComponent<MeshRenderer>();
-                    //발광할 머티리얼 찾아서 활성화
-                    if (targetRenderer != null && targetFuncScript.selfRecoloredMaterialsGlow[i]>0)
-                    {
-                        originalMaterialsTarget = targetRenderer.sharedMaterials;
-                        recoloredMaterialsGlowTarget = targetFuncScript.selfRecoloredMaterialsGlow[i];
-                        originalMaterialsTarget[recoloredMaterialsGlowTarget] = newGlowMaterial;
-                        targetRenderer.sharedMaterials = originalMaterialsTarget;
-                    }
-                    i++;
-                }
-                //조명 활성화
-                targetLightObject = (targetFuncScript.selfMeshLight);
-                targetLightObject.SetActive(true);
-                //실제 작동
-                targetFuncScript.Activate();
+                targetFuncScript.Trigger();
             }
         }
 
-        meshRenderer = selfMesh.GetComponent<MeshRenderer>();
         foreach (int index in selfRecoloredMaterialsGlow)
         {
             if (index >= 0 && index < originalMaterials.Length)
@@ -120,30 +96,11 @@ public class SwitchTrigger : MonoBehaviour
     {
         if (targetObjects != null && targetObjects.Length > 0)
         {
-            foreach (GameObject targetObject in targetObjects)
+            foreach (StageMechanicsController targetObject in targetObjects)
             {
                 //오브젝트 내 메시 오브젝트 지정
                 targetFuncScript = targetObject.GetComponent<InteractionObject>();
-                targetGameObjects = targetFuncScript.selfMesh;
-                int i = 0;
-                foreach (GameObject targetGameObject in targetGameObjects)
-                {
-                    MeshRenderer targetRenderer = targetGameObject.GetComponent<MeshRenderer>();
-                    //발광할 머티리얼 찾아서 활성화
-                    if (targetRenderer != null && targetFuncScript.selfRecoloredMaterialsGlow[i] > 0)
-                    {
-                        originalMaterialsTarget = targetRenderer.sharedMaterials;
-                        recoloredMaterialsGlowTarget = targetFuncScript.selfRecoloredMaterialsGlow[i];
-                        originalMaterialsTarget[recoloredMaterialsGlowTarget] = newMaterial;
-                        targetRenderer.sharedMaterials = originalMaterialsTarget;
-                    }
-                    i++;
-                }
-                //조명 비활성화
-                targetLightObject = (targetFuncScript.selfMeshLight);
-                targetLightObject.SetActive(false);
-                //실제 작동
-                targetFuncScript.Disactivate();
+                targetFuncScript.Exit();
             }
         }
         
@@ -161,8 +118,6 @@ public class SwitchTrigger : MonoBehaviour
         // Other actions when deactivated
         activated = false;
     }
-
-   
 
     void RecolorMaterials()
     {
@@ -212,43 +167,4 @@ public class SwitchTrigger : MonoBehaviour
         selfMeshLight.SetActive(false);
     }
 
-    void RecolorTargetObject(GameObject targetObjectEach)
-    {
-        //targetGameObjects = targetObjectEach;
-        //targetFuncScript = targetObjectEach.GetComponent<InteractionObject>();
-        targetGameObjects = (targetFuncScript.selfMesh);
-        targetLightObject = (targetFuncScript.selfMeshLight);
-
-        int i = 0;
-        foreach(GameObject targetObject in targetGameObjects)
-        {
-            meshRendererTarget = targetObject.GetComponent<MeshRenderer>();
-            if (meshRendererTarget != null)
-            {
-                originalMaterialsTarget = meshRendererTarget.sharedMaterials;
-
-                recoloredMaterialsTarget = targetFuncScript.selfRecoloredMaterials[i];
-                recoloredMaterialsGlowTarget = targetFuncScript.selfRecoloredMaterialsGlow[i];
-
-                if (recoloredMaterialsTarget >= 0 && (recoloredMaterialsTarget <= originalMaterialsTarget.Length))
-                {
-                    originalMaterialsTarget[recoloredMaterialsTarget] = newMaterial;
-                }
-                if (recoloredMaterialsGlowTarget >= 0 && (recoloredMaterialsGlowTarget <= originalMaterialsTarget.Length))
-                {
-                    originalMaterialsTarget[recoloredMaterialsGlowTarget] = newMaterial;
-                }
-                meshRendererTarget.sharedMaterials = originalMaterialsTarget;
-            }
-            i++;
-        }
-        meshRendererLightTarget = targetLightObject.GetComponent<Light>();
-
-        if (meshRendererLightTarget != null)
-        {
-            meshRendererLightTarget.color = selfColor;
-            targetLightObject.SetActive(false);
-        }
-
-    }
 }

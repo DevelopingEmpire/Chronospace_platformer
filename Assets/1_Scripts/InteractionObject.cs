@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using DG.Tweening; // dot ween 사용 
 
-public class InteractionObject : MonoBehaviour
+public class InteractionObject : StageMechanicsController
 {
     [Header("Interaction Target")]
     public GameObject[] targetObjects;
@@ -25,7 +25,16 @@ public class InteractionObject : MonoBehaviour
     public GameObject selfMeshLight;
     public int[] selfRecoloredMaterials;
     public int[] selfRecoloredMaterialsGlow;
+
+    private MeshRenderer meshRenderer; //오브젝트의 메시 렌더링 시스템을 불러올 때 사용됨
+    private Light meshRendererLight;
+    private Material[] originalMaterials; //오브젝트의 머티리얼 리스트를 임시로 불러올 때 사용됨
+    private Material importedMaterial; //스위치 오브젝트에서 받아온 머티리얼을 저장
+    private Material importedMaterialGlow; //스위치 오브젝트에서 받아온 발광 머티리얼을 저장
+
     //other vars are granted from switch
+
+    public override int Idx { get; set; }
 
     void Start()
     {
@@ -47,24 +56,66 @@ public class InteractionObject : MonoBehaviour
 
     // Update is called once per frame
 
-    public void Activate()
+    public override void Trigger()
     {
-        //Debug.Log("Activate");
+        //Debug.Log("Trigger");
         for (int i = 0; i < targetObjects.Length; i++)
         {
             targetObjects[i].transform.DOLocalMove(originalLoc[i] + transitionLoc[i], duration);
             targetObjects[i].transform.DOLocalRotate(originalRot[i] + transitionRot[i], duration);
             targetObjects[i].transform.DOScale(transitionScale[i], duration);
         }
+
+        selfMeshLight.SetActive(true);
+        for (int i = 0; i<selfMesh.Length; i++){
+            if(selfRecoloredMaterialsGlow[i] != -1) {
+                meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
+                originalMaterials = meshRenderer.sharedMaterials;
+                originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterialGlow;
+                meshRenderer.sharedMaterials = originalMaterials;
+            }
+        }
     }
 
-    public void Disactivate()
+    public override void Exit()
     {
         for (int i = 0; i < targetObjects.Length; i++)
         {
             targetObjects[i].transform.DOLocalMove(originalLoc[i], duration);
             targetObjects[i].transform.DOLocalRotate(originalRot[i], duration);
             targetObjects[i].transform.DOScale(originalScale[i], duration);
+        }
+
+        selfMeshLight.SetActive(false);
+        for (int i = 0; i<selfMesh.Length; i++){
+            if(selfRecoloredMaterialsGlow[i] != -1) {
+                meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
+                originalMaterials = meshRenderer.sharedMaterials;
+                originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterial;
+                meshRenderer.sharedMaterials = originalMaterials;
+            }
+        }
+    }
+
+    public override void SetInitialColor(Material targetColor, Material targetColorGlow)
+    {
+        importedMaterial = targetColor;
+        importedMaterialGlow = targetColorGlow;
+        for (int i = 0; i<selfMesh.Length; i++){
+            if(selfRecoloredMaterialsGlow[i] != -1) {
+                meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
+                originalMaterials = meshRenderer.sharedMaterials;
+                originalMaterials[selfRecoloredMaterials[i]] = importedMaterial;
+                originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterial;
+                meshRenderer.sharedMaterials = originalMaterials;
+            }
+        }
+
+        if (selfMeshLight != null)
+        {
+            meshRendererLight = selfMeshLight.GetComponent<Light>();
+            meshRendererLight.color = importedMaterial.color;
+            selfMeshLight.SetActive(false);
         }
     }
 }
