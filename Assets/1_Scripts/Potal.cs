@@ -31,4 +31,9 @@ public class Potal : StageMechanicsController
     {
         isActivated = false;
     }
+
+    public override void SetInitialColor(Material targetColor, Material targetColorGlow)
+    {
+
+    }
 }

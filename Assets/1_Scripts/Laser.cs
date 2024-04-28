@@ -4,14 +4,28 @@ using UnityEngine;
 
 public class Laser : StageMechanicsController
 {
+
+    [Header("Laser")]
     RaycastHit hit;
     public LineRenderer lr; // 얘가 선을 그어줄거야! 
     public Vector3 newPosition;
     public Vector3 newDir;
-    public int idx; // 인스펙터에서 정해주기  
 
+    [Header("Interactions")]
+    public int idx; // 인스펙터에서 정해주기  
     public GameObject lastPressedButton;
     public bool activated; // 활성화 여부 
+
+    [Header("Material Changes")]
+    public GameObject[] selfMesh;
+    public GameObject selfMeshLight;
+    public int[] selfRecoloredMaterials;
+    public int[] selfRecoloredMaterialsGlow;
+
+    private MeshRenderer meshRenderer;
+    private Material[] originalMaterials;
+    private Material importedMaterial;
+    private Material importedMaterialGlow;
 
     public override int Idx { get; set; }
 
@@ -29,12 +43,45 @@ public class Laser : StageMechanicsController
     public override void Trigger()
     {
         activated = true;
+
+        for (int i = 0; i<selfMesh.Length; i++){
+            if(selfRecoloredMaterialsGlow[i] != -1) {
+                meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
+                originalMaterials = meshRenderer.sharedMaterials;
+                originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterialGlow;
+                meshRenderer.sharedMaterials = originalMaterials;
+            }
+        }
     }
 
     public override void Exit()
     {
         activated = false;
-        lr.positionCount = 0; // 초기화 
+        lr.positionCount = 0;
+
+        for (int i = 0; i<selfMesh.Length; i++){
+            if(selfRecoloredMaterialsGlow[i] != -1) {
+                meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
+                originalMaterials = meshRenderer.sharedMaterials;
+                originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterial;
+                meshRenderer.sharedMaterials = originalMaterials;
+            }
+        }
+    }
+
+    public override void SetInitialColor(Material targetColor, Material targetColorGlow)
+    {
+        importedMaterial = targetColor;
+        importedMaterialGlow = targetColorGlow;
+        for (int i = 0; i<selfMesh.Length; i++){
+            if(selfRecoloredMaterialsGlow[i] != -1) {
+                meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
+                originalMaterials = meshRenderer.sharedMaterials;
+                originalMaterials[selfRecoloredMaterials[i]] = importedMaterial;
+                originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterial;
+                meshRenderer.sharedMaterials = originalMaterials;
+            }
+        }
     }
 
     public void LaserOn()
