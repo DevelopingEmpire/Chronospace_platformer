@@ -6,7 +6,7 @@ using UnityEngine;
 public class SaveData
 {
     public List<string> stageNames = new List<string>();
-    public List<bool> stageClearStatuses = new List<bool>();
+    public List<bool> stageClearStatus = new List<bool>();
 }
 
 public class DataManager : MonoBehaviour
@@ -57,7 +57,7 @@ public class DataManager : MonoBehaviour
                 for (int i = 0; i < saveData.stageNames.Count; i++)
                 {
                     // 이미 존재하는 키에 대한 처리가 필요 없으므로, Add 대신 인덱싱을 사용하여 값을 할당
-                    StageManager.Instance.stageClearStatus.Add(saveData.stageNames[i], saveData.stageClearStatuses[i]);
+                    StageManager.Instance.stageClearStatus.Add(saveData.stageNames[i], saveData.stageClearStatus[i]);
                 }
             }
         }
@@ -71,6 +71,7 @@ public class DataManager : MonoBehaviour
         foreach (var stage in StageManager.Instance.stageClearStatus)
         {
             saveData.stageNames.Add(stage.Key);
+            saveData.stageClearStatus.Add(false);
         }
 
         string json = JsonUtility.ToJson(saveData, true);
