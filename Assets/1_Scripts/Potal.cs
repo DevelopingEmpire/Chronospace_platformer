@@ -18,6 +18,7 @@ public class Potal : StageMechanicsController
     {
         if (other.CompareTag("Player") && isActivated)
         {
+            StageManager.Instance.SetStageCleared(); // 스테이지 클리어 됨 
             SceneManager.LoadScene("Stage0");
         }
     }

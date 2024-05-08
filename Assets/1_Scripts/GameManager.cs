@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Confined; // 마우스 커서 이탈 방지 
+
+        StageManager.Instance.InitializeStageClearStatus(); // 기본 정보 초기화 
     }
 
     // 타이틀 씬에서 쓰레기장 씬으로 이동 
@@ -49,7 +51,7 @@ public class GameManager : MonoBehaviour
     /*
     public void LoadGameScence() // stage 의 번호를 int로 받고, stage1 stage2 요런식으로 구분하면 좋을듯..!  
     {
-
+        
     }
     */
 
