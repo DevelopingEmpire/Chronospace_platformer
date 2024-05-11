@@ -67,6 +67,7 @@ public class SwitchTrigger : MonoBehaviour
 
     private void OnSwitchController()
     {
+        /*
         foreach (StageMechanicsController targetObject in targetObjects)
         {
             if (targetObject != null)
@@ -74,6 +75,12 @@ public class SwitchTrigger : MonoBehaviour
                 //오브젝트 내 메시 오브젝트 지정
                 targetFuncScript = targetObject.GetComponent<InteractionObject>();
                 targetFuncScript.Trigger();
+            }
+        }
+        */
+        foreach (StageMechanicsController tObj in targetObjects) {
+            if(tObj != null) {
+                tObj.Trigger();
             }
         }
 
@@ -94,6 +101,7 @@ public class SwitchTrigger : MonoBehaviour
 
     private void OffSwitchController()
     {
+        /* 
         if (targetObjects != null && targetObjects.Length > 0)
         {
             foreach (StageMechanicsController targetObject in targetObjects)
@@ -101,6 +109,13 @@ public class SwitchTrigger : MonoBehaviour
                 //오브젝트 내 메시 오브젝트 지정
                 targetFuncScript = targetObject.GetComponent<InteractionObject>();
                 targetFuncScript.Exit();
+            }
+        }
+        */
+
+        foreach (StageMechanicsController tObj in targetObjects) {
+            if(tObj != null) {
+                tObj.Exit();
             }
         }
         
