@@ -5,6 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #region SingleTon Pattern
+    public static GameManager Instance { get; private set; }
+    private void Awake()
+    {
+        // If an instance already exists and it's not this one, destroy this one
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        // Set this as the instance and ensure it persists across scenes
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+    }
+
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +33,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 타이틀 씬에서 쓰레기장 씬으로 이동 
-    public IEnumerator LoadMainScene(string sceneName)
+    public IEnumerator LoadScene(string sceneName)
     {
         // 비동기적으로 씬 로딩
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
@@ -45,6 +64,7 @@ public class GameManager : MonoBehaviour
             //게임 맵 들어가는 경우 
 
         }
+        StageManager.Instance.currentStageName = sceneName; // 바뀐 씬을 현재 씬으로 변경해줌 
 
     }
 
