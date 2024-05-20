@@ -11,23 +11,39 @@ public class PlayerTimer : MonoBehaviour
     public float currentTime; // 현재 남은 시간 
     public Player player; // player 스크립트 
 
+    public bool isPlaying = false; // play 중에만 타이머 시작 
+
     public GameObject timerUI; 
     public TextMeshProUGUI timerText;
     public Image timerBar;
 
-    // Start is called before the first frame update
-    void Start()
+    public void TimerUIInit()
+    {
+        // UI 요소들이 null이 아닌지 확인하고, null이라면 다시 찾기
+        if (UIManager.instance != null && UIManager.instance.battleHUDScreen != null)
+        {
+            timerUI = UIManager.instance.battleHUDScreen.transform.GetChild(1).gameObject;
+            timerBar = timerUI.transform.GetChild(0).GetComponent<Image>();// 빨간 바 
+            timerText = timerUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        }
+        else
+        {
+            Debug.LogError("UIManager 또는 battleHUDScreen이 null입니다.");
+        }
+    }
+
+    private void Start()
     {
         currentTime = timeLimit;
-        timerText = timerUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-        timerBar = timerUI.transform.GetChild(0).GetComponent<Image>();// 빨간 바 
+        TimerUIInit(); // Start에서 UI 초기화 호출
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (player.isAlive) 
+        if (isPlaying && player.isAlive) 
         {
             CountDown();
         }
