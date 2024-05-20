@@ -35,9 +35,12 @@ public class GameManager : MonoBehaviour
     // 타이틀 씬에서 쓰레기장 씬으로 이동 
     public IEnumerator LoadScene(string sceneName)
     {
+        Debug.Log("게임매니저 - 로드씬 실행 됨  ");
+
         // 비동기적으로 씬 로딩
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
 
+        Debug.Log("비동기 씬 로딩 시작 ");
 
 
         // 씬 로딩이 완료될 때까지 대기
@@ -46,14 +49,23 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        // PlayerTimer 제어 로직 추가
+        PlayerTimer playerTimer = FindObjectOfType<PlayerTimer>();
+
         // 로비로 가는 경우
         if (sceneName == "Stage0")
         {
-            /*
-            UIManager.instance.OnClickBattleButton();
-            UIManager.instance.pickUpScreen.SetActive(true);
-            UIManager.instance.selectedStageName = preStageName;
-            */
+
+            if (playerTimer != null)
+            {
+                playerTimer.enabled = false; // PlayerTimer 비활성화
+            }
+
+            //UIManager.instance.OnClickBattleButton();
+            //UIManager.instance.pickUpScreen.SetActive(true);f
+            //UIManager.instance.selectedStageName = preStageName;
+
+
 
             //브금 틀기 
             //AudioManager.instance.PlayBgm(AudioManager.BGM.BGM_Lobby);
@@ -62,10 +74,14 @@ public class GameManager : MonoBehaviour
         else
         {
             //게임 맵 들어가는 경우 
-
+            if (playerTimer != null)
+            {
+                playerTimer.enabled = true; // PlayerTimer 활성화
+            }
         }
-        StageManager.Instance.currentStageName = sceneName; // 바뀐 씬을 현재 씬으로 변경해줌 
 
+        StageManager.Instance.currentStageName = sceneName; // 바뀐 씬을 현재 씬으로 변경해줌 
+        Debug.Log("바뀐 씬 이름으로 바꿔줌 ");
     }
 
     /*

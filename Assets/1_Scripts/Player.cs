@@ -72,7 +72,26 @@ public class Player : MonoBehaviour, IGravityControl
 
     public float Gravity { get; set; }
 
-    
+    // 플레이어를 싱글톤으로??
+    #region SingleTon Pattern
+    public static Player Instance { get; private set; }
+    private void Awake()
+    {
+        // If an instance already exists and it's not this one, destroy this one
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        // Set this as the instance and ensure it persists across scenes
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+    }
+
+    #endregion
+
     public void AntiGravity() // 중력 반전 함수 
     {
         IsInRange = true;
