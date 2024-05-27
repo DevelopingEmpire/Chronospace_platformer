@@ -8,6 +8,7 @@ public class Portal : StageMechanicsController
 {
     public bool isActivated; // 포탈 켜졌는지 아닌지 
     public override int Idx { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public string targetScene;
 
     [Header("Symbol")]
     public GameObject symbolObject;
@@ -34,30 +35,27 @@ public class Portal : StageMechanicsController
 
     private void Start()
     {
-        isActivated = false;
         PosSymbol();
     }
 
     void FixedUpdate() {
-        symbolObjectPos.transform.Rotate(symbolRotAxis * symbolRotSpeed * Time.deltaTime); // 빙글빙글 회전 효과
+        if (symbolObjectPos != null) {
+            symbolObjectPos.transform.Rotate(symbolRotAxis * symbolRotSpeed * Time.deltaTime); // 빙글빙글 회전 효과
+        }
     }
 
     private void PosSymbol() {
-        symbolInitPos = symbolObjectPos.transform.position;
-        symbolInitRot = symbolObjectPos.transform.rotation;
-        symbolObjectPos = Instantiate(symbolObject, symbolInitPos, symbolInitRot);
+        if (symbolObjectPos != null)
+        {
+            symbolInitPos = symbolObjectPos.transform.position;
+            symbolInitRot = symbolObjectPos.transform.rotation;
+            symbolObjectPos = Instantiate(symbolObject, symbolInitPos, symbolInitRot);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && isActivated)
-        {
-            StageManager.Instance.SetStageCleared(); // 스테이지 클리어 됨 
-            SceneManager.LoadScene("Stage0");
-        }
 
-        /*
-         
          Debug.Log("포탈에 닿음");
         // 플레이어가 액티브 포탈에 닿았는지 확인 
         if (!(other.CompareTag("Player") && isActivated)) {
@@ -72,14 +70,17 @@ public class Portal : StageMechanicsController
         Debug.Log("스테이지 입장가능 ");
 
         // 스테이지 이동 가즈아 
-        // StageManager.Instance.SetStageCleared(); // 현재 스테이지 클리어 됨 
-        StartCoroutine(GameManager.Instance.LoadScene(targetScene)); // 다음 스테이지 로드 - 비동기 이넘이므로 스타트 코루틴 
-        Debug.Log("게임매니저 - 로드씬 호출 됨 ");
 
-        // SceneManager.LoadScene(targetScene);  // 씬 로드하기 임시 
-         
-         
-         */
+        // if stage0 으로 가는거면 그냥 가고, 아니면 스테이지 클리어 처리 
+        if(targetScene == "Stage0" || targetScene == "Stage1")
+        {
+            StageManager.Instance.SetStageCleared(); // 현재 스테이지 클리어 됨 
+        }
+
+        GameManager.Instance.LoadSceneCall(targetScene); // 다음 스테이지 로드 요청
+
+        Debug.Log("게임매니저 - 로드씬 요청 됨 ");
+
     }
 
     public override void Trigger()

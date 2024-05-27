@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -31,6 +32,11 @@ public class GameManager : MonoBehaviour
         StageManager.Instance.InitializeStageClearStatus(); // 기본 정보 초기화
     }
 
+    // potal은 씬 생성 호출 후 사라지므로, 생성은 게임 매니저가 맡는다.
+    public void LoadSceneCall(string sceneName) 
+    {
+        StartCoroutine(LoadScene(sceneName)); //비동기이므로 코루틴으로 호출 
+    }
     // 타이틀 씬에서 쓰레기장 씬으로 이동 
     public IEnumerator LoadScene(string sceneName)
     {
@@ -38,24 +44,16 @@ public class GameManager : MonoBehaviour
 
         // 비동기적으로 씬 로딩
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = true; // 씬 활성화 허용 여부 초기화
+        
 
         Debug.Log("비동기 씬 로딩 시작 ");
 
         // 씬 로딩이 완료될 때까지 대기
         while (!asyncLoad.isDone)
         {
-            Debug.Log("로딩 진행 중: " + asyncLoad.progress);
-
-            // progress가 0.9에 도달했을 때 씬 활성화 허용
-            if (asyncLoad.progress >= 0.9f)
-            {
-                Debug.Log("로딩 0.9 도달, 씬 활성화 준비 완료");
-                asyncLoad.allowSceneActivation = true;
-            }
-
             yield return null;
         }
+
         Debug.Log("비동기 씬 로딩 됨  ");
 
         // PlayerTimer 제어 로직 추가
@@ -84,34 +82,13 @@ public class GameManager : MonoBehaviour
             {
                 playerTimer.enabled = true; // PlayerTimer 활성화
             }
+
         }
 
         StageManager.Instance.currentStageName = sceneName; // 바뀐 씬을 현재 씬으로 변경해줌 
-        Debug.Log("바뀐 씬 이름으로 바꿔줌 ");
 
-        // 전환 후 해당 씬의 시작 위치로 이동
-        StartCoroutine(MovePlayerToStartPosition());
+        // 캐릭터 위치, 타이머 시작, 등등 .. 초기화하는 함수 
+        Player.Instance.PlayerInit(sceneName);
     }
 
-    private IEnumerator MovePlayerToStartPosition()
-    {
-        yield return new WaitForSeconds(1); // 씬이 완전히 로드되도록 1초 대기
-
-        GameObject startPosition = GameObject.FindWithTag("StartPosition");
-        if (startPosition != null && playerObject != null)
-        {
-            playerObject.transform.position = startPosition.transform.position;
-            playerObject.transform.rotation = startPosition.transform.rotation;
-            Debug.Log("캐릭터를 시작 위치로 이동시켰습니다.");
-        }
-        else
-        {
-            Debug.LogError("StartPosition 태그를 가진 오브젝트를 찾을 수 없습니다.");
-        }
-    }
-
-    public void LoadTitleScene()
-    {
-        SceneManager.LoadScene("TestTitle"); // 타이틀 씬 불러오기 
-    }
 }

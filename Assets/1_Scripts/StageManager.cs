@@ -45,7 +45,7 @@ public class StageManager : MonoBehaviour
     {
         stageClearStatus = new Dictionary<string, bool>();
 
-        for (int i = 1; i <= 10; i++)
+        for (int i = 0; i <= 10; i++)
         {
             stageClearStatus.Add("Stage" + i, false);
         }
@@ -81,6 +81,7 @@ public class StageManager : MonoBehaviour
     {
         return stageClearStatus.TryGetValue(stageName, out bool cleared) && cleared;
     }
+
 
 }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -109,9 +110,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Start()
     {
-        Application.targetFrameRate = 50; // 서주민 전용코드 
-        Gravity = -9.81f;
-        //controller.detectCollisions = false; // 이거 끄면.. 플레이어가 발판을 못 밟음 
+        PlayerInit(StageManager.Instance.currentStageName); // 플레이어 초기화 
     }
 
     void Update() //플레이어 상태 관리 함수
@@ -260,6 +259,23 @@ public class Player : MonoBehaviour, IGravityControl
         isSwaping = false;
     }
 
+    // 플레이어 상태 초기화 
+    public void PlayerInit(string sceneName)
+    {
+        Gravity = 0;
+        moveDirection = Vector3.zero; // 이 값 임의로 초기화 
+
+        controller.enabled = false; // 잠시 끄고 
+        transform.position = new Vector3(0,2,0); // 처음 위치로 이동 
+        controller.enabled = true; // 다시 켠다 
+
+        Application.targetFrameRate = 50; // 서주민 전용코드 
+        Gravity = -9.81f;
+        //controller.detectCollisions = false; // 이거 끄면.. 플레이어가 발판을 못 밟음 
+
+        if(sceneName == "stage0") timer.isPlaying = false;
+        else timer.isPlaying = true;
+    }
     void Interaction() //아이템 줍기
     {
         if (nearObject != null && nearObject.tag == "Item")

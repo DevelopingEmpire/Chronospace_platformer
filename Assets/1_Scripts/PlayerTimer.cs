@@ -22,8 +22,8 @@ public class PlayerTimer : MonoBehaviour
         // UI 요소들이 null이 아닌지 확인하고, null이라면 다시 찾기
         if (UIManager.instance != null && UIManager.instance.battleHUDScreen != null)
         {
-            timerUI = UIManager.instance.battleHUDScreen.transform.GetChild(1).gameObject;
-            timerBar = timerUI.transform.GetChild(0).GetComponent<Image>();// 빨간 바 
+            timerUI = UIManager.instance.battleHUDScreen.transform.GetChild(0).gameObject;
+            timerBar = timerUI.transform.GetChild(0).GetComponent<Image>();// 테두리 원 
             timerText = timerUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         }
         else

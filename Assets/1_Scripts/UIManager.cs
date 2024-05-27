@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static UnityEditor.Progress;
 //using UnityEngine.SceneManagement; // 씬 매니지먼트 
 
 public class UIManager : MonoBehaviour
@@ -24,9 +25,10 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-    public GameObject startScreen;
-    public GameObject settingScreen;
-    public GameObject battleHUDScreen;
+
+    public GameObject settingScreen; // 설정창
+
+    public GameObject battleHUDScreen; // HUD 전체 
     public GameObject itemLayOut; // 아이템 가진 현황 
 
 
@@ -61,10 +63,24 @@ public class UIManager : MonoBehaviour
         {
             itemFrame.color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 1f); // 보임
             itemFrame.transform.position = itemLayOut.transform.GetChild((int)useItem).GetComponent<Image>().transform.position; // 0중력, 1시간, 2 태엽
-
+            
         }
         
     }
     #endregion
+
+    public void SetUIForScene(string sceneName)
+    {
+        if (sceneName == "Stage0")
+        {
+            // Robby에서 보일 UI 요소 설정
+            battleHUDScreen.SetActive(false);
+        }
+        else
+        {
+            // Stage에서 보일 UI 요소 설정
+            battleHUDScreen.SetActive(true);
+        }
+    }
 
 }
