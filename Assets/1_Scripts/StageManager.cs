@@ -82,6 +82,16 @@ public class StageManager : MonoBehaviour
         return stageClearStatus.TryGetValue(stageName, out bool cleared) && cleared;
     }
 
+    // stage 첫 시작시 init()
+    public void StageInit(string sceneName)
+    {
+        // 현재 씬 이름 변경 
+        currentStageName = sceneName;
 
+        // 현재 씬에서 시작 위치 오브젝트 찾기 
+        Vector3 startpostion = GameObject.FindWithTag("StartPosition").transform.position;
+
+        Player.Instance.PlayerInit(startpostion);
+    }
 }
 
