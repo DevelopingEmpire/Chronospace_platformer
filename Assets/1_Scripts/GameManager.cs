@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Confined; // 마우스 커서 이탈 방지
-        StageManager.Instance.InitializeStageClearStatus(); // 기본 정보 초기화
+        // StageManager.Instance.InitializeStageClearStatus(); // 기본 정보 초기화.. 는 처음에만 수행해야지
         StageManager.Instance.StageInit("Stage0");
     }
 

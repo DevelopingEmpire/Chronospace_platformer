@@ -40,8 +40,10 @@ public class DataManager : MonoBehaviour
     {
         if (!File.Exists(path))
         {
+            
             StageManager.Instance.InitializeStageClearStatus();
             SaveJson(); // 초기 데이터를 파일에 저장
+            Debug.Log("stagedata.json 생성됨");
         }
         else
         {
@@ -60,8 +62,8 @@ public class DataManager : MonoBehaviour
                     StageManager.Instance.stageClearStatus.Add(saveData.stageNames[i], saveData.stageClearStatus[i]);
                 }
             }
+            Debug.Log("stagedata.json 불러옴");
         }
-        SaveJson();
     }
 
     public void SaveJson()

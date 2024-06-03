@@ -62,12 +62,14 @@ public class Portal : StageMechanicsController
             Debug.Log("활성화 안됨");
             return;
         }
-
-
         Debug.Log("활성화 확인");
+
+        /*
         // 스테이지 입장 가능한 상태인지 확인 
         if (!StageManager.Instance.CanEnterStage(targetScene)) return;
         Debug.Log("스테이지 입장가능 ");
+        */
+        
 
         // 스테이지 이동 가즈아 
 

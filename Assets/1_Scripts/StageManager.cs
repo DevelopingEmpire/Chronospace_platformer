@@ -53,20 +53,20 @@ public class StageManager : MonoBehaviour
 
     public bool CanEnterStage(string stageName)
     {
-        if (stageName.StartsWith("Stage1")) // 첫 스테이지는 그냥 들어가게 해야하고 그 뒤 스테이지는 체크가 필요하다. 
+        // 첫 스테이지는 그냥 들어가게 해야하고 그 뒤 스테이지는 체크가 필요하다. 
+        
+        int stageNumber = int.Parse(stageName.Replace("Stage", ""));
+        // 일반 스테이지 1은 항상 진입 가능
+        if (stageNumber == 1 || stageNumber == 0)
         {
-            int stageNumber = int.Parse(stageName.Replace("Stage", ""));
-            // 일반 스테이지 1은 항상 진입 가능
-            if (stageNumber == 1)
-            {
-                return true;
-            }
-            // 그 외의 일반 스테이지는 이전 스테이지 클리어 여부 확인
-            else if (stageNumber > 1)
-            {
-                return IsStageCleared("Stage" + (stageNumber - 1));
-            }
+            return true;
         }
+        // 그 외의 일반 스테이지는 이전 스테이지 클리어 여부 확인
+        else if (stageNumber > 1)
+        {
+            return IsStageCleared("Stage" + (stageNumber - 1));
+        }
+        
         return false; // 기본적으로는 진입 불가능
     }
 
@@ -94,4 +94,3 @@ public class StageManager : MonoBehaviour
         Player.Instance.PlayerInit(startpostion);
     }
 }
-
