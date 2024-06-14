@@ -7,7 +7,7 @@ public class Laser : StageMechanicsController
 
     [Header("Laser")]
     RaycastHit hit;
-    public LineRenderer lr; // 얘가 선을 그어줄거야! 
+    public LineRenderer lineRenderMethod; // 얘가 선을 그어줄거야! 
     public Vector3 newPosition;
     public Vector3 newDir;
 
@@ -32,8 +32,8 @@ public class Laser : StageMechanicsController
     private void Start()
     {
         Idx = idx; // 인스펙터에서 지정한 값을 Idx에 저장 
-
         activated = false;
+        lineRenderMethod.material = importedMaterialGlow;
     }
 
     private void Update()
@@ -57,7 +57,7 @@ public class Laser : StageMechanicsController
     public override void Exit()
     {
         activated = false;
-        lr.positionCount = 0;
+        lineRenderMethod.positionCount = 0;
 
         for (int i = 0; i<selfMesh.Length; i++){
             if(selfRecoloredMaterialsGlow[i] != -1) {
@@ -88,7 +88,8 @@ public class Laser : StageMechanicsController
     {
         List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
 
-        newPosition = transform.position + transform.forward;
+        //newPosition = transform.position + transform.forward;
+        newPosition = transform.position;
         newDir = transform.forward;
 
         positions.Add(newPosition);
@@ -128,10 +129,10 @@ public class Laser : StageMechanicsController
         }
 
         // 레이저 한붓그리기 
-        lr.positionCount = positions.Count; // 정점 추가 
+        lineRenderMethod.positionCount = positions.Count; // 정점 추가 
         for (int i = 0; i < positions.Count; i++)
         {
-            lr.SetPosition(i, positions[i]);
+            lineRenderMethod.SetPosition(i, positions[i]);
         }
     }
 

@@ -280,7 +280,9 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (nearObject != null && nearObject.tag == "Item")
         {
-            textMeshProUGUI.enabled = false; // ui 끄기 
+            if(textMeshProUGUI != null){
+                textMeshProUGUI.enabled = false; // ui 끄기 
+            }
             Item item = nearObject.GetComponent<Item>();
             int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
             //Debug.Log("itemIndex" + itemIndex);
@@ -291,7 +293,9 @@ public class Player : MonoBehaviour, IGravityControl
         }
         else if (nearObject != null && nearObject.tag == "Switch")
         {
-            textMeshProUGUI.enabled = false; // ui 끄기 
+            if(textMeshProUGUI != null){
+                textMeshProUGUI.enabled = false; // ui 끄기 
+            }
             SwitchTrigger targetSwitchScript = nearObject.GetComponent<SwitchTrigger>();
             if (targetSwitchScript != null)
             {
@@ -393,12 +397,16 @@ public class Player : MonoBehaviour, IGravityControl
         if (other.CompareTag("Item")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
         {
             //UI 켜기
-            textMeshProUGUI.enabled = true;
+            if(textMeshProUGUI != null){
+                textMeshProUGUI.enabled = true; // ui 끄기 
+            }
             nearObject = other.gameObject;
         }
         else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
         {
-            textMeshProUGUI.enabled = true;
+            if(textMeshProUGUI != null){
+                textMeshProUGUI.enabled = true; // ui 끄기 
+            }
             nearObject = other.gameObject;
         }
         else if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
@@ -414,12 +422,16 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (other.CompareTag("Item"))
         {
-            textMeshProUGUI.enabled = false; // ui 끄기 
+            if(textMeshProUGUI != null){
+                textMeshProUGUI.enabled = false; // ui 끄기 
+            }
             nearObject = null;
         }
         else if (other.CompareTag("Switch")) //플레이어면 플레이어임을 확인하고 true
         {
-            textMeshProUGUI.enabled = false; // ui 끄기 
+            if(textMeshProUGUI != null){
+                textMeshProUGUI.enabled = false; // ui 끄기 
+            }
             nearObject = null;
         }
         else if(other.CompareTag("Player"))

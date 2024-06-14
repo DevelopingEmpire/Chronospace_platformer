@@ -4,6 +4,7 @@ using UnityEngine;
 public class StageManager : MonoBehaviour
 {
     #region SingleTon Pattern
+    public Vector3 startPosOffset;
     public static StageManager Instance { get; private set; }
     private void Awake()
     {
@@ -89,7 +90,7 @@ public class StageManager : MonoBehaviour
         currentStageName = sceneName;
 
         // 현재 씬에서 시작 위치 오브젝트 찾기 
-        Vector3 startpostion = GameObject.FindWithTag("StartPosition").transform.position;
+        Vector3 startpostion = GameObject.FindWithTag("StartPosition").transform.position + startPosOffset;
 
         Player.Instance.PlayerInit(startpostion);
     }
