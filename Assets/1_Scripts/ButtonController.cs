@@ -57,7 +57,6 @@ public class ButtonController : StageMechanicsController
     private void OnTriggerEnter(Collider col)
     {
         controller = col.GetComponent<CharacterController>(); // 밟을 수 있는 애들은 다 캐.콘 갖고있음 
-        selfMeshLight.SetActive(true);
 
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
         if (controller != null)
@@ -69,7 +68,6 @@ public class ButtonController : StageMechanicsController
     private void OnTriggerExit(Collider col)
     {
         controller = col.GetComponent<CharacterController>(); // 밟을 수 있는 애들은 다 캐.콘 갖고있음 
-        selfMeshLight.SetActive(false);
 
         // 컴포넌트 안달린 놈은 null 반환하는데, 걔는 접근하면 오류남{
         if (controller != null)
@@ -101,6 +99,8 @@ public class ButtonController : StageMechanicsController
                 meshRenderer.sharedMaterials = originalMaterials;
             }
         }
+
+        selfMeshLight.SetActive(true);
     }
 
     public override void Exit()
@@ -123,6 +123,8 @@ public class ButtonController : StageMechanicsController
                 meshRenderer.sharedMaterials = originalMaterials;
             }
         }
+
+        selfMeshLight.SetActive(false);
     }
 
     void RecolorMaterialsInit(GameObject targetMesh, int matTarget, int matTargetGlow)

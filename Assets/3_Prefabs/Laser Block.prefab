@@ -1,5 +1,120 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6783888987073909151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2025231770703688303}
+  - component: {fileID: 5713651633035227900}
+  - component: {fileID: 1276276064942458242}
+  m_Layer: 0
+  m_Name: Laserblock_Light_Start
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2025231770703688303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6783888987073909151}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0.225}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8897125790124868827}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &5713651633035227900
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6783888987073909151}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 2
+  m_Shape: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 0.75
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!114 &1276276064942458242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6783888987073909151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &8897125789916457606
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +246,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8897125789916457601}
+  - {fileID: 2025231770703688303}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -142,12 +258,12 @@ LineRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8897125790124868824}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 0
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
@@ -176,8 +292,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: -1}
-  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -198,8 +314,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.5264151, g: 0.7919599, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.07075471, g: 1, b: 0.24049363, a: 1}
+      key1: {r: 0.07075471, g: 1, b: 0.24049363, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -222,7 +338,7 @@ LineRenderer:
       atime5: 0
       atime6: 0
       atime7: 0
-      m_Mode: 0
+      m_Mode: 1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
@@ -230,7 +346,7 @@ LineRenderer:
     alignment: 0
     textureMode: 1
     shadowBias: 0.5
-    generateLightingData: 0
+    generateLightingData: 1
   m_UseWorldSpace: 1
   m_Loop: 0
 --- !u!114 &6468420292788297568
@@ -245,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fbb58830eb53724495824387f304810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lr: {fileID: 1529434622921632395}
+  lineRenderMethod: {fileID: 1529434622921632395}
   newPosition: {x: 0, y: 0, z: 0}
   newDir: {x: 0, y: 0, z: 0}
   idx: 0
@@ -253,6 +369,7 @@ MonoBehaviour:
   activated: 0
   selfMesh:
   - {fileID: 8897125789916457606}
-  selfMeshLight: {fileID: 0}
+  selfMeshLight:
+  - {fileID: 6783888987073909151}
   selfRecoloredMaterials: 02000000
   selfRecoloredMaterialsGlow: 03000000

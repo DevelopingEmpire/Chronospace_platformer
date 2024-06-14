@@ -18,11 +18,12 @@ public class Laser : StageMechanicsController
 
     [Header("Material Changes")]
     public GameObject[] selfMesh;
-    public GameObject selfMeshLight;
+    public GameObject[] selfMeshLight;
     public int[] selfRecoloredMaterials;
     public int[] selfRecoloredMaterialsGlow;
 
     private MeshRenderer meshRenderer;
+    private Light meshRendererLight;
     private Material[] originalMaterials;
     private Material importedMaterial;
     private Material importedMaterialGlow;
@@ -34,6 +35,10 @@ public class Laser : StageMechanicsController
         Idx = idx; // 인스펙터에서 지정한 값을 Idx에 저장 
         activated = false;
         lineRenderMethod.material = importedMaterialGlow;
+
+        foreach(GameObject selfML in selfMeshLight) {
+            selfML.SetActive(false);
+        }
     }
 
     private void Update()
@@ -43,7 +48,6 @@ public class Laser : StageMechanicsController
     public override void Trigger()
     {
         activated = true;
-
         for (int i = 0; i<selfMesh.Length; i++){
             if(selfRecoloredMaterialsGlow[i] != -1) {
                 meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
@@ -51,6 +55,10 @@ public class Laser : StageMechanicsController
                 originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterialGlow;
                 meshRenderer.sharedMaterials = originalMaterials;
             }
+        }
+
+        foreach(GameObject selfML in selfMeshLight) {
+            selfML.SetActive(true);
         }
     }
 
@@ -67,6 +75,17 @@ public class Laser : StageMechanicsController
                 meshRenderer.sharedMaterials = originalMaterials;
             }
         }
+
+        foreach(GameObject selfML in selfMeshLight) {
+            selfML.SetActive(false);
+        }
+
+        if(lastPressedButton!=null) {
+            lastPressedButton.GetComponent<ButtonController>().Exit(); // 눌린거 꺼주기 
+        }
+        else{
+            Debug.Log("레이저 비활성화로 비활성화할 버튼이 없음.");
+        }
     }
 
     public override void SetInitialColor(Material targetColor, Material targetColorGlow)
@@ -80,6 +99,15 @@ public class Laser : StageMechanicsController
                 originalMaterials[selfRecoloredMaterials[i]] = importedMaterial;
                 originalMaterials[selfRecoloredMaterialsGlow[i]] = importedMaterial;
                 meshRenderer.sharedMaterials = originalMaterials;
+            }
+        }
+
+        if (selfMeshLight != null)
+        {
+            foreach(GameObject selfML in selfMeshLight) {
+                meshRendererLight = selfML.GetComponent<Light>();
+                meshRendererLight.color = importedMaterial.color;
+                selfML.SetActive(false);
             }
         }
     }
@@ -98,7 +126,8 @@ public class Laser : StageMechanicsController
         while (true)
         {
             Physics.Raycast(newPosition, newDir, out hit);
-            positions.Add(hit.point);
+            positions.Add(hit.point + (transform.forward * 0.5f));
+            //positions.Add(hit.point);
             if (hit.collider.gameObject.CompareTag("mirror"))
             {
                 newPosition = hit.point;
@@ -121,7 +150,6 @@ public class Laser : StageMechanicsController
                         lastPressedButton.GetComponent<ButtonController>().Exit(); // 눌린거 꺼주기 
                         lastPressedButton = null;
                     }
-
                 }
                 break;
             }
