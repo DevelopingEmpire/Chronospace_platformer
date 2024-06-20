@@ -13,6 +13,7 @@ public class Guards : MonoBehaviour, IGravityControl
     public float rotationSpeed = 5f;
     public float travelDistance = 5f;
     public float patrolDelay = 2f;
+    public GameObject detectionRangeObj;
     public float detectionInterval = 0.5f;
     float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
 
@@ -23,6 +24,7 @@ public class Guards : MonoBehaviour, IGravityControl
     private float fireTimer = 0f;
     public Vector3 fireOffset;
 
+    [Header("NavMesh")]
     // Reference to the NavMeshAgent component
     public NavMeshAgent navMeshAgent;
     private Vector3 targetPosition; // nav의 목표지점 
@@ -183,10 +185,11 @@ public class Guards : MonoBehaviour, IGravityControl
     }
 
     // 탐지 범위 내, 가장 가까운 플레이어를 탐색해 냄 ( 추적 대상 nearestPlayer) 
+    /*
     private void DetectPlayer()
     {
         //주변 col들 추출해서 배열에 저장
-        Collider[] hitColls = Physics.OverlapSphere(transform.position, 10f); // 시작 지점, 반지름, 레이어 
+        Collider[] hitColls = Physics.OverlapSphere(transform.position, 10f); // 시작 지점, 반지름, 레이어
 
         isPlayerDetected = false;
         nearestPlayer = null; // 
@@ -209,6 +212,43 @@ public class Guards : MonoBehaviour, IGravityControl
             }
         }
 
+    }
+    */
+    private void DetectPlayer()
+    {
+        MeshCollisionDetector detector = detectionRangeObj.GetComponent<MeshCollisionDetector>();
+        isPlayerDetected = false;
+        nearestPlayer = null;
+
+        foreach (Collider collider in hitColliders)
+        {
+            if (collider.gameObject.CompareTag("Player"))
+            {
+                isPlayerDetected = true;
+                if (nearestPlayer == null)
+                {
+                    nearestPlayer = collider.gameObject;
+                }
+                else
+                {
+                    float currentDistance = Vector3.Distance(transform.position, collider.transform.position);
+                    float nearestDistance = Vector3.Distance(transform.position, nearestPlayer.transform.position);
+                    if (currentDistance < nearestDistance)
+                    {
+                        nearestPlayer = collider.gameObject;
+                    }
+                }
+            }
+        }
+
+        if (isPlayerDetected)
+        {
+            Debug.Log("Player detected: " + nearestPlayer.name);
+        }
+        else
+        {
+            Debug.Log("No player detected");
+        }
     }
 
     // Move the opponent towards the target position using NavMeshAgent
