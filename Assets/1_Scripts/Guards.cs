@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using System; // 이벤트 쓰기 위해 가져옴 
 using UnityEngine.Diagnostics;
 using UnityEngine.InputSystem.XR;
+using System.Collections.Generic;
 
 public class Guards : MonoBehaviour, IGravityControl
 {
@@ -124,8 +125,6 @@ public class Guards : MonoBehaviour, IGravityControl
             {
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
-
-                
                 if (PlayerInFireRange()) // 사거리 내라면
                 {
                     Fire();
@@ -214,49 +213,42 @@ public class Guards : MonoBehaviour, IGravityControl
 
     }
     */
+
+    ///*
     private void DetectPlayer()
     {
         MeshCollisionDetector detector = detectionRangeObj.GetComponent<MeshCollisionDetector>();
         isPlayerDetected = false;
         nearestPlayer = null;
 
-        foreach (Collider collider in hitColliders)
+        if (detector != null)
         {
-            if (collider.gameObject.CompareTag("Player"))
+            // MeshCollisionDetector의 변수에 접근
+            bool isDetected = detector.isPlayerDetected;
+            nearestPlayer = detector.nearestPlayer;
+            List<GameObject> players = detector.playersInRange;
+
+            // 변수를 사용하여 원하는 작업 수행
+            Debug.Log("Is Player Detected: " + isDetected);
+            if (nearestPlayer != null)
             {
                 isPlayerDetected = true;
-                if (nearestPlayer == null)
-                {
-                    nearestPlayer = collider.gameObject;
-                }
-                else
-                {
-                    float currentDistance = Vector3.Distance(transform.position, collider.transform.position);
-                    float nearestDistance = Vector3.Distance(transform.position, nearestPlayer.transform.position);
-                    if (currentDistance < nearestDistance)
-                    {
-                        nearestPlayer = collider.gameObject;
-                    }
-                }
+                Debug.Log("Nearest Player: " + nearestPlayer.name);
             }
-        }
-
-        if (isPlayerDetected)
-        {
-            Debug.Log("Player detected: " + nearestPlayer.name);
+            Debug.Log("Players in Range Count: " + players.Count);
         }
         else
         {
-            Debug.Log("No player detected");
+            Debug.LogError("MeshCollisionDetector 컴포넌트를 찾을 수 없습니다!");
         }
     }
+    //*/
 
     // Move the opponent towards the target position using NavMeshAgent
     void MoveTowardsTarget()
     {
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
-        
     }
     
     bool PlayerInFireRange()
