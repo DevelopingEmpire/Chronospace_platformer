@@ -9,17 +9,15 @@ public class Guards : MonoBehaviour, IGravityControl
 {
     public GameObject nearestPlayer;
 
-    public float distWithTarget = 0.0f;
-
     [Header("Basic value")]
     public Vector3 initialPosition; // 초기 위치
     public float rotationSpeed = 5f;
     public float travelDistance = 5f;
-    public float chaseRange = 5f;
-    public float chaseRangeInterval = 1f;
-    public float patrolDelay = 2f;
+    public float chaseRange = 5f; //플레이어 추격 거리
+    public float chaseRangeErratum = 1f; //플레이어 추격 거리의 이동시 오차
+    public float patrolDelay = 2f; //순찰 텀
     public GameObject detectionRangeObj;
-    public float detectionInterval = 0.5f;
+    public float detectionInterval = 0.5f; //순찰 때 플레이어를 찾는 판단 시간
     float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
 
     [Header("Bullet")]
@@ -28,6 +26,11 @@ public class Guards : MonoBehaviour, IGravityControl
     public float fireDelay = 1f;
     private float fireTimer = 0f;
     public Vector3 fireOffset;
+    public int bulletAmount = 20;
+    private int bulletAmountCurrent;
+    public float bulletReloadTime = 2f;
+    public float bulletReloadTimeCurrent;
+
 
     [Header("NavMesh")]
     // Reference to the NavMeshAgent component
@@ -98,8 +101,7 @@ public class Guards : MonoBehaviour, IGravityControl
     // Update is called once per frame
     void Update()
     {
-        //this.navMeshAgent.velocity = this._controller.velocity;
-
+        // detectionTimer의 주기적인 초기화
         detectionTimer += Time.deltaTime;
         if(detectionTimer >= detectionInterval)
         {
@@ -108,6 +110,7 @@ public class Guards : MonoBehaviour, IGravityControl
             detectionTimer = 0;
         }
 
+        //캐릭터가 땅바닥에 있지 않는 경우를 체크함
         if (isGroundChecker != _controller.isGrounded) // 변화가 생겼다면
         {
             isGroundChecker = _controller.isGrounded; // 똑같이 맞춰준다
@@ -115,22 +118,28 @@ public class Guards : MonoBehaviour, IGravityControl
             // 만약 착지 한다면? 그래비티 false하고 nav 켜줘야함 
             if(isGroundChecker)
             {
-                isGravity = false; // 중력 상태 끝 
-                navMeshAgent.enabled = true; // 켜준다
+                isGravity = false; // 중력 영향력 상태 끝 
+                navMeshAgent.enabled = true; // navMeshAgent 활성화
             }
         }
 
-
-        if (!isGravity) // 중력 받는 상태가 아니라면 
+        if (!isGravity) // 중력 영향력 상태가 아니라면 
         {
             // If the player is in sight, set the target position to the player's position
             if (isPlayerDetected)// 범위 안이면 
             {
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
-                //if(!PlayerInChaseRange()) {
 
-                MoveTowardsTarget();
+                if (PlayerOutOfChaseRange()) // 추적 범위 내라면
+                {
+                    navMeshAgent.SetDestination(targetPosition);
+                }
+                else
+                {
+                    navMeshAgent.ResetPath(); // 멈춤
+                }
+
                 if (PlayerInFireRange()) // 사거리 내라면
                 {
                     Fire();
@@ -159,14 +168,9 @@ public class Guards : MonoBehaviour, IGravityControl
                 }
             }
         }
-        if (nearestPlayer != null) {
-            distWithTarget = Vector3.Distance(transform.position, nearestPlayer.transform.position);
-        }
     }
-
     
     // Stare at the player by rotating the opponent's direction
-    
     void StareAtPlayer()
     {
         // Rotate towards the nearest player
@@ -184,36 +188,6 @@ public class Guards : MonoBehaviour, IGravityControl
     }
 
     // 탐지 범위 내, 가장 가까운 플레이어를 탐색해 냄 ( 추적 대상 nearestPlayer) 
-    /*
-    private void DetectPlayer()
-    {
-        //주변 col들 추출해서 배열에 저장
-        Collider[] hitColls = Physics.OverlapSphere(transform.position, 10f); // 시작 지점, 반지름, 레이어
-
-        isPlayerDetected = false;
-        nearestPlayer = null; // 
-        foreach (Collider col in hitColls)
-        {
-            //if (col == _controller) Debug.Log("같다 ");
-            CharacterController characterController = col as CharacterController;
-            if (characterController != null && col.gameObject.CompareTag("Player")) // 캐릭터 콜라이더만 인식 
-            {
-                isPlayerDetected = true;
-
-                if (nearestPlayer == null) // 아직 nearest가 없다면 
-                {
-                    nearestPlayer = characterController.gameObject;
-                }
-                else
-                {
-                    nearestPlayer = Vector3.Distance(transform.position, nearestPlayer.transform.position) < Vector3.Distance(transform.position, characterController.gameObject.transform.position) ? nearestPlayer : characterController.gameObject;
-                }
-            }
-        }
-
-    }
-    */
-
     ///*
     private void DetectPlayer()
     {
@@ -233,7 +207,7 @@ public class Guards : MonoBehaviour, IGravityControl
             if (nearestPlayer != null)
             {
                 isPlayerDetected = true;
-                Debug.Log("Nearest Player: " + nearestPlayer.name);
+                //Debug.Log("Nearest Player: " + nearestPlayer.name);
             }
             //Debug.Log("Players in Range Count: " + players.Count);
         }
@@ -251,10 +225,10 @@ public class Guards : MonoBehaviour, IGravityControl
         navMeshAgent.SetDestination(targetPosition);
     }
 
-    bool PlayerInChaseRange()
+    bool PlayerOutOfChaseRange()
     {
         // 쿨타임 돌았고 사거리 안이면 
-        if (nearestPlayer != null && Vector3.Distance(transform.position, nearestPlayer.transform.position) < chaseRange /*+ ((UnityEngine.Random.value - 0.5f) * chaseRangeInterval)*/)
+        if (nearestPlayer != null && Vector3.Distance(transform.position, nearestPlayer.transform.position) > chaseRange + ((UnityEngine.Random.value - 0.5f) * chaseRangeErratum))
         {
             return true;
         }
@@ -263,13 +237,33 @@ public class Guards : MonoBehaviour, IGravityControl
     
     bool PlayerInFireRange()
     {
-        // 쿨타임 돌았고 사거리 안이면 
-        if (fireTimer >= fireDelay 
-        && Vector3.Distance(transform.position, nearestPlayer.transform.position) < fireRange)
+        // 사거리에 플레이어가 있는지 확인
+        if (Vector3.Distance(transform.position, nearestPlayer.transform.position) < fireRange)
         {
-            return true;
+            if (bulletReloadTimeCurrent <= 0f) // 장전 중인지 확인
+            {
+                if (fireTimer >= fireDelay) // 쿨타임이 지났는지 확인
+                {
+                    if (bulletAmountCurrent > 0)
+                    {
+                        bulletAmountCurrent--; // 총알 발사
+                        fireTimer = 0f; // 쿨타임 초기화
+                        return true;
+                    }
+                    else // 탄약이 없으면 장전 시작
+                    {
+                        bulletReloadTimeCurrent = bulletReloadTime;
+                        bulletAmountCurrent = bulletAmount; // 탄약을 다시 채움
+                    }
+                }
+            }
+            else // 장전 시간 감소
+            {
+                bulletReloadTimeCurrent -= Time.deltaTime;
+            }
         }
-
+        
+        // 쿨타임 증가
         fireTimer += Time.deltaTime;
         return false;
     }

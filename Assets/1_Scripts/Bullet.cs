@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 20f;
-    public float concentrationScale = 0.1f;
+    public float spreadScale = 0.075f;
     public float lifetime = 5f;
     private float timeDilation = 1f;
     private Vector3 initialDirection;
@@ -59,7 +59,7 @@ public class Bullet : MonoBehaviour
             // Set the initial direction towards the nearest player
             initialDirection = (nearestPlayer.transform.position - transform.position).normalized;
 
-            initialDirection += Random.onUnitSphere * concentrationScale;
+            initialDirection += Random.onUnitSphere * spreadScale;
 
             initialDirection.Normalize();
 
