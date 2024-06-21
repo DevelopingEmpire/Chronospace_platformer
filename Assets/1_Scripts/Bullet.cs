@@ -9,9 +9,18 @@ public class Bullet : MonoBehaviour
     public float lifetime = 5f;
     private float timeDilation = 1f;
     private Vector3 initialDirection;
+    private Rigidbody rb;
 
-    void Start() //instanciate ÀÌÈÄ ½ÇÇàµÇ´Â ½ºÅ©¸³Æ®ÀÌ±â¿¡ º»·¡ °èÈ¹´ë·Î ÃÑ¾ËÀÌ ¹æÇâÀ» 
+    void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+
+        rb.useGravity = false; // ì¤‘ë ¥ ì˜í–¥ì„ ë°›ì§€ ì•Šë„ë¡ ì„¤ì •
+
         SetInitialDirectionToPlayer();
         Destroy(gameObject, lifetime);
     }
@@ -19,6 +28,10 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         timeDilation = Time.timeScale;
+    }
+
+    void FixedUpdate()
+    {
         MoveBullet();
     }
 
@@ -45,13 +58,26 @@ public class Bullet : MonoBehaviour
 
             // Set the initial direction towards the nearest player
             initialDirection = (nearestPlayer.transform.position - transform.position).normalized;
+
             initialDirection += Random.onUnitSphere * concentrationScale;
+
             initialDirection.Normalize();
+
+            // ì´ì•Œì„ íƒ€ê²Ÿ ë°©í–¥ìœ¼ë¡œ íšŒì „
+            transform.rotation = Quaternion.LookRotation(initialDirection);
         }
     }
 
     void MoveBullet() //moves the bullet into player
     {
-        transform.Translate(initialDirection * speed * timeDilation * Time.deltaTime, Space.World);
+        rb.velocity = initialDirection * speed * timeDilation;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player")){
+            Destroy(gameObject);
+            Debug.Log("ì´ì•Œì´ í”Œë ˆì´ì–´ì— ë‹¿ì•˜ê¸° ë•Œë¬¸ì— ì‚¬ë¼ì¡ŒìŠµë‹ˆë‹¤");
+        }
     }
 }

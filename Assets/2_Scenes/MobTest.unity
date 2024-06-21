@@ -1631,6 +1631,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1135331722534134774, guid: 0290a0afd6107104b89c7e54a6bc7c3e, type: 3}
+      propertyPath: fireDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135331722534134774, guid: 0290a0afd6107104b89c7e54a6bc7c3e, type: 3}
+      propertyPath: chaseRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135331722534134774, guid: 0290a0afd6107104b89c7e54a6bc7c3e, type: 3}
+      propertyPath: chaseDistance
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135331722534134774, guid: 0290a0afd6107104b89c7e54a6bc7c3e, type: 3}
+      propertyPath: fireRangeInside
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135331722534134774, guid: 0290a0afd6107104b89c7e54a6bc7c3e, type: 3}
+      propertyPath: chaseRangeInterval
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0290a0afd6107104b89c7e54a6bc7c3e, type: 3}
 --- !u!1 &883576925
@@ -2114,26 +2134,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1333412150}
   m_CullTransparentMesh: 1
---- !u!1 &1486400008 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 594351123460640692, guid: 0290a0afd6107104b89c7e54a6bc7c3e, type: 3}
-  m_PrefabInstance: {fileID: 879537995}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1486400011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1486400008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84e702ef71aa694985e620e15dc577a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlayerDetected: 0
-  nearestPlayer: {fileID: 0}
-  playersInRange: []
 --- !u!1 &1567000111
 GameObject:
   m_ObjectHideFlags: 0

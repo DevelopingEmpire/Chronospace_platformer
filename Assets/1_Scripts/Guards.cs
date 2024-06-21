@@ -9,10 +9,14 @@ public class Guards : MonoBehaviour, IGravityControl
 {
     public GameObject nearestPlayer;
 
+    public float distWithTarget = 0.0f;
+
     [Header("Basic value")]
     public Vector3 initialPosition; // 초기 위치
     public float rotationSpeed = 5f;
     public float travelDistance = 5f;
+    public float chaseRange = 5f;
+    public float chaseRangeInterval = 1f;
     public float patrolDelay = 2f;
     public GameObject detectionRangeObj;
     public float detectionInterval = 0.5f;
@@ -20,7 +24,7 @@ public class Guards : MonoBehaviour, IGravityControl
 
     [Header("Bullet")]
     public GameObject bullet; // 총알 
-    public float fireRange = 5f; // 공격 사거리
+    public float fireRange = 8f;
     public float fireDelay = 1f;
     private float fireTimer = 0f;
     public Vector3 fireOffset;
@@ -119,12 +123,14 @@ public class Guards : MonoBehaviour, IGravityControl
 
         if (!isGravity) // 중력 받는 상태가 아니라면 
         {
-            MoveTowardsTarget();
             // If the player is in sight, set the target position to the player's position
             if (isPlayerDetected)// 범위 안이면 
             {
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
+                //if(!PlayerInChaseRange()) {
+
+                MoveTowardsTarget();
                 if (PlayerInFireRange()) // 사거리 내라면
                 {
                     Fire();
@@ -137,10 +143,9 @@ public class Guards : MonoBehaviour, IGravityControl
                     Patrol();
                     // Set the next patrol time
                     nextPatrolTime = Time.time + patrolDelay;
+                    MoveTowardsTarget();
                 }
             }
-            
-            
         }
         else // 중력 받는 상태라면 
         {
@@ -148,17 +153,15 @@ public class Guards : MonoBehaviour, IGravityControl
             if (isPlayerDetected) // 범위 안이면 
             {
                 StareAtPlayer();
-                
                 if (PlayerInFireRange())
                 {
                     Fire();
                 }
-                
-
             }
-            
         }
-
+        if (nearestPlayer != null) {
+            distWithTarget = Vector3.Distance(transform.position, nearestPlayer.transform.position);
+        }
     }
 
     
@@ -171,9 +174,6 @@ public class Guards : MonoBehaviour, IGravityControl
         Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
-    
-    
-    
 
     // Patrol by setting a new random target within the travel distance
     void Patrol()
@@ -229,13 +229,13 @@ public class Guards : MonoBehaviour, IGravityControl
             List<GameObject> players = detector.playersInRange;
 
             // 변수를 사용하여 원하는 작업 수행
-            Debug.Log("Is Player Detected: " + isDetected);
+            //Debug.Log("Is Player Detected: " + isDetected);
             if (nearestPlayer != null)
             {
                 isPlayerDetected = true;
                 Debug.Log("Nearest Player: " + nearestPlayer.name);
             }
-            Debug.Log("Players in Range Count: " + players.Count);
+            //Debug.Log("Players in Range Count: " + players.Count);
         }
         else
         {
@@ -250,11 +250,22 @@ public class Guards : MonoBehaviour, IGravityControl
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
     }
+
+    bool PlayerInChaseRange()
+    {
+        // 쿨타임 돌았고 사거리 안이면 
+        if (nearestPlayer != null && Vector3.Distance(transform.position, nearestPlayer.transform.position) < chaseRange /*+ ((UnityEngine.Random.value - 0.5f) * chaseRangeInterval)*/)
+        {
+            return true;
+        }
+        return false;
+    }
     
     bool PlayerInFireRange()
     {
         // 쿨타임 돌았고 사거리 안이면 
-        if (fireTimer >= fireDelay && Vector3.Distance(transform.position, nearestPlayer.transform.position) < fireRange)
+        if (fireTimer >= fireDelay 
+        && Vector3.Distance(transform.position, nearestPlayer.transform.position) < fireRange)
         {
             return true;
         }
@@ -262,7 +273,6 @@ public class Guards : MonoBehaviour, IGravityControl
         fireTimer += Time.deltaTime;
         return false;
     }
-    
 
     //Fire projectile into player
     void Fire()

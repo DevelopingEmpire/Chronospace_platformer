@@ -56,7 +56,7 @@ public class Portal : StageMechanicsController
     private void OnTriggerEnter(Collider other)
     {
 
-         Debug.Log("포탈에 닿음");
+        Debug.Log("포탈에 닿음");
         // 플레이어가 액티브 포탈에 닿았는지 확인 
         if (!(other.CompareTag("Player") && isActivated)) {
             Debug.Log("활성화 안됨");
