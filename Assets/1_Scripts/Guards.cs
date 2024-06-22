@@ -20,6 +20,9 @@ public class Guards : MonoBehaviour, IGravityControl
     public float detectionInterval = 0.5f; //순찰 때 플레이어를 찾는 판단 시간
     float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
 
+    [Header("Animation")]
+    public Animator anim;
+
     [Header("Bullet")]
     public GameObject bullet; // 총알 
     public float fireRange = 8f;
@@ -40,13 +43,11 @@ public class Guards : MonoBehaviour, IGravityControl
     private float nextPatrolTime;
     public CharacterController _controller; // 컨트롤러
 
+
+    [Header("Gravity")]
     // 중력 관련 변수들 
     public bool isGravity; // 중력을 받는 상태인가? 
     bool isGroundChecker; //is Grounded 상태가 변했는지 추적  
-
-    /// <summary>
-    /// 중력 인터페이스 구현부 
-    /// 
 
     // 중력탬 범위 내에 있는가 
     public bool IsInRange {get; set;}
@@ -133,11 +134,12 @@ public class Guards : MonoBehaviour, IGravityControl
 
                 if (PlayerOutOfChaseRange()) // 추적 범위 내라면
                 {
-                    navMeshAgent.SetDestination(targetPosition);
+                    MoveTowardsTarget();
                 }
                 else
                 {
                     navMeshAgent.ResetPath(); // 멈춤
+                    anim.SetBool("isRunning", false);
                 }
 
                 if (PlayerInFireRange()) // 사거리 내라면
@@ -153,6 +155,7 @@ public class Guards : MonoBehaviour, IGravityControl
                     // Set the next patrol time
                     nextPatrolTime = Time.time + patrolDelay;
                     MoveTowardsTarget();
+                    anim.SetBool("isRunning", false);
                 }
             }
         }
@@ -223,6 +226,7 @@ public class Guards : MonoBehaviour, IGravityControl
     {
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
+        anim.SetBool("isRunning", true);
     }
 
     bool PlayerOutOfChaseRange()
@@ -271,6 +275,7 @@ public class Guards : MonoBehaviour, IGravityControl
     //Fire projectile into player
     void Fire()
     {
+        anim.SetBool("isInAttack", true);
         // Check if enough time has passed to fire a bullet
         GameObject projectileIns = Instantiate(bullet);
         projectileIns.transform.position = transform.position + fireOffset;
