@@ -90,7 +90,7 @@ public class StageManager : MonoBehaviour
         Player.Instance.SetCheckpoint(new Vector3(0,1.5f,0)); // 처음 시작 위치를 리스폰 위치로 설정 - 일단 하드코딩 ㅋㅋ 
 
         // 캐릭터 스폰 
-        StartCoroutine(Player.Instance.Respawn()); 
+        Player.Instance.PlayerInit(); 
     }
 
 
