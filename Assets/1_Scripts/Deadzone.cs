@@ -9,10 +9,11 @@ public class Deadzone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 플레이어인지 확인
-        if (!(other.CompareTag("Player"))) return;
-        StageManager.Instance.StageInit(StageManager.Instance.currentStageName);
+        if ((other.CompareTag("Player")))
+        {
+            other.gameObject.GetComponent<Player>().Die(); // 닿은 플레이어 죽음 ㄱㄱ 
+        }
 
-        //other.transform.GetComponent<Player>().isAlive = false;
-
+        
     }
 }

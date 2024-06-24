@@ -19,6 +19,9 @@ public class PlayerTimer : MonoBehaviour
 
     public void TimerUIInit()
     {
+        // 시간초 리셋 
+        currentTime = timeLimit;
+
         // UI 요소들이 null이 아닌지 확인하고, null이라면 다시 찾기
         if (UIManager.instance != null && UIManager.instance.battleHUDScreen != null)
         {
@@ -34,9 +37,7 @@ public class PlayerTimer : MonoBehaviour
 
     private void Start()
     {
-        currentTime = timeLimit;
         TimerUIInit(); // Start에서 UI 초기화 호출
-
     }
 
     // Update is called once per frame
@@ -67,7 +68,7 @@ public class PlayerTimer : MonoBehaviour
         else
         {
             timerText.text = "Stop";
-            player.isAlive = false;
+            player.Die();
 
             // 멈춘다 
         }

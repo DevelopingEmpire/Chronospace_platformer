@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using static UnityEditor.Progress;
 //using UnityEngine.SceneManagement; // 씬 매니지먼트 
 
 public class UIManager : MonoBehaviour
