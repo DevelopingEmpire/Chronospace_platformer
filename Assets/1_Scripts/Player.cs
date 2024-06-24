@@ -16,6 +16,7 @@ public class Player : MonoBehaviour, IGravityControl
     public float[] timeScaleMultiplier = new float[] {0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
+    public Vector3 respawnPosition; // 리스폰 위치 
 
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
@@ -53,7 +54,7 @@ public class Player : MonoBehaviour, IGravityControl
     #endregion
 
     //플레이어 상태 변수
-    bool isPlayerNear = false; // 주변에 동료가 있는가 
+    //bool isPlayerNear = false; // 주변에 동료가 있는가 
     public bool isAlive = true;
     public bool isBlackHoling; // 블랙홀에 잡혀있는 중 
 
@@ -212,6 +213,32 @@ public class Player : MonoBehaviour, IGravityControl
     {
         transform.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
     }
+
+    // 사망
+    public void Die()
+    {
+        // 사망 처리
+        isAlive = false;
+        // anim.SetTrigger("die"); // 애니메이션 트리거 설정 
+ 
+
+        // 사망 후 일정 시간 후에 시작 위치로 이동
+        StartCoroutine(Respawn());
+    }
+
+    // 저장 위치에서 부활 
+    public IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(2f); // 사망 후 2초 대기 (옵션)
+
+        // 플레이어 위치 초기화
+        PlayerInit();
+
+        // 플레이어 상태 초기화
+        isAlive = true;
+    }
+
+
     //아이템 사용 함수
     #region Item
 
@@ -256,12 +283,13 @@ public class Player : MonoBehaviour, IGravityControl
     }
 
     // 플레이어 상태 초기화 
-    public void PlayerInit(Vector3 startpostion)
+    public void PlayerInit()
     {
+        
         moveDirection = Vector3.zero; // 이 값 임의로 초기화 
         controller.enabled = false; // 잠시 끄고 
-        
-        transform.position = startpostion; 
+
+        transform.position = respawnPosition;  // 현재 체크포인트에서 시작. 처음엔 처음 위치임 
 
         controller.enabled = true; // 다시 켠다 
 
@@ -274,6 +302,11 @@ public class Player : MonoBehaviour, IGravityControl
 
         if(StageManager.Instance.currentStageName == "stage0") timer.isPlaying = false;
         else timer.isPlaying = true;
+    }
+
+    public void SetCheckpoint(Vector3 checkpointPosition)
+    {
+        respawnPosition = checkpointPosition;
     }
 
     void Interaction() //아이템 줍기
@@ -409,11 +442,18 @@ public class Player : MonoBehaviour, IGravityControl
             }
             nearObject = other.gameObject;
         }
+        if (other.CompareTag("CheckPoint"))
+        {
+            respawnPosition = other.transform.position;
+            Debug.Log("Checkpoint reached: " + respawnPosition);
+        }
+        /*
         else if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
         {
             nearObject = other.gameObject;
             isPlayerNear = true;
         }
+        */
 
 
     }
@@ -434,11 +474,13 @@ public class Player : MonoBehaviour, IGravityControl
             }
             nearObject = null;
         }
+        /*
         else if(other.CompareTag("Player"))
         {
             nearObject = null;
             isPlayerNear = false;
         }
+        */
     }
 
     // 상자 밀기 

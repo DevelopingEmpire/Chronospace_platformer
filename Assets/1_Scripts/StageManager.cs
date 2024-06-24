@@ -4,7 +4,6 @@ using UnityEngine;
 public class StageManager : MonoBehaviour
 {
     #region SingleTon Pattern
-    public Vector3 startPosOffset;
     public static StageManager Instance { get; private set; }
     private void Awake()
     {
@@ -31,7 +30,6 @@ public class StageManager : MonoBehaviour
     public string currentStageName; // 이 변수에 꼭 현재 진행중인 스테이지를 넣어줘야한다. 
     public int idx = 0; // 인덱스 끝 번을 넣어준다. 해당 인덱스가 해결되면 스테이지 클리어 
     public GameObject npcDialogueUI;
-    //private static SceneTransitionManager instance;
 
     //박강 작성 구간:
 
@@ -89,9 +87,11 @@ public class StageManager : MonoBehaviour
         // 현재 씬 이름 변경 
         currentStageName = sceneName;
 
-        // 현재 씬에서 시작 위치 오브젝트 찾기 
-        Vector3 startpostion = GameObject.FindWithTag("StartPosition").transform.position + startPosOffset;
+        Player.Instance.SetCheckpoint(new Vector3(0,1.5f,0)); // 처음 시작 위치를 리스폰 위치로 설정 - 일단 하드코딩 ㅋㅋ 
 
-        Player.Instance.PlayerInit(startpostion);
+        // 캐릭터 스폰 
+        StartCoroutine(Player.Instance.Respawn()); 
     }
+
+
 }

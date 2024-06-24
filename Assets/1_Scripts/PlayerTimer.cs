@@ -11,8 +11,7 @@ public class PlayerTimer : MonoBehaviour
     public float currentTime; // 현재 남은 시간 
     public Player player; // player 스크립트 
 
-    public bool isPlaying = false; // play 중에만 타이머 시작\
-    public bool isTimerAvailable = true;
+    public bool isPlaying = false; // play 중에만 타이머 시작 
 
     public GameObject timerUI; 
     public TextMeshProUGUI timerText;
@@ -20,6 +19,9 @@ public class PlayerTimer : MonoBehaviour
 
     public void TimerUIInit()
     {
+        // 시간초 리셋 
+        currentTime = timeLimit;
+
         // UI 요소들이 null이 아닌지 확인하고, null이라면 다시 찾기
         if (UIManager.instance != null && UIManager.instance.battleHUDScreen != null)
         {
@@ -35,20 +37,18 @@ public class PlayerTimer : MonoBehaviour
 
     private void Start()
     {
-        currentTime = timeLimit;
         TimerUIInit(); // Start에서 UI 초기화 호출
-        if (timerText==null || timerBar==null) {
-            isTimerAvailable = false;
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isPlaying && player.isAlive && isTimerAvailable) 
+
+        if (isPlaying && player.isAlive) 
         {
             CountDown();
         }
+        
     }
 
     public void TimeChange(float changeTime)
@@ -68,7 +68,9 @@ public class PlayerTimer : MonoBehaviour
         else
         {
             timerText.text = "Stop";
-            player.isAlive = false; 
+            player.Die();
+
+            // 멈춘다 
         }
     }
 }
