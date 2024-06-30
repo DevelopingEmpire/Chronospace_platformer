@@ -1,0 +1,64 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BulletDirectionDefined : MonoBehaviour
+{
+    public float speed = 20f;
+    public float spreadScale = 0.075f;
+    public float lifetime = 5f;
+    private float timeDilation = 1f;
+    public Vector3 initialDirection;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+
+        rb.useGravity = false; // 중력 영향을 받지 않도록 설정
+
+        SetInitialDirectionToPlayer(Vector3.up);
+        Destroy(gameObject, lifetime);
+    }
+
+    void Update()
+    {
+        timeDilation = Time.timeScale;
+    }
+
+    void FixedUpdate()
+    {
+        MoveBullet();
+    }
+
+    /*
+    void SetInitialDirectionToPlayer(Vector3 dir) //sets the direction of the bullet into player
+    {
+        initialDirection = dir;
+    }
+    */
+    internal void SetInitialDirectionToPlayer(Vector3 dir)
+    {
+        initialDirection = dir;
+    }
+
+    void MoveBullet() //moves the bullet into player
+    {
+        rb.velocity = initialDirection * speed * timeDilation;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player")){
+            Destroy(gameObject);
+            Debug.Log("총알이 플레이어에 닿았기 때문에 사라졌습니다");
+        }
+    }
+
+
+}

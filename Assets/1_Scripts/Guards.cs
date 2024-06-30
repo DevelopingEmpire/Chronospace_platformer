@@ -11,7 +11,8 @@ public class Guards : MonoBehaviour, IGravityControl
 
     [Header("Basic value")]
     public Vector3 initialPosition; // 초기 위치
-    public float rotationSpeed = 5f;
+    public float rotationSpeedPatrol = 5f;
+    public float rotationSpeedFire = 1f;
     public float travelDistance = 5f;
     public float chaseRange = 5f; //플레이어 추격 거리
     public float chaseRangeErratum = 1f; //플레이어 추격 거리의 이동시 오차
@@ -127,7 +128,7 @@ public class Guards : MonoBehaviour, IGravityControl
         if (!isGravity) // 중력 영향력 상태가 아니라면 
         {
             // If the player is in sight, set the target position to the player's position
-            if (isPlayerDetected)// 범위 안이면 
+            if (isPlayerDetected) // 범위 안이면 
             {
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
@@ -135,6 +136,7 @@ public class Guards : MonoBehaviour, IGravityControl
                 if (PlayerOutOfChaseRange()) // 추적 범위 내라면
                 {
                     MoveTowardsTarget();
+                    anim.SetBool("isRunning", true); // 추적 애니메이션
                 }
                 else
                 {
@@ -142,9 +144,20 @@ public class Guards : MonoBehaviour, IGravityControl
                     anim.SetBool("isRunning", false);
                 }
 
-                if (PlayerInFireRange()) // 사거리 내라면
+                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면
                 {
-                    Fire();
+                    // 목표 회전 계산
+                    StareAtPlayer();
+                    anim.SetBool("isInAttack", true);
+                    //발사
+                    if (PlayerHasAmmos())
+                    {
+                        Fire();
+                    }
+                }
+                else
+                {
+                    anim.SetBool("isInAttack", false);
                 }
             }
             else // 평화로운 상태
@@ -164,10 +177,15 @@ public class Guards : MonoBehaviour, IGravityControl
             ApplyGravity();
             if (isPlayerDetected) // 범위 안이면 
             {
-                StareAtPlayer();
-                if (PlayerInFireRange())
+                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면
                 {
-                    Fire();
+                    // 목표 회전 계산
+                    StareAtPlayer();
+                    //발사
+                    if (PlayerHasAmmos())
+                    {
+                        Fire();
+                    }
                 }
             }
         }
@@ -179,13 +197,15 @@ public class Guards : MonoBehaviour, IGravityControl
         // Rotate towards the nearest player
         Vector3 directionToPlayer = (nearestPlayer.transform.position - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeedPatrol * Time.deltaTime);
     }
 
     // Patrol by setting a new random target within the travel distance
     void Patrol()
     {
-        //범위내에서 랜덤하게 patrol 
+        //범위내에서 랜덤하게 patrol
+        anim.SetBool("isRunning", false);
+        anim.SetBool("isInAttack", true); //isInAttackWithRunning
         Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * travelDistance;
         targetPosition = initialPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
     }
@@ -227,6 +247,7 @@ public class Guards : MonoBehaviour, IGravityControl
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
         anim.SetBool("isRunning", true);
+        anim.SetBool("isInAttack", false); //isInAttackWithRunning
     }
 
     bool PlayerOutOfChaseRange()
@@ -244,43 +265,62 @@ public class Guards : MonoBehaviour, IGravityControl
         // 사거리에 플레이어가 있는지 확인
         if (Vector3.Distance(transform.position, nearestPlayer.transform.position) < fireRange)
         {
-            if (bulletReloadTimeCurrent <= 0f) // 장전 중인지 확인
-            {
-                if (fireTimer >= fireDelay) // 쿨타임이 지났는지 확인
-                {
-                    if (bulletAmountCurrent > 0)
-                    {
-                        bulletAmountCurrent--; // 총알 발사
-                        fireTimer = 0f; // 쿨타임 초기화
-                        return true;
-                    }
-                    else // 탄약이 없으면 장전 시작
-                    {
-                        bulletReloadTimeCurrent = bulletReloadTime;
-                        bulletAmountCurrent = bulletAmount; // 탄약을 다시 채움
-                    }
-                }
-            }
-            else // 장전 시간 감소
-            {
-                bulletReloadTimeCurrent -= Time.deltaTime;
-            }
+            return true;
         }
         
+        return false;
+    }
+
+    bool PlayerHasAmmos()
+    {
         // 쿨타임 증가
         fireTimer += Time.deltaTime;
-        return false;
+
+        // 장전 중인지 확인
+        if (bulletReloadTimeCurrent > 0f)
+        {
+            // 장전 시간 감소
+            bulletReloadTimeCurrent -= Time.deltaTime;
+            return false;
+        }
+
+        // 쿨타임이 지났는지 확인
+        if (fireTimer < fireDelay)
+        {
+            return false;
+        }
+
+        // 탄약이 있는지 확인
+        if (bulletAmountCurrent > 0)
+        {
+            //bulletAmountCurrent--; // 총알 발사
+            fireTimer = 0f; // 쿨타임 초기화
+            return true;
+        }
+        else
+        {
+            // 탄약이 없으면 장전 시작
+            bulletReloadTimeCurrent = bulletReloadTime;
+            bulletAmountCurrent = bulletAmount; // 탄약을 다시 채움
+            return false;
+        }
     }
 
     //Fire projectile into player
     void Fire()
     {
-        anim.SetBool("isInAttack", true);
+        bulletAmountCurrent--; // 총알 발사
         // Check if enough time has passed to fire a bullet
         GameObject projectileIns = Instantiate(bullet);
         projectileIns.transform.position = transform.position + fireOffset;
         // Reset the timer for the next bullet
         fireTimer = 0f; // 초기화 
+        if( anim.GetBool("isRunning") == false) {
+            anim.SetTrigger("doRecursiveAttack");
+        }
+        else {
+            anim.SetTrigger("doRecursiveAttackWhileRunning");
+        }
     }
 
     public void BlackHole(Vector3 fieldCenter)
