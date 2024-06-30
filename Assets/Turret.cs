@@ -90,7 +90,7 @@ public class Turret : MonoBehaviour
     {
         if (nearestPlayer != null) {
             // 타겟 방향 계산 (y축 고정을 위해 y축 값은 무시)
-            direction = nearestPlayer.transform.position - transform.position;
+            direction = nearestPlayer.transform.position - transform.position - fireOffset;
             return direction;
         }
         else {

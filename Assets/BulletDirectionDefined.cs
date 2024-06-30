@@ -22,7 +22,7 @@ public class BulletDirectionDefined : MonoBehaviour
 
         rb.useGravity = false; // 중력 영향을 받지 않도록 설정
 
-        SetInitialDirectionToPlayer(Vector3.up);
+        SetInitialDirectionToPlayer();
         Destroy(gameObject, lifetime);
     }
 
@@ -36,15 +36,11 @@ public class BulletDirectionDefined : MonoBehaviour
         MoveBullet();
     }
 
-    /*
-    void SetInitialDirectionToPlayer(Vector3 dir) //sets the direction of the bullet into player
+    void SetInitialDirectionToPlayer() //sets the direction of the bullet into player
     {
-        initialDirection = dir;
-    }
-    */
-    internal void SetInitialDirectionToPlayer(Vector3 dir)
-    {
-        initialDirection = dir;
+            initialDirection.Normalize();
+            // 총알을 타겟 방향으로 회전
+            transform.rotation = Quaternion.LookRotation(initialDirection);
     }
 
     void MoveBullet() //moves the bullet into player
