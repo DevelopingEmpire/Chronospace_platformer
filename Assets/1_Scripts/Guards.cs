@@ -314,13 +314,16 @@ public class Guards : MonoBehaviour, IGravityControl
         GameObject projectileIns = Instantiate(bullet);
         projectileIns.transform.position = transform.position + fireOffset;
         // Reset the timer for the next bullet
-        fireTimer = 0f; // 초기화 
-        if( anim.GetBool("isRunning") == false) {
+        fireTimer = 0f; // 초기화
+        /*
+        if(false) { //anim.GetBool("isRunning") == false
             anim.SetTrigger("doRecursiveAttack");
         }
         else {
             anim.SetTrigger("doRecursiveAttackWhileRunning");
         }
+        */
+        anim.SetTrigger("doRecursiveAttackWhileRunning");
     }
 
     public void BlackHole(Vector3 fieldCenter)
