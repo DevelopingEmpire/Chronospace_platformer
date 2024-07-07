@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.12
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.015278044, g: 0.016097672, b: 0.014529424, a: 0.12}
+  m_IndirectSpecularColor: {r: 0.015278098, g: 0.016097708, b: 0.014529443, a: 0.12}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4142,6 +4142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStageName: Stage2
   idx: 0
+  spawnCharacterOffset: {x: 0, y: 0, z: 0}
   npcDialogueUI: {fileID: 1710316982}
 --- !u!4 &1126858256
 Transform:
@@ -4660,15 +4661,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3757352273267944372, guid: f690158ee5452264c916f2a8b99de0f6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.54
+      value: 0.04000002
       objectReference: {fileID: 0}
     - target: {fileID: 3757352273267944372, guid: f690158ee5452264c916f2a8b99de0f6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.33
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 3757352273267944372, guid: f690158ee5452264c916f2a8b99de0f6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 44.14
+      value: 44
       objectReference: {fileID: 0}
     - target: {fileID: 3757352273267944372, guid: f690158ee5452264c916f2a8b99de0f6, type: 3}
       propertyPath: m_LocalRotation.w
