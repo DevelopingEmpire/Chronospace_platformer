@@ -62,8 +62,10 @@ public class PlayerTimer : MonoBehaviour
         if (currentTime > 0)
         {
             currentTime -= speed * Time.deltaTime;
-            timerText.text = ((int)currentTime+1).ToString(); // 0까지 나오므로 +1 해줌 
-            timerBar.fillAmount = currentTime / timeLimit;
+            if(timerText != null && timerBar != null){
+                timerText.text = ((int)currentTime+1).ToString(); // 0까지 나오므로 +1 해줌 
+                timerBar.fillAmount = currentTime / timeLimit;
+            }
         }
         else
         {
