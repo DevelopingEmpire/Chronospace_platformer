@@ -41,6 +41,8 @@ public class Guards : MonoBehaviour, IGravityControl
     public NavMeshAgent navMeshAgent;
     private Vector3 targetPosition; // nav의 목표지점 
     public bool isPlayerDetected = false; // 사람 발견시 true 
+    public bool isPlayerInAttackRange = false; // 고정 사격 거리 이하 
+
     private float nextPatrolTime;
     public CharacterController _controller; // 컨트롤러
 
@@ -158,17 +160,22 @@ public class Guards : MonoBehaviour, IGravityControl
                 */
 
                 // 고정 사격 거리 측정 
-                if (Vector3.Distance(transform.position, nearestPlayer.transform.position) > 0.5f) // 고정사격 거리보다 크다면
+                if (Vector3.Distance(transform.position, nearestPlayer.transform.position) > fireRange) // 고정사격 거리보다 크다면
                 {
+                    isPlayerInAttackRange = false;
+
                     MoveTowardsTarget(); // 움직이면서 사격 
+                    anim.SetBool("isInAttackRange", false);
+                    //anim.SetBool("isInAttackRangeWhileRunning", true);
                 }
                 else 
                 {
                     // 고정사격 거리보다 작다면 멈춰서 사격 
-                    navMeshAgent.ResetPath(); 
+                    navMeshAgent.ResetPath();
+                    isPlayerInAttackRange = true;
                     anim.SetBool("isDetected", true);
                     anim.SetBool("isInAttackRange", true);
-
+                    //anim.SetBool("isInAttackRangeWhileRunning", false);
                 }
 
             }
