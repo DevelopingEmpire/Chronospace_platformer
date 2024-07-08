@@ -51,8 +51,8 @@ public class Guards : MonoBehaviour, IGravityControl
     bool isGroundChecker; //is Grounded 상태가 변했는지 추적  
 
     // 중력탬 범위 내에 있는가 
-    public bool IsInRange {get; set;}
-    public float Gravity {get;set;}
+    public bool IsInRange { get; set; }
+    public float Gravity { get; set; }
 
     public void AntiGravity() // 중력 반전 함수 
     {
@@ -105,7 +105,7 @@ public class Guards : MonoBehaviour, IGravityControl
     {
         // detectionTimer의 주기적인 초기화
         detectionTimer += Time.deltaTime;
-        if(detectionTimer >= detectionInterval)
+        if (detectionTimer >= detectionInterval)
         {
             // 탐지 실행
             DetectPlayer();
@@ -118,7 +118,7 @@ public class Guards : MonoBehaviour, IGravityControl
             isGroundChecker = _controller.isGrounded; // 똑같이 맞춰준다
             // 만약 공중에 뜬 거라면? 머.. 알빠없음. 그래비티 true 됐을거임
             // 만약 착지 한다면? 그래비티 false하고 nav 켜줘야함 
-            if(isGroundChecker)
+            if (isGroundChecker)
             {
                 isGravity = false; // 중력 영향력 상태 끝 
                 navMeshAgent.enabled = true; // navMeshAgent 활성화
@@ -132,35 +132,47 @@ public class Guards : MonoBehaviour, IGravityControl
             {
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
+                anim.SetBool("isDetected", true); // 발견! 공격 
 
-                if (PlayerOutOfChaseRange()) // 추적 범위 내라면
-                {
-                    MoveTowardsTarget();
-                    anim.SetBool("isRunning", true); // 추적 애니메이션
-                }
-                else
-                {
-                    navMeshAgent.ResetPath(); // 멈춤
-                    anim.SetBool("isRunning", false);
-                }
-
-                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면
+                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면 공격
                 {
                     // 목표 회전 계산
                     StareAtPlayer();
-                    anim.SetBool("isInAttack", true);
                     //발사
                     if (PlayerHasAmmos())
                     {
                         Fire();
                     }
                 }
+                
+                /*
+                if (PlayerOutOfChaseRange()) // 추적 범위 내라면
+                {
+                    MoveTowardsTarget();
+                }
                 else
                 {
-                    anim.SetBool("isInAttack", false);
+                    navMeshAgent.ResetPath(); // 멈춤
+                    anim.SetBool("isDetected", false);
                 }
+                */
+
+                // 고정 사격 거리 측정 
+                if (Vector3.Distance(transform.position, nearestPlayer.transform.position) > 0.5f) // 고정사격 거리보다 크다면
+                {
+                    MoveTowardsTarget(); // 움직이면서 사격 
+                }
+                else 
+                {
+                    // 고정사격 거리보다 작다면 멈춰서 사격 
+                    navMeshAgent.ResetPath(); 
+                    anim.SetBool("isDetected", true);
+                    anim.SetBool("isInAttackRange", true);
+
+                }
+
             }
-            else // 평화로운 상태
+            else // 평화로운 상태. idle
             {
                 if (Time.time >= nextPatrolTime)
                 {
@@ -168,7 +180,9 @@ public class Guards : MonoBehaviour, IGravityControl
                     // Set the next patrol time
                     nextPatrolTime = Time.time + patrolDelay;
                     MoveTowardsTarget();
-                    anim.SetBool("isRunning", false);
+                    anim.SetBool("isDetected", false);
+                    anim.SetBool("isInAttackRange", false);
+
                 }
             }
         }
@@ -190,7 +204,7 @@ public class Guards : MonoBehaviour, IGravityControl
             }
         }
     }
-    
+
     // Stare at the player by rotating the opponent's direction
     void StareAtPlayer()
     {
@@ -204,8 +218,8 @@ public class Guards : MonoBehaviour, IGravityControl
     void Patrol()
     {
         //범위내에서 랜덤하게 patrol
-        anim.SetBool("isRunning", false);
-        anim.SetBool("isInAttack", true); //isInAttackWithRunning
+        anim.SetBool("isDetected", false);
+        anim.SetBool("isInAttackRange", true); //isInAttackWithRunning
         Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * travelDistance;
         targetPosition = initialPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
     }
@@ -221,18 +235,9 @@ public class Guards : MonoBehaviour, IGravityControl
         if (detector != null)
         {
             // MeshCollisionDetector의 변수에 접근
-            bool isDetected = detector.isPlayerDetected;
+            isPlayerDetected = detector.isPlayerDetected;
             nearestPlayer = detector.nearestPlayer;
-            List<GameObject> players = detector.playersInRange;
 
-            // 변수를 사용하여 원하는 작업 수행
-            //Debug.Log("Is Player Detected: " + isDetected);
-            if (nearestPlayer != null)
-            {
-                isPlayerDetected = true;
-                //Debug.Log("Nearest Player: " + nearestPlayer.name);
-            }
-            //Debug.Log("Players in Range Count: " + players.Count);
         }
         else
         {
@@ -246,8 +251,8 @@ public class Guards : MonoBehaviour, IGravityControl
     {
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
-        anim.SetBool("isRunning", true);
-        anim.SetBool("isInAttack", false); //isInAttackWithRunning
+        anim.SetBool("isDetected", true);
+        anim.SetBool("isInAttackRange", false); 
     }
 
     bool PlayerOutOfChaseRange()
@@ -259,7 +264,7 @@ public class Guards : MonoBehaviour, IGravityControl
         }
         return false;
     }
-    
+
     bool PlayerInFireRange()
     {
         // 사거리에 플레이어가 있는지 확인
@@ -267,7 +272,7 @@ public class Guards : MonoBehaviour, IGravityControl
         {
             return true;
         }
-        
+
         return false;
     }
 
@@ -315,15 +320,8 @@ public class Guards : MonoBehaviour, IGravityControl
         projectileIns.transform.position = transform.position + fireOffset;
         // Reset the timer for the next bullet
         fireTimer = 0f; // 초기화
-        /*
-        if(false) { //anim.GetBool("isRunning") == false
-            anim.SetTrigger("doRecursiveAttack");
-        }
-        else {
-            anim.SetTrigger("doRecursiveAttackWhileRunning");
-        }
-        */
-        anim.SetTrigger("doRecursiveAttackWhileRunning");
+
+
     }
 
     public void BlackHole(Vector3 fieldCenter)

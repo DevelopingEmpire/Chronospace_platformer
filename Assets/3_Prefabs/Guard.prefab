@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6850570268413608707}
   - component: {fileID: 6784990059728491147}
-  - component: {fileID: 1486400014}
   - component: {fileID: 1486400011}
   m_Layer: 0
   m_Name: Guard_Sight
@@ -27,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 594351123460640692}
   m_LocalRotation: {x: -0.70701015, y: -0, z: -0, w: 0.7072035}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -47,20 +46,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 9130449710071922620, guid: 3de61af15284ca94fa75beb96c82d2ee, type: 3}
---- !u!135 &1486400014
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 594351123460640692}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.4
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Mesh: {fileID: 9130449710071922620, guid: 5d87529c9349d56449b053b1ac3eb7fa, type: 3}
 --- !u!114 &1486400011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +61,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlayerDetected: 0
   nearestPlayer: {fileID: 0}
-  playersInRange: []
 --- !u!1 &621278534067018043
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,7 +367,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nearestPlayer: {fileID: 0}
   initialPosition: {x: -25, y: 0, z: 0}
-  rotationSpeed: 5
+  rotationSpeedPatrol: 5
+  rotationSpeedFire: 1
   travelDistance: 2.5
   chaseRange: 10
   chaseRangeErratum: 1
@@ -392,8 +378,8 @@ MonoBehaviour:
   anim: {fileID: 1538759538}
   bullet: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
   fireRange: 15
-  fireDelay: 0.5
-  fireOffset: {x: 0, y: 1.11, z: 0}
+  fireDelay: 2
+  fireOffset: {x: 0.12, y: 0.8, z: 0}
   bulletAmount: 20
   bulletReloadTime: 2
   bulletReloadTimeCurrent: 0
