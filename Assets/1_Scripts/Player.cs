@@ -17,6 +17,7 @@ public class Player : MonoBehaviour, IGravityControl
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
     public Vector3 respawnPosition; // 리스폰 위치 
+    public CamController camController; // CamController 참조
 
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
@@ -93,6 +94,11 @@ public class Player : MonoBehaviour, IGravityControl
     }
 
     #endregion
+
+    private void Start()
+    {
+        camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
+    }
 
     public void AntiGravity() // 중력 반전 함수 
     {
@@ -220,6 +226,9 @@ public class Player : MonoBehaviour, IGravityControl
         // 사망 처리
         isAlive = false;
 
+        // 3인칭 전환
+        camController.ToggleCamera(3);
+
         // 죽음 애니메이션 설정 
         anim.SetBool("isDie", true);
 
@@ -240,6 +249,9 @@ public class Player : MonoBehaviour, IGravityControl
 
         // 플레이어 상태 초기화
         isAlive = true;
+
+        // 3인칭 전환
+        camController.ToggleCamera(1);
 
     }
 
