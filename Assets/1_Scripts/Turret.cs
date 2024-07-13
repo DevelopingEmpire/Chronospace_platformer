@@ -12,6 +12,11 @@ public class Turret : MonoBehaviour
     public GameObject detectionRangeObj;
     private bool isPlayerDetected = false; // 사람 발견시 true 
     private GameObject nearestPlayer;
+    
+    [Header("Mesh")]
+    public GameObject turretBase;
+    public GameObject turretSupport;
+    public GameObject turretHead;
 
     [Header("Bullet")]
     public GameObject bullet; // 총알 
@@ -72,7 +77,11 @@ public class Turret : MonoBehaviour
         {
             // 타겟 방향 계산 (y축 고정을 위해 y축 값은 무시)
             Vector3 direction = nearestPlayer.transform.position - transform.position;
+            Vector3 directionTurretHead = nearestPlayer.transform.position - turretHead.transform.position;
             direction.y = 0; // y축 방향 무시
+
+            //directionTurretHead.x = 0;
+            //directionTurretHead.z = 0;
 
             // 방향이 0이 아니면 회전
             if (direction != Vector3.zero)
@@ -82,6 +91,7 @@ public class Turret : MonoBehaviour
 
                 // 현재 회전값에서 목표 회전값으로 부드럽게 회전
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeedPatrol);
+                turretHead.transform.LookAt(nearestPlayer.transform, Vector3.up);
             }
         }
     }

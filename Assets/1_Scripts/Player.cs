@@ -23,6 +23,7 @@ public class Player : MonoBehaviour, IGravityControl
     public float movSpeed = 5f;
     public float rotSpeed = 300f;
     public float pushPower = 0.03f;
+    public float height = 1.35f;
 
     [Header("InputValue")] //플레이어 이동 사용 변수
     Vector3 moveDirection;
@@ -289,7 +290,7 @@ public class Player : MonoBehaviour, IGravityControl
         moveDirection = Vector3.zero; // 이 값 임의로 초기화 
         controller.enabled = false; // 잠시 끄고 
 
-        transform.position = respawnPosition;  // 현재 체크포인트에서 시작. 처음엔 처음 위치임 
+        transform.position = respawnPosition + (Vector3.up*height);  // 현재 체크포인트에서 시작. 처음엔 처음 위치임 
 
         controller.enabled = true; // 다시 켠다 
 
