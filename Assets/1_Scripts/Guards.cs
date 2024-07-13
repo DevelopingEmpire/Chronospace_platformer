@@ -146,18 +146,6 @@ public class Guards : MonoBehaviour, IGravityControl
                         Fire();
                     }
                 }
-                
-                /*
-                if (PlayerOutOfChaseRange()) // 추적 범위 내라면
-                {
-                    MoveTowardsTarget();
-                }
-                else
-                {
-                    navMeshAgent.ResetPath(); // 멈춤
-                    anim.SetBool("isDetected", false);
-                }
-                */
 
                 // 고정 사격 거리 측정 
                 if (Vector3.Distance(transform.position, nearestPlayer.transform.position) > fireRange) // 고정사격 거리보다 크다면
@@ -166,7 +154,6 @@ public class Guards : MonoBehaviour, IGravityControl
 
                     MoveTowardsTarget(); // 움직이면서 사격 
                     anim.SetBool("isInAttackRange", false);
-                    //anim.SetBool("isInAttackRangeWhileRunning", true);
                 }
                 else 
                 {
@@ -175,7 +162,6 @@ public class Guards : MonoBehaviour, IGravityControl
                     isPlayerInAttackRange = true;
                     anim.SetBool("isDetected", true);
                     anim.SetBool("isInAttackRange", true);
-                    //anim.SetBool("isInAttackRangeWhileRunning", false);
                 }
 
             }
