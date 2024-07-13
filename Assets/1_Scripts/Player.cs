@@ -219,8 +219,9 @@ public class Player : MonoBehaviour, IGravityControl
     {
         // 사망 처리
         isAlive = false;
-        // anim.SetTrigger("die"); // 애니메이션 트리거 설정 
- 
+
+        // 죽음 애니메이션 설정 
+        anim.SetBool("isDie", true);
 
         // 사망 후 일정 시간 후에 시작 위치로 이동
         StartCoroutine(Respawn());
@@ -229,13 +230,17 @@ public class Player : MonoBehaviour, IGravityControl
     // 저장 위치에서 부활 
     public IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(2f); // 사망 후 2초 대기 (옵션)
+        yield return new WaitForSeconds(4f); // 사망 후 4초 대기 (옵션)
 
         // 플레이어 위치 초기화
         PlayerInit();
 
+        // 죽음 -> idle 변경 
+        anim.SetBool("isDie", false);
+
         // 플레이어 상태 초기화
         isAlive = true;
+
     }
 
 
@@ -285,7 +290,7 @@ public class Player : MonoBehaviour, IGravityControl
     // 플레이어 상태 초기화 
     public void PlayerInit()
     {
-        
+
         moveDirection = Vector3.zero; // 이 값 임의로 초기화 
         controller.enabled = false; // 잠시 끄고 
 
@@ -299,9 +304,12 @@ public class Player : MonoBehaviour, IGravityControl
         Gravity = -9.81f;
         
         //controller.detectCollisions = false; // 이거 끄면.. 플레이어가 발판을 못 밟음 
+        timer.TimerUIInit();
 
-        if(StageManager.Instance.currentStageName == "stage0") timer.isPlaying = false;
+        if (StageManager.Instance.currentStageName == "stage0") timer.isPlaying = false;
         else timer.isPlaying = true;
+
+        
     }
 
     public void SetCheckpoint(Vector3 checkpointPosition)
@@ -445,6 +453,9 @@ public class Player : MonoBehaviour, IGravityControl
         if (other.CompareTag("CheckPoint"))
         {
             respawnPosition = other.transform.position;
+
+            timer.SetCheckPointTime();
+
             Debug.Log("Checkpoint reached: " + respawnPosition);
         }
         /*

@@ -7,6 +7,8 @@ using UnityEngine;
 public class PlayerTimer : MonoBehaviour
 {
     public float timeLimit; // 시간제한 
+    public float checkPointTimeLimit; // 체크포인트 찍은 후 남은 시간제한 
+
     public float speed; // 1초에 몇 닳는 지 ( 기본 1 )
     public float currentTime; // 현재 남은 시간 
     public Player player; // player 스크립트 
@@ -19,8 +21,7 @@ public class PlayerTimer : MonoBehaviour
 
     public void TimerUIInit()
     {
-        // 시간초 리셋 
-        currentTime = timeLimit;
+        currentTime = checkPointTimeLimit;
 
         // UI 요소들이 null이 아닌지 확인하고, null이라면 다시 찾기
         if (UIManager.instance != null && UIManager.instance.battleHUDScreen != null)
@@ -37,6 +38,9 @@ public class PlayerTimer : MonoBehaviour
 
     private void Start()
     {
+        // 시간초 리셋 
+        checkPointTimeLimit = timeLimit; 
+
         TimerUIInit(); // Start에서 UI 초기화 호출
     }
 
@@ -55,6 +59,14 @@ public class PlayerTimer : MonoBehaviour
     {
         // 태엽 감으면 늘어나는거. 혹시 뺄 일도 있을까 싶어서 이름은 change로 지음 
         currentTime = timeLimit < currentTime + changeTime ? timeLimit : currentTime + changeTime; // 시간 제한보다 많아지진 않는다 
+    }
+
+    public void SetCheckPointTime()
+    {
+        Debug.Log("set check point time");
+
+        checkPointTimeLimit = currentTime;
+
     }
 
     public void CountDown()
