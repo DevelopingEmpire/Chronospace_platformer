@@ -13,6 +13,8 @@ public class GravityItem : MonoBehaviour
     // 적용 당할 오브젝트의 itemGravityControl
     IGravityControl iGravityControl;
 
+    public float effectDuration = 5f;
+
     // colliderRange 내의 col 들 모아두는 list 
     private List<Collider> colInRange = new List<Collider>();
 
@@ -33,12 +35,14 @@ public class GravityItem : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
 
         rb.useGravity = false; // 리지드의 중력 끄기 
-        itemMeshObj.SetActive(false); // 비활성화 
+        if(itemMeshObj != null) {
+            itemMeshObj.SetActive(false); // 비활성화 
+        }
         //effectObj.SetActive(true); // 효과 보여주는거
         colliderRange.enabled = true; // 콜라이더 켜기 
         meshRenderer.enabled = true;
 
-        yield return new WaitForSeconds(3f); // 4초 대기 
+        yield return new WaitForSeconds(effectDuration); // 4초 대기 
 
         // 남은 놈들도 싹 정리해주기 
         foreach (Collider col in colInRange)
@@ -61,6 +65,7 @@ public class GravityItem : MonoBehaviour
         if (iGravityControl != null && iGravityControl.IsInRange == false)
         {
             //해당 스크립트가 있고 또한 이미 범위에 추가된 것이 아니라면
+            Debug.Log("IGravityControl 있음");
             colInRange.Add(col); // 추가함 
             iGravityControl.AntiGravity();
         }

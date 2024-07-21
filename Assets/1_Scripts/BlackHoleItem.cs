@@ -29,8 +29,10 @@ public class BlackHoleItem : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        rb.useGravity = false; // 리지드의 중력 끄기 
-        itemMeshObj.SetActive(false); // 비활성화 
+        rb.useGravity = false; // 리지드의 중력 끄기
+        if(itemMeshObj != null) {
+            itemMeshObj.SetActive(false); // 비활성화 
+        }
         //effectObj.SetActive(true); // 효과 보여주는거
         colliderRange.enabled = true; // 콜라이더 켜기 
         meshRenderer.enabled = true;
