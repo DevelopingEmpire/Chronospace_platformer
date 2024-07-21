@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Confined; // 마우스 커서 이탈 방지
         // StageManager.Instance.InitializeStageClearStatus(); // 기본 정보 초기화.. 는 처음에만 수행해야지
-        StageManager.Instance.StageInit("Stage0");
+        // StageManager.Instance.StageInit("Stage0");
     }
 
     // potal은 씬 생성 호출 후 사라지므로, 생성은 게임 매니저가 맡는다.
@@ -93,6 +93,16 @@ public class GameManager : MonoBehaviour
         // 바뀐 씬을 현재 씬으로 변경하고 초기화해줌
         StageManager.Instance.StageInit(sceneName);
         
+    }
+
+    //게임 종료
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit(); // 어플리케이션 종료
+#endif
     }
 
 }

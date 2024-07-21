@@ -41,6 +41,7 @@ public class StageManager : MonoBehaviour
     {
         npcDialogueUI.SetActive(false);
     }
+
     public void InitializeStageClearStatus()
     {
         stageClearStatus = new Dictionary<string, bool>();
