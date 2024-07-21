@@ -40,7 +40,7 @@ public class Portal : StageMechanicsController
 
     void FixedUpdate() {
         if (symbolObjectPos != null) {
-            symbolObjectPos.transform.Rotate(symbolRotAxis * symbolRotSpeed * Time.deltaTime); // 빙글빙글 회전 효과
+            symbolObjectPos.transform.Rotate(symbolRotAxis * symbolRotSpeed * Time.deltaTime, Space.World); // 빙글빙글 회전 효과
         }
     }
 

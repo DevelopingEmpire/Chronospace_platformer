@@ -40,6 +40,8 @@ public class Turret : MonoBehaviour
             Fire();
         }
         else {
+            Quaternion currentRotation = turretHead.transform.rotation;
+            turretHead.transform.rotation = Quaternion.Lerp(currentRotation, transform.rotation, Time.deltaTime * rotationSpeedPatrol);
             transform.Rotate(Vector3.up * rotSpeed * Time.deltaTime);
         }
     }
@@ -63,6 +65,9 @@ public class Turret : MonoBehaviour
             {
                 isPlayerDetected = true;
                 //Debug.Log("Nearest Player: " + nearestPlayer.name);
+            }
+            if (nearestPlayer == null){
+                isPlayerDetected = false;
             }
             //Debug.Log("Players in Range Count: " + players.Count);
         }
@@ -91,7 +96,18 @@ public class Turret : MonoBehaviour
 
                 // 현재 회전값에서 목표 회전값으로 부드럽게 회전
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeedPatrol);
-                turretHead.transform.LookAt(nearestPlayer.transform, Vector3.up);
+
+                // 타겟 플레이어의 방향 계산
+                Vector3 directionHead = nearestPlayer.transform.position - turretHead.transform.position;
+                //directionHead.y = 0; // y축 고정
+                
+                // 현재 회전과 목표 회전 계산
+                Quaternion currentRotation = turretHead.transform.rotation;
+
+                // Lerp를 사용하여 부드럽게 회전
+                turretHead.transform.rotation = Quaternion.Lerp(currentRotation, Quaternion.LookRotation(directionHead), Time.deltaTime * rotationSpeedPatrol);
+
+                //turretHead.transform.LookAt(nearestPlayer.transform, Vector3.up);
             }
         }
     }
