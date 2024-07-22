@@ -76,25 +76,21 @@ public class Turret : MonoBehaviour
         if (nearestPlayer != null)
         {
             // 타겟 방향 계산 (y축 고정을 위해 y축 값은 무시)
-            Vector3 direction = nearestPlayer.transform.position - transform.position;
             Vector3 directionTurretHead = nearestPlayer.transform.position - turretHead.transform.position;
-            direction.y = 0; // y축 방향 무시
-
-            //directionTurretHead.x = 0;
-            //directionTurretHead.z = 0;
+            directionTurretHead.y = 0; // y축 방향 무시
 
             // 방향이 0이 아니면 회전
-            if (direction != Vector3.zero)
+            if (directionTurretHead != Vector3.zero)
             {
                 // 지정된 방향으로 회전하도록 회전값 계산
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                Quaternion targetRotation = Quaternion.LookRotation(directionTurretHead);
 
                 // 현재 회전값에서 목표 회전값으로 부드럽게 회전
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeedPatrol);
-                turretHead.transform.LookAt(nearestPlayer.transform, Vector3.up);
+                turretHead.transform.rotation = Quaternion.Slerp(turretHead.transform.rotation, targetRotation, Time.deltaTime * rotationSpeedPatrol);
             }
         }
     }
+
 
     Vector3 GenerateTargetDirection()
     {
