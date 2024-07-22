@@ -79,4 +79,12 @@ public class DataManager : MonoBehaviour
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(path, json);
     }
+
+    // 데이터 초기화. 새 게임 생성시
+    public void InitJson()
+    {
+        StageManager.Instance.InitializeStageClearStatus();
+        SaveJson(); // 초기 데이터를 파일에 저장
+        Debug.Log("stagedata.json 생성됨");
+    }
 }

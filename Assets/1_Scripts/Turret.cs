@@ -12,11 +12,6 @@ public class Turret : MonoBehaviour
     public GameObject detectionRangeObj;
     private bool isPlayerDetected = false; // 사람 발견시 true 
     private GameObject nearestPlayer;
-    
-    [Header("Mesh")]
-    public GameObject turretBase;
-    public GameObject turretSupport;
-    public GameObject turretHead;
 
     [Header("Bullet")]
     public GameObject bullet; // 총알 
@@ -57,7 +52,7 @@ public class Turret : MonoBehaviour
             // MeshCollisionDetector의 변수에 접근
             bool isDetected = detector.isPlayerDetected;
             nearestPlayer = detector.nearestPlayer;
-            List<GameObject> players = detector.playersInRange;
+            //List<GameObject> players = detector.playersInRange;
 
             // 변수를 사용하여 원하는 작업 수행
             //Debug.Log("Is Player Detected: " + isDetected);
@@ -82,11 +77,7 @@ public class Turret : MonoBehaviour
         {
             // 타겟 방향 계산 (y축 고정을 위해 y축 값은 무시)
             Vector3 direction = nearestPlayer.transform.position - transform.position;
-            Vector3 directionTurretHead = nearestPlayer.transform.position - turretHead.transform.position;
             direction.y = 0; // y축 방향 무시
-
-            //directionTurretHead.x = 0;
-            //directionTurretHead.z = 0;
 
             // 방향이 0이 아니면 회전
             if (direction != Vector3.zero)

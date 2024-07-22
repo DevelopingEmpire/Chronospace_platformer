@@ -32,15 +32,48 @@ public class StageManager : MonoBehaviour
     public Vector3 spawnCharacterOffset; // 인덱스 끝 번을 넣어준다. 해당 인덱스가 해결되면 스테이지 클리어 
     public GameObject npcDialogueUI;
 
-    //박강 작성 구간:
+    public bool isPause = true; // 일시정지 상태를 나타낸다 
+    public float timeScale; // 타임 스케일 임시저장할 변수 
 
-
-    //roh 작성 구간:
 
     void Start()
     {
         npcDialogueUI.SetActive(false);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) // esc 눌림! 
+        {
+
+            isPause = !isPause;
+
+            
+            if (isPause) // 일시 정지된 상황이면 
+            {
+                //timeScale = Time.timeScale; // 현재 timeScale 을 임시 저장 
+                Time.timeScale = 0f; // 일시정지 
+            }
+            else // 일시정지가 해제된 상황이면 
+            {
+                //Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
+                Time.timeScale = 1;
+            }
+            
+
+            UIManager.instance.OnClickEscButton(isPause);
+
+        }
+
+    }
+
+    public void UnPause()
+    {
+        //Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
+        Time.timeScale = 1;
+    }
+
+
     public void InitializeStageClearStatus()
     {
         stageClearStatus = new Dictionary<string, bool>();
@@ -92,7 +125,10 @@ public class StageManager : MonoBehaviour
         Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
 
         // 캐릭터 스폰 
-        Player.Instance.PlayerInit(); 
+        Player.Instance.PlayerInit();
+
+        // time Scale 은 정상으로 되돌려둠 
+        UnPause();
     }
 
 
