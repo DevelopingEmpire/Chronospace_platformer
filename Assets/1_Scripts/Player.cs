@@ -68,6 +68,8 @@ public class Player : MonoBehaviour, IGravityControl
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
+    // 
+    public float bulletDamage = 10f;
     private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
     /// <summary>
     /// 중력 인터페이스 구현부 
@@ -482,6 +484,17 @@ public class Player : MonoBehaviour, IGravityControl
             isPlayerNear = false;
         }
         */
+    }
+
+    // 총알 콜리젼 확인 
+    private void OnCollisionEnter(Collision coll)
+    {
+        if (coll.collider.tag == "Bullet")
+        {
+            // 시간초 깍임 
+            timer.TimeChange(-bulletDamage);
+            Destroy(coll.gameObject);
+        }
     }
 
     // 상자 밀기 

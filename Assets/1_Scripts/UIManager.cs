@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-    public GameObject settingScreen; // 설정창
+    public GameObject pauseScreen; // 일시 정지 창
 
     public GameObject battleHUDScreen; // HUD 전체 
     public GameObject itemLayOut; // 아이템 가진 현황 
@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
 
     public void OnClickEscButton(bool isPause)
     {
-        settingScreen.SetActive(isPause);
+        pauseScreen.SetActive(isPause);
     }
 
     #region HUD Screen 
