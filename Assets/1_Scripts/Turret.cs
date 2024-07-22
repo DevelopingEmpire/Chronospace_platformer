@@ -12,11 +12,6 @@ public class Turret : MonoBehaviour
     public GameObject detectionRangeObj;
     private bool isPlayerDetected = false; // 사람 발견시 true 
     private GameObject nearestPlayer;
-    
-    [Header("Mesh")]
-    public GameObject turretBase;
-    public GameObject turretSupport;
-    public GameObject turretHead;
 
     [Header("Bullet")]
     public GameObject bullet; // 총알 
@@ -55,7 +50,7 @@ public class Turret : MonoBehaviour
             // MeshCollisionDetector의 변수에 접근
             bool isDetected = detector.isPlayerDetected;
             nearestPlayer = detector.nearestPlayer;
-            List<GameObject> players = detector.playersInRange;
+            //List<GameObject> players = detector.playersInRange;
 
             // 변수를 사용하여 원하는 작업 수행
             //Debug.Log("Is Player Detected: " + isDetected);
@@ -76,21 +71,20 @@ public class Turret : MonoBehaviour
         if (nearestPlayer != null)
         {
             // 타겟 방향 계산 (y축 고정을 위해 y축 값은 무시)
-            Vector3 directionTurretHead = nearestPlayer.transform.position - turretHead.transform.position;
-            directionTurretHead.y = 0; // y축 방향 무시
+            Vector3 direction = nearestPlayer.transform.position - transform.position;
+            direction.y = 0; // y축 방향 무시
 
             // 방향이 0이 아니면 회전
-            if (directionTurretHead != Vector3.zero)
+            if (direction != Vector3.zero)
             {
                 // 지정된 방향으로 회전하도록 회전값 계산
-                Quaternion targetRotation = Quaternion.LookRotation(directionTurretHead);
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
 
                 // 현재 회전값에서 목표 회전값으로 부드럽게 회전
-                turretHead.transform.rotation = Quaternion.Slerp(turretHead.transform.rotation, targetRotation, Time.deltaTime * rotationSpeedPatrol);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeedPatrol);
             }
         }
     }
-
 
     Vector3 GenerateTargetDirection()
     {

@@ -17,13 +17,13 @@ public class Player : MonoBehaviour, IGravityControl
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
     public Vector3 respawnPosition; // 리스폰 위치 
+    public CamController camController; // CamController 참조
 
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
     public float movSpeed = 5f;
     public float rotSpeed = 300f;
     public float pushPower = 0.03f;
-    public float height = 1.35f;
 
     [Header("InputValue")] //플레이어 이동 사용 변수
     Vector3 moveDirection;
@@ -68,8 +68,6 @@ public class Player : MonoBehaviour, IGravityControl
     // 아이템 습득 UI 
     public TextMeshProUGUI textMeshProUGUI;
 
-    // 
-    public float bulletDamage = 10f;
     private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
     /// <summary>
     /// 중력 인터페이스 구현부 
@@ -96,6 +94,11 @@ public class Player : MonoBehaviour, IGravityControl
     }
 
     #endregion
+
+    private void Start()
+    {
+        camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
+    }
 
     public void AntiGravity() // 중력 반전 함수 
     {
@@ -222,8 +225,12 @@ public class Player : MonoBehaviour, IGravityControl
     {
         // 사망 처리
         isAlive = false;
-        // anim.SetTrigger("die"); // 애니메이션 트리거 설정 
- 
+
+        // 3인칭 전환
+        camController.ToggleCamera(3);
+
+        // 죽음 애니메이션 설정 
+        anim.SetBool("isDie", true);
 
         // 사망 후 일정 시간 후에 시작 위치로 이동
         StartCoroutine(Respawn());
@@ -232,13 +239,20 @@ public class Player : MonoBehaviour, IGravityControl
     // 저장 위치에서 부활 
     public IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(2f); // 사망 후 2초 대기 (옵션)
+        yield return new WaitForSeconds(4f); // 사망 후 4초 대기 (옵션)
 
         // 플레이어 위치 초기화
         PlayerInit();
 
+        // 죽음 -> idle 변경 
+        anim.SetBool("isDie", false);
+
         // 플레이어 상태 초기화
         isAlive = true;
+
+        // 3인칭 전환
+        camController.ToggleCamera(1);
+
     }
 
 
@@ -288,11 +302,11 @@ public class Player : MonoBehaviour, IGravityControl
     // 플레이어 상태 초기화 
     public void PlayerInit()
     {
-        
+
         moveDirection = Vector3.zero; // 이 값 임의로 초기화 
         controller.enabled = false; // 잠시 끄고 
 
-        transform.position = respawnPosition + (Vector3.up*height);  // 현재 체크포인트에서 시작. 처음엔 처음 위치임 
+        transform.position = respawnPosition;  // 현재 체크포인트에서 시작. 처음엔 처음 위치임 
 
         controller.enabled = true; // 다시 켠다 
 
@@ -302,9 +316,12 @@ public class Player : MonoBehaviour, IGravityControl
         Gravity = -9.81f;
         
         //controller.detectCollisions = false; // 이거 끄면.. 플레이어가 발판을 못 밟음 
+        timer.TimerUIInit();
 
-        if(StageManager.Instance.currentStageName == "stage0") timer.isPlaying = false;
+        if (StageManager.Instance.currentStageName == "stage0") timer.isPlaying = false;
         else timer.isPlaying = true;
+
+        
     }
 
     public void SetCheckpoint(Vector3 checkpointPosition)
@@ -448,6 +465,9 @@ public class Player : MonoBehaviour, IGravityControl
         if (other.CompareTag("CheckPoint"))
         {
             respawnPosition = other.transform.position;
+
+            timer.SetCheckPointTime();
+
             Debug.Log("Checkpoint reached: " + respawnPosition);
         }
         /*
@@ -484,17 +504,6 @@ public class Player : MonoBehaviour, IGravityControl
             isPlayerNear = false;
         }
         */
-    }
-
-    // 총알 콜리젼 확인 
-    private void OnCollisionEnter(Collision coll)
-    {
-        if (coll.collider.tag == "Bullet")
-        {
-            // 시간초 깍임 
-            timer.TimeChange(-bulletDamage);
-            Destroy(coll.gameObject);
-        }
     }
 
     // 상자 밀기 
