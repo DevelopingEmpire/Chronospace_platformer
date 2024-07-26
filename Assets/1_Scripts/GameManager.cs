@@ -41,13 +41,16 @@ public class GameManager : MonoBehaviour
     // 타이틀 씬에서 쓰레기장 씬으로 이동 
     public IEnumerator LoadScene(string sceneName)
     {
+        // 화면 암전 
+        UIManager.instance.SetFade(true);
+
         Debug.Log("게임매니저 - 로드씬 실행 됨  ");
 
         // 비동기적으로 씬 로딩
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        
-
         Debug.Log("비동기 씬 로딩 시작 ");
+
+     
 
         // 씬 로딩이 완료될 때까지 대기
         while (!asyncLoad.isDone)
@@ -56,6 +59,9 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("비동기 씬 로딩 됨  ");
+
+        // 화면 암전 끄기
+        //UIManager.instance.SetFade(false);
 
         // PlayerTimer 제어 로직 추가
         PlayerTimer playerTimer = FindObjectOfType<PlayerTimer>();

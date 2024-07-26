@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+
 //using UnityEngine.SceneManagement; // 씬 매니지먼트 
 
 public class UIManager : MonoBehaviour
@@ -26,11 +28,15 @@ public class UIManager : MonoBehaviour
 
 
     public GameObject pauseScreen; // 일시 정지 창
-
     public GameObject battleHUDScreen; // HUD 전체 
-    public GameObject itemLayOut; // 아이템 가진 현황 
+    private GameObject itemLayOut; // 아이템 가진 현황 
+    public Image fadeImg; // 암전 이미지 
+    public float fadeDuration; // 암전 시간
 
-
+    private void Start()
+    {
+        itemLayOut = battleHUDScreen.transform.Find("ItemLayOut").gameObject;
+    }
     public void OnClickEscButton(bool isPause)
     {
         pauseScreen.SetActive(isPause);
@@ -82,4 +88,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetFade(bool set)
+    {
+        // 암전 켜기
+        if (set)
+        {
+            fadeImg.DOFade(1, fadeDuration);
+        }
+        // 암전 끄기
+        else
+        {
+            fadeImg.DOFade(0, fadeDuration);
+        }
+        
+    }
 }
