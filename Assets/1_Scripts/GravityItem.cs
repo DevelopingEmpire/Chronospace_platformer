@@ -34,15 +34,17 @@ public class GravityItem : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        rb.useGravity = false; // 리지드의 중력 끄기 
+        rb.useGravity = false; // 리지드의 중력 끄기 \
+        /*
         if(itemMeshObj != null) {
             itemMeshObj.SetActive(false); // 비활성화 
         }
+        */
         //effectObj.SetActive(true); // 효과 보여주는거
         colliderRange.enabled = true; // 콜라이더 켜기 
         meshRenderer.enabled = true;
 
-        yield return new WaitForSeconds(effectDuration); // 4초 대기 
+        yield return new WaitForSeconds(effectDuration); // effectDuration 동안 대기 
 
         // 남은 놈들도 싹 정리해주기 
         foreach (Collider col in colInRange)

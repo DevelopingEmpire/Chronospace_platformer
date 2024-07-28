@@ -1869,11 +1869,11 @@ MonoBehaviour:
   itemPointTransform: {fileID: 1090306087314540582}
   timer: {fileID: 5360781343035164255}
   respawnPosition: {x: 0, y: 0, z: 0}
+  camController: {fileID: 0}
   jumpForce: 8
   movSpeed: 4
   rotSpeed: 300
   pushPower: 0.03
-  height: 1.35
   Items:
   - {fileID: 1090306087314541017}
   - {fileID: 1090306087766506786}
@@ -1915,6 +1915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLimit: 600
+  checkPointTimeLimit: 0
   speed: 1
   currentTime: 0
   player: {fileID: 5360781343035164253}
