@@ -29,12 +29,17 @@ public class UIManager : MonoBehaviour
     public GameObject pauseScreen; // 일시 정지 창
 
     public GameObject battleHUDScreen; // HUD 전체 
-    public GameObject itemLayOut; // 아이템 가진 현황 
+    private GameObject itemLayOut; // 아이템 가진 현황 
+
     public Image fadeImg; // 암전 화면 
     [SerializeField]
     private float fadeDuration; // 암전 시간 
 
 
+    private void Start()
+    {
+        itemLayOut = battleHUDScreen.transform.Find("ItemLayOut").gameObject;
+    }
     public void OnClickEscButton(bool isPause)
     {
         pauseScreen.SetActive(isPause);
