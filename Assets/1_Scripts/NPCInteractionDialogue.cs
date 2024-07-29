@@ -13,12 +13,12 @@ public class NPCInteractionDialogue : MonoBehaviour
 
     [Header("Content Display")]
     public GameObject dialogueUI;
-    public TextMeshProUGUI dialogueUIName;
-    public TextMeshProUGUI dialogueUIContent;
+    private TextMeshProUGUI dialogueUIName;
+    private TextMeshProUGUI dialogueUIContent;
 
     [Header("External-Content Display")]
     public GameObject extUI;
-    public TextMeshProUGUI dialogueUIExt;
+    private TextMeshProUGUI dialogueUIExt;
 
     [Header("Dialog Status")]
     bool isPlayerDetected = false;
@@ -29,6 +29,15 @@ public class NPCInteractionDialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // 각 컴포넌트들 캐싱 
+        dialogueUI = CanvasScripts.instance.transform.Find("MainScreen").GetChild(2).gameObject;
+        extUI = CanvasScripts.instance.transform.Find("MainScreen").GetChild(1).gameObject;
+
+        dialogueUIName = dialogueUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        dialogueUIContent = dialogueUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+
+        dialogueUIExt = extUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
         dialogueUI.SetActive(false);
         dialogueUIContentInitialVal = dialogueUIExt.text;
         if(dialogueSource != null)
