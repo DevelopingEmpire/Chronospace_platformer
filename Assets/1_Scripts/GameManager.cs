@@ -1,5 +1,7 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -36,8 +38,17 @@ public class GameManager : MonoBehaviour
     // potal은 씬 생성 호출 후 사라지므로, 생성은 게임 매니저가 맡는다.
     public void LoadSceneCall(string sceneName) 
     {
+        //화면 암전 시작
+        UIManager.instance.ScreenFade(1, sceneName);
+
+    }
+
+    // 암전 콜백 
+    public void FadeCallback(string sceneName)
+    {
         StartCoroutine(LoadScene(sceneName)); //비동기이므로 코루틴으로 호출 
     }
+
     // 타이틀 씬에서 쓰레기장 씬으로 이동 
     public IEnumerator LoadScene(string sceneName)
     {
@@ -92,7 +103,10 @@ public class GameManager : MonoBehaviour
 
         // 바뀐 씬을 현재 씬으로 변경하고 초기화해줌
         StageManager.Instance.StageInit(sceneName);
-        
+
+        //화면 암전 끄기 
+        UIManager.instance.ScreenFade(0, sceneName);
+
     }
 
     //게임 종료
