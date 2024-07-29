@@ -107,7 +107,6 @@ public class UIManager : MonoBehaviour
             sequence.Append(fadeImg.DOFade(0, fadeDuration));
         }
 
-        
 
         sequence.Play();
 
