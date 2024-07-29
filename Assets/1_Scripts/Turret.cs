@@ -13,7 +13,6 @@ public class Turret : MonoBehaviour
     public GameObject turretHead;
     private bool isPlayerDetected = false; // 사람 발견시 true 
     private GameObject nearestPlayer;
-    public GameObject turretHead;
 
     [Header("Bullet")]
     public GameObject bullet; // 총알 
