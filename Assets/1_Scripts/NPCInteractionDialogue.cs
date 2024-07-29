@@ -30,10 +30,13 @@ public class NPCInteractionDialogue : MonoBehaviour
     void Start()
     {
         // 각 컴포넌트들 캐싱 
+        dialogueUI = CanvasScripts.instance.transform.Find("MainScreen").GetChild(2).gameObject;
+        extUI = CanvasScripts.instance.transform.Find("MainScreen").GetChild(1).gameObject;
+
         dialogueUIName = dialogueUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         dialogueUIContent = dialogueUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
 
-        dialogueUIExt = extUI.GetComponent<TextMeshProUGUI>();
+        dialogueUIExt = extUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
         dialogueUI.SetActive(false);
         dialogueUIContentInitialVal = dialogueUIExt.text;
