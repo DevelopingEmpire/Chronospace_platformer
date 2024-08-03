@@ -9,6 +9,7 @@ public class BulletDirectionDefined : MonoBehaviour
     public float spreadScale = 0.075f;
     public float lifetime = 5f;
     private float timeDilation = 1f;
+    private float timeElapsed = 0f;
     public Vector3 initialDirection;
     private Rigidbody rb;
 
@@ -29,6 +30,7 @@ public class BulletDirectionDefined : MonoBehaviour
     void Update()
     {
         timeDilation = Time.timeScale;
+        timeElapsed += Time.deltaTime;
     }
 
     void FixedUpdate()
@@ -50,9 +52,11 @@ public class BulletDirectionDefined : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player")){
+        if(!other.CompareTag("Enemy")){
+            if(other.CompareTag("Player")){
+                Debug.Log("총알이 플레이어에 닿았기 때문에 사라졌습니다");
+            }
             Destroy(gameObject);
-            Debug.Log("총알이 플레이어에 닿았기 때문에 사라졌습니다");
         }
     }
 

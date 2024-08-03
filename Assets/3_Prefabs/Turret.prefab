@@ -295,11 +295,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8940096836374065647}
   - component: {fileID: 8940096836374065644}
-  - component: {fileID: 8940096836374065645}
   - component: {fileID: 8940096836374065646}
   m_Layer: 0
   m_Name: Turret_Sight
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -333,19 +332,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 9130449710071922620, guid: 3de61af15284ca94fa75beb96c82d2ee, type: 3}
---- !u!135 &8940096836374065645
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8940096836374065632}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.4
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8940096836374065646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +346,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlayerDetected: 0
   nearestPlayer: {fileID: 0}
-  playersInRange: []
 --- !u!1 &8940096836708585240
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +358,7 @@ GameObject:
   - component: {fileID: 8940096836708585222}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -412,8 +397,6 @@ MonoBehaviour:
   rotSpeed: 10
   rotationSpeedPatrol: 5
   detectionRangeObj: {fileID: 8940096836374065632}
-  turretBase: {fileID: 0}
-  turretSupport: {fileID: 0}
   turretHead: {fileID: 8919791864553171183}
   bullet: {fileID: 2486424465529188360, guid: 05743f5a2c7521846937e1c5984c7578, type: 3}
   fireDelay: 1

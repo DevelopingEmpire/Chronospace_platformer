@@ -125,10 +125,12 @@ public class Player : MonoBehaviour, IGravityControl
         SetDir();
         if (inputInteraction) Interaction(); //interaction item이 주변에 있을 때 상호작용 활성화
         if(inputKeyButton1 || inputKeyButton2 || inputKeyButton3) Swap(); //input key 버튼으로 아이템 선택 활성화
+        /*
         if (inputKeyR) //아이템 사용(모드 0, 모드 1로 이원화)
         {
             UseItem(0);
         }
+        */ //비활성화함
         if (inputKeyF)
         {
             UseItem(1);
@@ -372,6 +374,7 @@ public class Player : MonoBehaviour, IGravityControl
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier[RFnum], 5));
+                Debug.Log("Time speed has changed into " + timeScaleMultiplier[RFnum] + "x.");
                 break;
 
             case Item.Type.WindKey: //윈드 키(다른 플레이어가 존재할 때에만 활성화됨
@@ -382,6 +385,12 @@ public class Player : MonoBehaviour, IGravityControl
                     nearObject.GetComponent<Player>().WindKeyActivate();
                 }*/
                 
+                break;
+
+            case Item.Type.Shield:
+                timer.isPlaying = false;
+                StartCoroutine(WaitAndExecute(3.0f));
+                timer.isPlaying = true;
                 break;
 
             case Item.Type.Null: //없음
@@ -525,6 +534,12 @@ public class Player : MonoBehaviour, IGravityControl
         //blackholeVector = Vector3.Normalize(blackholeVector); // 방향만 구함 
         controller.Move(blackholeVector* Time.deltaTime); //* blackholeStrength *Time.unscaledDeltaTime
 
+    }
+
+    private IEnumerator WaitAndExecute(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        timer.isPlaying = true;
     }
 
     #endregion

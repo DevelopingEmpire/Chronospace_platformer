@@ -8,12 +8,13 @@ public class PlayerTimer : MonoBehaviour
 {
     public float timeLimit; // 시간제한 
     public float checkPointTimeLimit; // 체크포인트 찍은 후 남은 시간제한 
+    public float paneltyTimeDecrease = 20f;
 
     public float speed; // 1초에 몇 닳는 지 ( 기본 1 )
     public float currentTime; // 현재 남은 시간 
     public Player player; // player 스크립트 
 
-    public bool isPlaying = false; // play 중에만 타이머 시작 
+    public bool isPlaying = false; // play 중에만 타이머 시작
 
     public GameObject timerUI; 
     public TextMeshProUGUI timerText;
@@ -83,6 +84,13 @@ public class PlayerTimer : MonoBehaviour
             player.Die();
 
             // 멈춘다 
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Bullet")){
+            currentTime -= paneltyTimeDecrease;
         }
     }
 }
