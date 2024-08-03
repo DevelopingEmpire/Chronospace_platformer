@@ -46,9 +46,11 @@ public class UIManager : MonoBehaviour
     }
 
     #region HUD Screen 
-    public void hasItemUI(Item.Type useItem, bool has)
+    public void hasItemUI(Item.Type useItem, bool has, int slot)
     {
-        Image itemImage = itemLayOut.transform.GetChild((int)useItem).GetComponent<Image>(); // 0중력, 1시간, 2 태엽 
+        //Image itemImage = itemLayOut.transform.GetChild((int)useItem).GetComponent<Image>(); // 0중력, 1시간, 2 태엽 
+        Image itemImage = itemLayOut.transform.GetChild(slot).GetComponent<Image>(); // 0중력, 1시간, 2 태엽 
+
         if (has)
         {
             itemImage.color = Color.white; // 활 
@@ -60,7 +62,8 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void equipItemUI(Item.Type useItem)
+    // 몇 번째 위치가 선택되었는가? 
+    public void equipItemUI(Item.Type useItem, int slot) 
     {
         Image itemFrame = itemLayOut.transform.GetChild(3).GetComponent<Image>();
         if (useItem == Item.Type.Null)
@@ -70,7 +73,7 @@ public class UIManager : MonoBehaviour
         else
         {
             itemFrame.color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 1f); // 보임
-            itemFrame.transform.position = itemLayOut.transform.GetChild((int)useItem).GetComponent<Image>().transform.position; // 0중력, 1시간, 2 태엽
+            itemFrame.transform.position = itemLayOut.transform.GetChild(slot).GetComponent<Image>().transform.position; // 0중력, 1시간, 2 태엽
             
         }
         

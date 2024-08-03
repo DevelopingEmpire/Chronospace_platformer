@@ -35,9 +35,7 @@ public class Player : MonoBehaviour, IGravityControl
     private float directionInput;
 
     [Header("Item")] //플레이어 아이템 사용 변수
-    bool inputInteraction; // interaction키 down. 아이템 줍는 입력 e 
-    public GameObject[] Items; 
-    public bool[] hasItems; // 아이템 가졌는지
+    private bool inputInteraction; // interaction키 down. 아이템 줍는 입력 e 
     private bool inputKeyButton1; // 템 스왑 1
     private bool inputKeyButton2; // 템 스왑 2
     private bool inputKeyButton3; // 템 스왑 3
@@ -54,18 +52,21 @@ public class Player : MonoBehaviour, IGravityControl
     #endregion
 
     //플레이어 상태 변수
-    //bool isPlayerNear = false; // 주변에 동료가 있는가 
     public bool isAlive = true;
     public bool isBlackHoling; // 블랙홀에 잡혀있는 중 
 
     //주변 아이템 변수
     [SerializeField]
     public GameObject nearObject;
-    GameObject equipItem; // 현재 손에 들고있는 아이템 
-    public Item.Type equipItemIndex = Item.Type.Null; // 현재 손에 있는 탬 종류 
+    public GameObject equipItem; // 현재 손에 들고있는 아이템 
+    public int equipItemIndex = -1; // 현재 선택된 템 번호 
 
-    // 아이템 습득 UI 
-    public TextMeshProUGUI textMeshProUGUI;
+    // 아이템 습득 UI 관련  
+    public TextMeshProUGUI interactionText; // interaction 안내 UI 
+    public GameObject[] equipItems; // 손에 드는 아이템들 
+    public bool[] hasItems; // 아이템 가졌는지
+    public Item.Type[] inventory; // 가진 아이템 목록
+
 
     private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
     /// <summary>
@@ -97,6 +98,7 @@ public class Player : MonoBehaviour, IGravityControl
     private void Start()
     {
         camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
+        inventory = new Item.Type[]{ Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3 
     }
 
     public void AntiGravity() // 중력 반전 함수 
@@ -152,7 +154,6 @@ public class Player : MonoBehaviour, IGravityControl
         inputKeyButton1 = Input.GetButtonDown("Swap1");
         inputKeyButton2 = Input.GetButtonDown("Swap2");
         inputKeyButton3 = Input.GetButtonDown("Swap3");
-        //inputKeyR = Input.GetButtonDown("Effect1"); //r
         inputKeyF = Input.GetButtonDown("Effect2"); //f
     }
 
@@ -257,38 +258,45 @@ public class Player : MonoBehaviour, IGravityControl
 
     void Swap() //아이템 스왑 함수
     {
-        if ((inputKeyButton1 && hasItems[0]) || (inputKeyButton2 && hasItems[1]) || (inputKeyButton3 && hasItems[2]))
-            //아이템 선택 키를 눌렀음&아이템이 있을 때에만 아이템 꺼내 주기
+        Debug.Log("스왑 눌림");
+
+        // 현재 장착된 아이템 비활성화
+        if (equipItem != null)
+            equipItem.SetActive(false);
+
+        // 각 키에 맞는 아이템 선택 및 활성화
+        if (inputKeyButton1 && inventory[0] != Item.Type.Null)
         {
-            Debug.Log("스왑 눌림");
-            // Deactivate current equipItem
-            if (equipItem != null) equipItem.SetActive(false); //없으면 안 꺼내주기
-
-            // 각 번호에 맞는 아이템 꺼내주기
-            if (inputKeyButton1)
-            {
-                equipItemIndex = Item.Type.Gravity;
-            }
-            else if (inputKeyButton2)
-            {
-                equipItemIndex = Item.Type.TimeStop;
-            }
-            else if (inputKeyButton3)
-            {
-                equipItemIndex = Item.Type.WindKey;
-            }
-
-            //아이템 인덱스에 따라서 아이템을 지정해 줌
-            equipItem = Items[(int)equipItemIndex];
-            equipItem.SetActive(true);
-
-            // 아이템 UI에 장착 장비 표시
-            UIManager.instance.equipItemUI(equipItemIndex); // 해당하는 아이템 장착 ui 표시 
-
-            isSwaping = true;
-            Invoke("SwapOut", 0.4f); // Assuming you want to perform some post-swap logic
+            EquipItem(inventory[0], 0);
+            equipItemIndex = 0;
         }
+        else if (inputKeyButton2 && inventory[1] != Item.Type.Null)
+        {
+            EquipItem(inventory[1], 1);
+            equipItemIndex = 1;
+        }
+        else if (inputKeyButton3 && inventory[2] != Item.Type.Null)
+        {
+            EquipItem(inventory[2], 2);
+            equipItemIndex = 2;
+        }
+
+        isSwaping = true;
+        Invoke("SwapOut", 0.4f); // 스왑 후 추가 로직 수행을 위해 0.4초 대기
+        
     }
+
+    void EquipItem(Item.Type itemType, int itemIndex)
+    {
+        // inventory[i] 에 있는 아이템을, 내 손의 탬 중에서 찾아서 장비해야 함 
+        equipItem = equipItems[(int)itemType]; // 0중력 1 시간 2태엽 3블랙홀 4쉴드 
+        equipItem.SetActive(true);
+
+
+        // 아이템 UI에 장착 장비 표시
+        UIManager.instance.equipItemUI(itemType, itemIndex);
+    }
+
 
     void SwapOut() //스왑 끝내기
     {
@@ -329,21 +337,34 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (nearObject != null && nearObject.tag == "Item")
         {
-            if(textMeshProUGUI != null){
-                textMeshProUGUI.enabled = false; // ui 끄기 
+            if(interactionText != null){
+                interactionText.enabled = false; // ui 끄기 
             }
-            Item item = nearObject.GetComponent<Item>();
-            int itemIndex = (int)item.type; // gravity 0, time 1, wind 2 
+            Item.Type itemType = nearObject.GetComponent<Item>().type;
+            int itemIndex = (int)itemType; // gravity 0, time 1, wind 2 
             //Debug.Log("itemIndex" + itemIndex);
             hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
-            UIManager.instance.hasItemUI(item.type, true);
 
-            Destroy(nearObject); //지역에 떨어진 아이템 삭제하기
+            for(int i=0; i< inventory.Length; i++)
+            {
+                if (inventory[i] == Item.Type.Null)
+                {
+                    // i 번째 슬롯이 비었다! 
+                    inventory[i] = itemType; // 아이템 넣어주고~ 
+                    UIManager.instance.hasItemUI(itemType, true, i);
+                    Debug.Log(i+"빈슬롯 색칠~");
+                    Destroy(nearObject); //지역에 떨어진 아이템 삭제하기
+                    break;
+                }
+                
+            }
+            
+     
         }
         else if (nearObject != null && nearObject.tag == "Switch")
         {
-            if(textMeshProUGUI != null){
-                textMeshProUGUI.enabled = false; // ui 끄기 
+            if(interactionText != null){
+                interactionText.enabled = false; // ui 끄기 
             }
             SwitchTrigger targetSwitchScript = nearObject.GetComponent<SwitchTrigger>();
             if (targetSwitchScript != null)
@@ -357,10 +378,16 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItem() // R이면 0, F면 1 이 전달됨 
+    void UseItem() 
     {
-        switch (equipItemIndex)
+        if (equipItemIndex < 0 || equipItemIndex >= inventory.Length)
         {
+            Debug.LogError("EquipItemIndex is out of range.");
+            return;
+        }
+        switch (inventory[equipItemIndex])
+        {
+            
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
 
@@ -387,15 +414,18 @@ public class Player : MonoBehaviour, IGravityControl
             default: //모든 확인할 수 없는 아이템이 잡혀 있는 경우 에러 메시지 전달
                 Debug.LogError("Unknown item type: " + equipItemIndex);
                 return;
+            
         }
 
         //사용 후 처리들 
         
-        UIManager.instance.hasItemUI(equipItemIndex, false);
+        //UIManager.instance.hasItemUI(equipItemIndex, false);
         hasItems[(int)equipItemIndex] = false;
         equipItem.SetActive(false);
-        equipItemIndex = Item.Type.Null;        // 사용시 사라진다 
-        UIManager.instance.equipItemUI(equipItemIndex); // itemFrame 꺼진다 
+
+        equipItem.GetComponent<Item>().type = Item.Type.Null;        // 사용시 사라진다 
+        UIManager.instance.equipItemUI(equipItem.GetComponent<Item>().type, equipItemIndex); // itemFrame 꺼진다 
+            
     }
 
 
@@ -446,15 +476,15 @@ public class Player : MonoBehaviour, IGravityControl
         if (other.CompareTag("Item")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
         {
             //UI 켜기
-            if(textMeshProUGUI != null){
-                textMeshProUGUI.enabled = true; // ui 끄기 
+            if(interactionText != null){
+                interactionText.enabled = true; // ui 끄기 
             }
             nearObject = other.gameObject;
         }
         else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
         {
-            if(textMeshProUGUI != null){
-                textMeshProUGUI.enabled = true; // ui 끄기 
+            if(interactionText != null){
+                interactionText.enabled = true; // ui 끄기 
             }
             nearObject = other.gameObject;
         }
@@ -481,15 +511,15 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (other.CompareTag("Item"))
         {
-            if(textMeshProUGUI != null){
-                textMeshProUGUI.enabled = false; // ui 끄기 
+            if(interactionText != null){
+                interactionText.enabled = false; // ui 끄기 
             }
             nearObject = null;
         }
         else if (other.CompareTag("Switch")) //플레이어면 플레이어임을 확인하고 true
         {
-            if(textMeshProUGUI != null){
-                textMeshProUGUI.enabled = false; // ui 끄기 
+            if(interactionText != null){
+                interactionText.enabled = false; // ui 끄기 
             }
             nearObject = null;
         }
