@@ -41,8 +41,7 @@ public class Player : MonoBehaviour, IGravityControl
     private bool inputKeyButton1; // 템 스왑 1
     private bool inputKeyButton2; // 템 스왑 2
     private bool inputKeyButton3; // 템 스왑 3
-    private bool inputKeyR; // 탬사용1
-    private bool inputKeyF; // 탬사용2
+    private bool inputKeyF; // 탬사용
 
     bool isSwaping = false; //사용하고 있는 변수. Console에 사용하지 않는다고 뜬다. 
 
@@ -125,13 +124,10 @@ public class Player : MonoBehaviour, IGravityControl
         SetDir();
         if (inputInteraction) Interaction(); //interaction item이 주변에 있을 때 상호작용 활성화
         if(inputKeyButton1 || inputKeyButton2 || inputKeyButton3) Swap(); //input key 버튼으로 아이템 선택 활성화
-        if (inputKeyR) //아이템 사용(모드 0, 모드 1로 이원화)
-        {
-            UseItem(0);
-        }
+
         if (inputKeyF)
         {
-            UseItem(1);
+            UseItem();
         }
         //Debug.Log("R"+inputKeyR); Debug.Log("F" + inputKeyF); //디버깅
     }
@@ -156,7 +152,7 @@ public class Player : MonoBehaviour, IGravityControl
         inputKeyButton1 = Input.GetButtonDown("Swap1");
         inputKeyButton2 = Input.GetButtonDown("Swap2");
         inputKeyButton3 = Input.GetButtonDown("Swap3");
-        inputKeyR = Input.GetButtonDown("Effect1"); //r
+        //inputKeyR = Input.GetButtonDown("Effect1"); //r
         inputKeyF = Input.GetButtonDown("Effect2"); //f
     }
 
@@ -361,27 +357,27 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItem(int RFnum) // R이면 0, F면 1 이 전달됨 
+    void UseItem() // R이면 0, F면 1 이 전달됨 
     {
         switch (equipItemIndex)
         {
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
-                Instantiate(gravityPrefebs[RFnum], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
 
                 break;
 
-            case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
-                StartCoroutine(TweakTimeEffect(timeScaleMultiplier[RFnum], 5));
+            case Item.Type.TimeStop: //시간 슬로우 
+                StartCoroutine(TweakTimeEffect(timeScaleMultiplier[0], 5));
                 break;
 
-            case Item.Type.WindKey: //윈드 키(다른 플레이어가 존재할 때에만 활성화됨
+            case Item.Type.WindKey: //윈드 키
                 timer.TimeChange(30f); // 30초 추가 
-                /*
-                if (nearObject != null && isPlayerNear == true)  
-                {
-                    nearObject.GetComponent<Player>().WindKeyActivate();
-                }*/
                 
+                break;
+
+            case Item.Type.Blackhole: // 블랙홀
+                Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+
                 break;
 
             case Item.Type.Null: //없음
