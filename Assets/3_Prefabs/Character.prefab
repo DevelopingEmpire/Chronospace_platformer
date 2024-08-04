@@ -1864,7 +1864,7 @@ MonoBehaviour:
   - {fileID: 5706759120963266375, guid: 88860d988fdded54ca31519c3f005852, type: 3}
   - {fileID: 5706759120963266375, guid: 67d90a657b91f534483257b8b07f9b1c, type: 3}
   timeScaleMultiplier:
-  - 0.25
+  - 0.1
   - 0.005
   itemPointTransform: {fileID: 1090306087314540582}
   timer: {fileID: 5360781343035164255}
@@ -1877,7 +1877,7 @@ MonoBehaviour:
   Items:
   - {fileID: 1090306087314541017}
   - {fileID: 1090306087766506786}
-  - {fileID: 1090306088576203712}
+  - {fileID: 3062250969172818651, guid: 2fdea7a300721ce4a98ae37a45cee3e6, type: 3}
   hasItems: 000000
   isAlive: 1
   isBlackHoling: 0
@@ -1916,10 +1916,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeLimit: 600
   checkPointTimeLimit: 0
+  paneltyTimeDecrease: 20
   speed: 1
   currentTime: 0
   player: {fileID: 5360781343035164253}
-  isPlaying: 0
+  isPlaying: 1
   timerUI: {fileID: 0}
   timerText: {fileID: 0}
   timerBar: {fileID: 0}
