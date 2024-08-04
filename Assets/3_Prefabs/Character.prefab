@@ -1874,16 +1874,18 @@ MonoBehaviour:
   movSpeed: 4
   rotSpeed: 300
   pushPower: 0.03
-  Items:
+  isAlive: 1
+  isBlackHoling: 0
+  nearObject: {fileID: 0}
+  equipItem: {fileID: 0}
+  equipItemIndex: 3
+  interactionText: {fileID: 0}
+  equipItems:
   - {fileID: 1090306087314541017}
   - {fileID: 1090306087766506786}
   - {fileID: 3062250969172818651, guid: 2fdea7a300721ce4a98ae37a45cee3e6, type: 3}
   hasItems: 000000
-  isAlive: 1
-  isBlackHoling: 0
-  nearObject: {fileID: 0}
-  equipItemIndex: 3
-  textMeshProUGUI: {fileID: 0}
+  inventory: 
 --- !u!143 &5360781343035164252
 CharacterController:
   m_ObjectHideFlags: 0
