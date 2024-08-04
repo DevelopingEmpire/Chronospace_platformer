@@ -401,7 +401,7 @@ public class Player : MonoBehaviour, IGravityControl
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier[1], 5));
-                Debug.Log("Time speed has changed into " + timeScaleMultiplier[RFnum] + "x.");
+                Debug.Log("Time speed has changed into " + timeScaleMultiplier[1] + "x.");
                 break;
 
             case Item.Type.WindKey: //윈드 키
@@ -413,8 +413,9 @@ public class Player : MonoBehaviour, IGravityControl
                 timer.isPlaying = false;
                 StartCoroutine(WaitAndExecute(3.0f));
                 timer.isPlaying = true;
+                break;
 
-            case Item.Type.Blackhole: // 블랙홀
+            case Item.Type.Magneticgrav: // 블랙홀
                 Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
                 break;
 
