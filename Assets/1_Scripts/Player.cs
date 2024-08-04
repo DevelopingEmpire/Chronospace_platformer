@@ -343,10 +343,17 @@ public class Player : MonoBehaviour, IGravityControl
             Item.Type itemType = nearObject.GetComponent<Item>().type;
             int itemIndex = (int)itemType; // gravity 0, time 1, wind 2 
             //Debug.Log("itemIndex" + itemIndex);
+
             hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
 
             for(int i=0; i< inventory.Length; i++)
             {
+                if(inventory[i] == itemType)
+                {
+                    // 이미 해당 아이템이 존재한다면
+                    Debug.Log("아이템 중복!");
+                    break;
+                }
                 if (inventory[i] == Item.Type.Null)
                 {
                     // i 번째 슬롯이 비었다! 
