@@ -425,14 +425,17 @@ public class Player : MonoBehaviour, IGravityControl
         }
 
         //사용 후 처리들 
-        
-        //UIManager.instance.hasItemUI(equipItemIndex, false);
-        hasItems[(int)equipItemIndex] = false;
+
+        hasItems[equipItemIndex] = false;
+
+        UIManager.instance.hasItemUI(inventory[equipItemIndex], false, equipItemIndex); // 아이콘과 슬롯 끄기 
+
+        inventory[equipItemIndex] = Item.Type.Null;        // 사용시 사라진다
+
+        UIManager.instance.equipItemUI(inventory[equipItemIndex], equipItemIndex); // itemFrame 꺼진다 . 몇번째 슬롯인지 받아온다 
+
         equipItem.SetActive(false);
 
-        equipItem.GetComponent<Item>().type = Item.Type.Null;        // 사용시 사라진다 
-        UIManager.instance.equipItemUI(equipItem.GetComponent<Item>().type, equipItemIndex); // itemFrame 꺼진다 
-            
     }
 
 
@@ -503,13 +506,6 @@ public class Player : MonoBehaviour, IGravityControl
 
             Debug.Log("Checkpoint reached: " + respawnPosition);
         }
-        /*
-        else if (other.CompareTag("Player")) //플레이어면 플레이어임을 확인하고 true
-        {
-            nearObject = other.gameObject;
-            isPlayerNear = true;
-        }
-        */
 
 
     }

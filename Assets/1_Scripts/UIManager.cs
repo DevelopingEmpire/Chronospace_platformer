@@ -83,7 +83,8 @@ public class UIManager : MonoBehaviour
     // 몇 번째 위치가 선택되었는가? 
     public void equipItemUI(Item.Type useItem, int slot) 
     {
-        
+        Debug.Log("equipItem 실행");
+
         if (useItem == Item.Type.Null)
         {
             itemFrame.color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 0f); // 투명 
