@@ -9,6 +9,8 @@ public class BlackHoleItem : MonoBehaviour
     public Rigidbody rb;
     public SphereCollider colliderRange; // 탬 적용 범위 콜라이더 
     public MeshRenderer meshRenderer; // 템 범위 mesh 
+    public float duration = 10f; // 템 범위 mesh 
+
 
     // 적용 당할 오브젝트의 itemGravityControl
     IGravityControl iGravityControl;
@@ -23,7 +25,7 @@ public class BlackHoleItem : MonoBehaviour
     // 시간차를 위해 코루틴으로
     IEnumerator Explosion()
     {
-        yield return new WaitForSeconds(0.5f); // 1초 길어서 줄임  
+        yield return new WaitForSeconds(duration); // 1초 길어서 줄임  
 
         // 물리적인 속도들 모두 0으로 해줌 
         rb.velocity = Vector3.zero;
@@ -37,7 +39,7 @@ public class BlackHoleItem : MonoBehaviour
         colliderRange.enabled = true; // 콜라이더 켜기 
         meshRenderer.enabled = true;
 
-        yield return new WaitForSeconds(3f); // 4초 대기 
+        yield return new WaitForSeconds(duration); // 4초 대기 
 
         Destroy(transform.parent.gameObject); // 아이템 clone 삭제 
     }

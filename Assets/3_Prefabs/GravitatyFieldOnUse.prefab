@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071562800376992299}
-  m_Mesh: {fileID: 6733897641582039954, guid: 73518d22c317ab448bcb139cd3a6a02d, type: 3}
+  m_Mesh: {fileID: 8783448435345165013, guid: 73518d22c317ab448bcb139cd3a6a02d, type: 3}
 --- !u!23 &1575706543311156222
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b403a1a805db5f44867691406a57ca6, type: 2}
+  - {fileID: 2100000, guid: 2e5351a8bc62b0a4d8eb71c76e35af57, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123,7 +123,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3520435877681440549}
-  m_Mesh: {fileID: -2122328172278024057, guid: 83b8603a11466764c9b57ecc652337f6, type: 3}
+  m_Mesh: {fileID: -2117555278452786855, guid: 83b8603a11466764c9b57ecc652337f6, type: 3}
 --- !u!23 &2187082571465920332
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -244,8 +244,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6392574276357548630}
-  - component: {fileID: 281289211094590939}
-  - component: {fileID: 7907251846243579635}
+  - component: {fileID: 5779458340642289029}
+  - component: {fileID: 7181190720172475480}
   m_Layer: 0
   m_Name: GravityItem
   m_TagString: Untagged
@@ -269,7 +269,7 @@ Transform:
   m_Father: {fileID: 2530671327733074968}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &281289211094590939
+--- !u!114 &5779458340642289029
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -278,16 +278,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6392574276357548969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de60781bc85351c4f872d769ea06c210, type: 3}
+  m_Script: {fileID: 11500000, guid: 234e12f081b95f942a7d93043aa75a8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemMeshObj: {fileID: 3520435877681440549}
+  itemMeshObj: {fileID: 5706759120963266375}
   rb: {fileID: 7507105716042323706}
-  colliderRange: {fileID: 6895456309707896167}
+  colliderRange: {fileID: 7181190720172475480}
   meshRenderer: {fileID: 1575706543311156222}
-  effectDuration: 5
---- !u!65 &7907251846243579635
-BoxCollider:
+--- !u!135 &7181190720172475480
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -297,7 +296,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6592923256374585074
 GameObject:
@@ -343,7 +342,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.15966538, g: 0.8679245, b: 0.28903827, a: 1}
+  m_Color: {r: 1, g: 0.8759466, b: 0.114893615, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
