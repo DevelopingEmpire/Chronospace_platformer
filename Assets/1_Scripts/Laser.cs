@@ -26,7 +26,7 @@ public class Laser : StageMechanicsController
     private Light meshRendererLight;
     private Material[] originalMaterials;
     private Material importedMaterial;
-    private Material importedMaterialGlow;
+    public Material importedMaterialGlow;
 
     public override int Idx { get; set; }
 
@@ -34,7 +34,6 @@ public class Laser : StageMechanicsController
     {
         Idx = idx; // 인스펙터에서 지정한 값을 Idx에 저장 
         activated = false;
-        lineRenderMethod.material = importedMaterialGlow;
 
         foreach(GameObject selfML in selfMeshLight) {
             selfML.SetActive(false);
@@ -115,6 +114,20 @@ public class Laser : StageMechanicsController
     public void LaserOn()
     {
         List<Vector3> positions = new List<Vector3>(); // 그릴 점들 리스트 
+
+        /*
+        if (lineRenderMethod.materials.Length == 1) {
+            lineRenderMethod.materials[0] = importedMaterialGlow;
+        }
+        else {
+            for(int i = 0; i <= lineRenderMethod.materials.Length; i++) {
+                lineRenderMethod.materials[i] = importedMaterialGlow;
+            }
+        }
+        */
+        Material[] matList = new Material[1];
+        matList[0] = importedMaterialGlow;
+        lineRenderMethod.materials = matList;
 
         //newPosition = transform.position + transform.forward;
         newPosition = transform.position;

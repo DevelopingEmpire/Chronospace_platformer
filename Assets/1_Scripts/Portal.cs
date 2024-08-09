@@ -58,11 +58,24 @@ public class Portal : StageMechanicsController
 
         Debug.Log("포탈에 닿음");
         // 플레이어가 액티브 포탈에 닿았는지 확인 
-        if (!(other.CompareTag("Player") && isActivated)) {
-            Debug.Log("활성화 안됨");
-            return;
+        if(other.CompareTag("Player")) {
+            Debug.Log("활성화 확인");
+            if(isActivated) {
+                if(targetScene == "Stage0" || targetScene == "Stage1")
+                {
+                    StageManager.Instance.SetStageCleared(); // 현재 스테이지 클리어 됨 
+                }
+                Debug.Log("게임매니저 - 로드씬 요청 됨 ");
+                GameManager.Instance.LoadSceneCall(targetScene); // 다음 스테이지 로드 요청
+            }
+            else {
+                Debug.Log("스위치로 인한 활성화가 이루어지지 않았습니다");
+                return;
+            }
         }
-        Debug.Log("활성화 확인");
+        else {
+            Debug.Log("활성화할 수 있는 오브젝트가 접근하지 않았습니다");
+        }
 
         /*
         // 스테이지 입장 가능한 상태인지 확인 
@@ -74,15 +87,6 @@ public class Portal : StageMechanicsController
         // 스테이지 이동 가즈아 
 
         // if stage0 으로 가는거면 그냥 가고, 아니면 스테이지 클리어 처리 
-        if(targetScene == "Stage0" || targetScene == "Stage1")
-        {
-            StageManager.Instance.SetStageCleared(); // 현재 스테이지 클리어 됨 
-        }
-
-        GameManager.Instance.LoadSceneCall(targetScene); // 다음 스테이지 로드 요청
-
-        Debug.Log("게임매니저 - 로드씬 요청 됨 ");
-
     }
 
     public override void Trigger()

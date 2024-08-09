@@ -98,7 +98,8 @@ public class Player : MonoBehaviour, IGravityControl
     private void Start()
     {
         camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
-        inventory = new Item.Type[]{ Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3 
+        inventory = new Item.Type[]{ Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3
+        AntiGravityEnd();
     }
 
     public void AntiGravity() // 중력 반전 함수 

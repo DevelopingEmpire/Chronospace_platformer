@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.136
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.017315118, g: 0.01824403, b: 0.01646668, a: 0.136}
+  m_IndirectSpecularColor: {r: 0.01731518, g: 0.018244071, b: 0.016466703, a: 0.136}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStageName: Stage0
   idx: 0
-  spawnCharacterOffset: {x: 0, y: 0, z: 0}
+  spawnCharacterOffset: {x: 0, y: 2, z: 0}
   npcDialogueUI: {fileID: 1548539553}
   isPause: 1
   timeScale: 0
@@ -3597,11 +3597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d9c81952ef05734b9b003d416a4724d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &981606366 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8854943185810745642, guid: a3f1040af8ad95243ad8d199c8bf3b10, type: 3}
-  m_PrefabInstance: {fileID: 1387859522}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &984349192
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7305,7 +7300,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseScreen: {fileID: 1387859524}
   battleHUDScreen: {fileID: 685723021}
-  itemLayOut: {fileID: 981606366}
   fadeImg: {fileID: 1387859523}
   fadeDuration: 1
 --- !u!4 &2092071518
