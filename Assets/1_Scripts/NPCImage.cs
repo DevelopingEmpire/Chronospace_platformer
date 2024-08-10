@@ -33,6 +33,7 @@ public class NPCImage : MonoBehaviour
 
                     //                    targetMaterial.SetColor("_Color", targetImage); // 텍스처 적용
                     targetMaterial.mainTexture = targetImage; // 텍스처 적용
+                    targetMaterial.SetTexture("_EmissionMap",targetImage);
 
                     // 변경된 머티리얼을 다시 설정
                     materials[selfRecoloredMaterials[i]] = targetMaterial;

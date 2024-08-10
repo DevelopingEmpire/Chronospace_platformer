@@ -63,10 +63,7 @@ MonoBehaviour:
   npcName: Example NPC
   dialogueSource: {fileID: 4900000, guid: 3b826a3d1b4e4ad43ab86cbd17d658e5, type: 3}
   dialogueUI: {fileID: 0}
-  dialogueUIName: {fileID: 0}
-  dialogueUIContent: {fileID: 0}
   extUI: {fileID: 0}
-  dialogueUIExt: {fileID: 0}
 --- !u!1 &1169022195984316941
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,6 +121,7 @@ GameObject:
   - component: {fileID: 6852496869529049696}
   - component: {fileID: 7545550336246568389}
   - component: {fileID: 5716151239903715599}
+  - component: {fileID: 6245911759286133739}
   m_Layer: 0
   m_Name: npc_mechanical
   m_TagString: Untagged
@@ -199,3 +197,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6245911759286133739
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6076241229105922266}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9199999, y: 0.50000054, z: 1.7200005}
+  m_Center: {x: -0.000000029802337, y: -0.00000020504001, z: 0.8600002}
