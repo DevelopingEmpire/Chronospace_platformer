@@ -18,6 +18,7 @@ public class NPCInteractionDialogue : MonoBehaviour
 
     [Header("External-Content Display")]
     public GameObject extUI;
+    public GameObject[] excludedUI;
     private TextMeshProUGUI dialogueUIExt;
 
     [Header("Dialog Status")]
@@ -65,9 +66,9 @@ public class NPCInteractionDialogue : MonoBehaviour
             isPlayerDetected = true;
             Debug.Log("Interaction with NPC will be started.");
 
-            //dialogueUIName.text = npcName;
+            dialogueUIName.text = npcName;
             dialogueUIExt.text = "To talk with " + npcName + ", press [E] to continue.";
-            dialogueUIExt.enabled = true; // ui 끄기 
+            dialogueUIExt.enabled = true;
         }
     }
     private void OnTriggerExit(Collider other)
@@ -80,9 +81,16 @@ public class NPCInteractionDialogue : MonoBehaviour
         if(extUI != null){
             extUI.SetActive(true);
         }
-        //dialogueUIName.text = "";
+        dialogueUIName.text = "";
         dialogueUIExt.text = dialogueUIContentInitialVal;
         dialogueUIExt.enabled = false; // ui 끄기 
+        if(excludedUI != null) {
+            for(int i = 0; i < excludedUI.Length; i++) {
+                if(excludedUI[i] && excludedUI[i].activeSelf == false){
+                    excludedUI[i].SetActive(true);
+                }
+            }
+        }
     }
 
     void showDialogue()
@@ -90,6 +98,13 @@ public class NPCInteractionDialogue : MonoBehaviour
         if (isPlayerDetected){
             if (Input.GetButtonDown("Interaction"))
             {
+                if(excludedUI != null) {
+                    for(int i = 0; i < excludedUI.Length; i++) {
+                        if(excludedUI[i] && excludedUI[i].activeSelf == true){
+                            excludedUI[i].SetActive(false);
+                        }
+                    }
+                }
                 if (dialogueLnNumber<dialogueList.Length) {
                     if(dialogueLnNumber == 0){
                         if(extUI != null){

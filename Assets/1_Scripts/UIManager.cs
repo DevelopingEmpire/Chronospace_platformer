@@ -25,17 +25,22 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-
+    [Header("Main UI")]
     public GameObject pauseScreen; // 일시 정지 창
-
     public GameObject battleHUDScreen; // HUD 전체 
-    private GameObject itemLayOut; // 아이템 가진 현황 
-
     public Image fadeImg; // 암전 화면 
-    [SerializeField]
     private float fadeDuration; // 암전 시간 
 
+    [Header("NPC Dialogue UI")]
+    public GameObject dialogueUI;
+    private TextMeshProUGUI dialogueUIName;
+    private TextMeshProUGUI dialogueUIContent;
+    public GameObject extUI;
+    private TextMeshProUGUI dialogueUIExt; 
+
+    [Header("Item")]
     // 아이템 관련
+    private GameObject itemLayOut; // 아이템 가진 현황 
     private Image itemFrame;
     private GameObject itemIcons;
 
@@ -51,7 +56,9 @@ public class UIManager : MonoBehaviour
     }
     public void OnClickEscButton(bool isPause)
     {
-        pauseScreen.SetActive(isPause);
+        if(pauseScreen){
+            pauseScreen.SetActive(isPause);
+        }
     }
 
     #region HUD Screen 

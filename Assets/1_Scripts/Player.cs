@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.EventSystems;
+using Cinemachine;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -17,8 +18,10 @@ public class Player : MonoBehaviour, IGravityControl
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
     public Vector3 respawnPosition; // 리스폰 위치 
-    public CamController camController; // CamController 참조
 
+    [Header("UI")] //플레이어 외부 컴포넌트 변수
+    public CamController camController; // CamController 참조
+    public GameObject damageFX;
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
     public float movSpeed = 5f;
@@ -217,7 +220,17 @@ public class Player : MonoBehaviour, IGravityControl
         transform.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
     }
 
-    // 사망
+    // 대미지 및 사망
+    private IEnumerator dmgFX()
+    {
+        if (damageFX != null)
+        {
+            // shakeDuration 동안 대기
+            damageFX.SetActive(true);
+            yield return new WaitForSeconds(0.25f);
+            damageFX.SetActive(false);
+        }
+    }
     public void Die()
     {
         // 사망 처리
@@ -451,7 +464,6 @@ public class Player : MonoBehaviour, IGravityControl
         yield return new WaitForSecondsRealtime(duration); // Unscaled time을 사용해 실제 흐르는 시간을 측정하고 이후에 시간 조작 비활성화
         TweakTimeEnd();
     }
-
     public void TweakTimeStart(float timeScaleMultiplier) //시간 조작 활성화
     {
         Time.timeScale = timeScaleMultiplier;
@@ -487,6 +499,15 @@ public class Player : MonoBehaviour, IGravityControl
     // 필수 조건 
     // 1. 둘 중에 하나에 무조건 rigidbody
     // 2. 둘 중에 하나에 무조건 isTrigger 체크 
+    private void OnTriggerEnter(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위에 있을 때
+    {
+        if (other.CompareTag("Bullet")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
+        {
+            damageFX = CanvasScripts.instance.transform.Find("MainScreen").GetChild(0).gameObject;
+            StartCoroutine(dmgFX());
+        }
+    }
+
     private void OnTriggerStay(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위에 있을 때
     {
         if (other.CompareTag("Item")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
@@ -512,8 +533,6 @@ public class Player : MonoBehaviour, IGravityControl
 
             Debug.Log("Checkpoint reached: " + respawnPosition);
         }
-
-
     }
 
     private void OnTriggerExit(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위를 벗어났을 때
