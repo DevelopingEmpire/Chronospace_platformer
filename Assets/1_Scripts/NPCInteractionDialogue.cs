@@ -67,7 +67,7 @@ public class NPCInteractionDialogue : MonoBehaviour
             Debug.Log("Interaction with NPC will be started.");
 
             dialogueUIName.text = npcName;
-            dialogueUIExt.text = "To talk with " + npcName + ", press [E] to continue.";
+            dialogueUIExt.text = npcName + "와/과의 대화를 위해 [E]를 누르십시오.";
             dialogueUIExt.enabled = true;
         }
     }
