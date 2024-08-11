@@ -13,7 +13,7 @@ public class Player : MonoBehaviour, IGravityControl
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽 
     public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
-    public float[] timeScaleMultiplier = new float[] {0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
+    public float timeScaleMultiplier = 0.005f; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
     public Vector3 respawnPosition; // 리스폰 위치 
@@ -97,6 +97,7 @@ public class Player : MonoBehaviour, IGravityControl
 
     private void Start()
     {
+        AntiGravityEnd(); // 중력 반전은 꺼져있습니다~ 
         camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
         inventory = new Item.Type[]{ Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3 
     }
@@ -121,7 +122,6 @@ public class Player : MonoBehaviour, IGravityControl
     {
         GetInput();
         if (!isAlive)  return;
-        if (isWinding) return; //플레이어가 살아있지 않거나, 플레이어가 윈드 업 중일 때에는 동작 불가능
 
         SetDir();
         if (inputInteraction) Interaction(); //interaction item이 주변에 있을 때 상호작용 활성화
@@ -130,7 +130,6 @@ public class Player : MonoBehaviour, IGravityControl
         {
             UseItem();
         }
-        //Debug.Log("R"+inputKeyR); Debug.Log("F" + inputKeyF); //디버깅
     }
     void FixedUpdate() //플레이어 행동 관리 함수
     {
@@ -400,8 +399,8 @@ public class Player : MonoBehaviour, IGravityControl
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
-                StartCoroutine(TweakTimeEffect(timeScaleMultiplier[1], 5));
-                Debug.Log("Time speed has changed into " + timeScaleMultiplier[1] + "x.");
+                StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
+                Debug.Log("Time speed has changed into " + timeScaleMultiplier + "x.");
                 break;
 
             case Item.Type.WindKey: //윈드 키
@@ -477,12 +476,6 @@ public class Player : MonoBehaviour, IGravityControl
     }
 
 
-    //Winding
-    public void WindKeyActivate() // 활성화되면서 
-    {
-        windKey.SetActive(true); 
-    }
-
     // 필수 조건 
     // 1. 둘 중에 하나에 무조건 rigidbody
     // 2. 둘 중에 하나에 무조건 isTrigger 체크 
@@ -492,14 +485,14 @@ public class Player : MonoBehaviour, IGravityControl
         {
             //UI 켜기
             if(interactionText != null){
-                interactionText.enabled = true; // ui 끄기 
+                interactionText.enabled = true; // ui 켜기
             }
             nearObject = other.gameObject;
         }
         else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
         {
             if(interactionText != null){
-                interactionText.enabled = true; // ui 끄기 
+                interactionText.enabled = true; // ui 켜기
             }
             nearObject = other.gameObject;
         }
@@ -531,13 +524,6 @@ public class Player : MonoBehaviour, IGravityControl
             }
             nearObject = null;
         }
-        /*
-        else if(other.CompareTag("Player"))
-        {
-            nearObject = null;
-            isPlayerNear = false;
-        }
-        */
     }
 
     // 상자 밀기 
