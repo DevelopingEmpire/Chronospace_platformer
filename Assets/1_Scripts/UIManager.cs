@@ -31,7 +31,10 @@ public class UIManager : MonoBehaviour
     public GameObject battleHUDScreen; // HUD 전체 
     private GameObject itemLayOut; // 아이템 가진 현황 
 
+    public GameObject portalInpoText; // 포탈 입장 불가 텍스트 
+
     public Image fadeImg; // 암전 화면 
+
     [SerializeField]
     private float fadeDuration; // 암전 시간 
 
@@ -47,6 +50,7 @@ public class UIManager : MonoBehaviour
         itemFrame = itemLayOut.transform.GetChild(3).GetComponent<Image>();
 
         itemIcons = itemLayOut.transform.GetChild(4).gameObject;
+
 
     }
     public void OnClickEscButton(bool isPause)
@@ -134,8 +138,26 @@ public class UIManager : MonoBehaviour
             sequence.Append(fadeImg.DOFade(0, fadeDuration));
         }
 
-
         sequence.Play();
 
     }
+
+    public void PortalImpossible(int stage)
+    {
+
+        portalInpoText.SetActive(true); // 켜준다 
+        portalInpoText.GetComponent<TextMeshProUGUI>().text = string.Format($"실험실{stage} 접근 권한을 가진 카드가 필요합니다");
+        StartCoroutine(PortalInfoTextFade());
+     
+
+    }
+
+    private IEnumerator PortalInfoTextFade()
+    {
+        yield return new WaitForSeconds(2f); // 2초 대기 
+
+        // fade 
+        portalInpoText.SetActive(false ); // 끈다 
+    }
+
 }

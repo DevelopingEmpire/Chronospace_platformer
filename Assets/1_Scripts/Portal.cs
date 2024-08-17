@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -64,9 +65,17 @@ public class Portal : StageMechanicsController
         }
         Debug.Log("활성화 확인");
 
-        
+
         // 스테이지 입장 가능한 상태인지 확인 
-        if (!StageManager.Instance.CanEnterStage(targetScene)) return;
+        if (!StageManager.Instance.CanEnterStage(targetScene))
+        {
+            Debug.Log("스테이지 입장불가 ");
+
+            // 입장불가 UI 띄우기 
+            UIManager.instance.PortalImpossible(int.Parse(targetScene.Replace("Stage", "")));
+
+            return;
+        }
         Debug.Log("스테이지 입장가능 ");
         
 
