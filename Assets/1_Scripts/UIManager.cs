@@ -34,6 +34,8 @@ public class UIManager : MonoBehaviour
     public GameObject portalInpoText; // 포탈 입장 불가 텍스트 
 
     public Image fadeImg; // 암전 화면 
+    public Image damageFX; // 피격 화면 
+
 
     [SerializeField]
     private float fadeDuration; // 암전 시간 
@@ -160,4 +162,15 @@ public class UIManager : MonoBehaviour
         portalInpoText.SetActive(false ); // 끈다 
     }
 
+    // 피격 화면 
+    public IEnumerator DmgFX()
+    {
+        
+        damageFX.GetComponent<Image>().color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 1f); // 보임
+            
+        yield return new WaitForSeconds(0.25f);
+
+        damageFX.DOFade(0, 0.25f);
+        
+    }
 }

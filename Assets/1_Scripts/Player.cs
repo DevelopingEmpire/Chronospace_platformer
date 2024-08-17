@@ -14,14 +14,14 @@ public class Player : MonoBehaviour, IGravityControl
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽 
     public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
-    public float[] timeScaleMultiplier = new float[] { 0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
+    public float timeScaleMultiplier = 0.005f; // 시간 계수. 거의 멈춤 
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
     public Vector3 respawnPosition; // 리스폰 위치 
 
     [Header("UI")] //플레이어 외부 컴포넌트 변수
     public CamController camController; // CamController 참조
-    public GameObject damageFX;
+
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
     public float movSpeed = 5f;
@@ -220,17 +220,7 @@ public class Player : MonoBehaviour, IGravityControl
         transform.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
     }
 
-    // 대미지 및 사망
-    private IEnumerator dmgFX()
-    {
-        if (damageFX != null)
-        {
-            // shakeDuration 동안 대기
-            damageFX.SetActive(true);
-            yield return new WaitForSeconds(0.25f);
-            damageFX.SetActive(false);
-        }
-    }
+
     public void Die()
     {
         // 사망 처리
@@ -416,8 +406,8 @@ public class Player : MonoBehaviour, IGravityControl
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
-                StartCoroutine(TweakTimeEffect(timeScaleMultiplier[1], 5));
-                Debug.Log("Time speed has changed into " + timeScaleMultiplier[1] + "x.");
+                StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
+                Debug.Log("Time speed has changed into " + timeScaleMultiplier + "x.");
                 break;
 
             case Item.Type.WindKey: //윈드 키
@@ -501,18 +491,17 @@ public class Player : MonoBehaviour, IGravityControl
     // 필수 조건 
     // 1. 둘 중에 하나에 무조건 rigidbody
     // 2. 둘 중에 하나에 무조건 isTrigger 체크 
-    private void OnTriggerEnter(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위에 있을 때
+    private void OnTriggerEnter(Collider other) 
     {
-        if (other.CompareTag("Bullet")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
+        if (other.CompareTag("Bullet")) 
         {
-            damageFX = CanvasScripts.instance.transform.Find("MainScreen").GetChild(0).gameObject;
-            StartCoroutine(dmgFX());
+            StartCoroutine(UIManager.instance.DmgFX());
         }
     }
 
-    private void OnTriggerStay(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위에 있을 때
+    private void OnTriggerStay(Collider other) 
     {
-        if (other.CompareTag("Item")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
+        if (other.CompareTag("Item"))
         {
             //UI 켜기
             if (interactionText != null)
@@ -539,7 +528,7 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    private void OnTriggerExit(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위를 벗어났을 때
+    private void OnTriggerExit(Collider other) 
     {
         if (other.CompareTag("Item"))
         {
@@ -549,7 +538,7 @@ public class Player : MonoBehaviour, IGravityControl
             }
             nearObject = null;
         }
-        else if (other.CompareTag("Switch")) //플레이어면 플레이어임을 확인하고 true
+        else if (other.CompareTag("Switch")) 
         {
             if (interactionText != null)
             {
@@ -557,13 +546,6 @@ public class Player : MonoBehaviour, IGravityControl
             }
             nearObject = null;
         }
-        /*
-        else if(other.CompareTag("Player"))
-        {
-            nearObject = null;
-            isPlayerNear = false;
-        }
-        */
     }
 
     // 상자 밀기 
