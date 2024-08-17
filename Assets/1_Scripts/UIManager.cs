@@ -166,7 +166,7 @@ public class UIManager : MonoBehaviour
     public IEnumerator DmgFX()
     {
         
-        damageFX.GetComponent<Image>().color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 1f); // 보임
+        damageFX.color = new Color(damageFX.color.r, damageFX.color.g, damageFX.color.b, 1f); // 보임
             
         yield return new WaitForSeconds(0.25f);
 

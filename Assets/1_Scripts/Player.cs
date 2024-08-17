@@ -495,6 +495,7 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (other.CompareTag("Bullet")) 
         {
+            camController.ShakeCam();
             StartCoroutine(UIManager.instance.DmgFX());
         }
     }
