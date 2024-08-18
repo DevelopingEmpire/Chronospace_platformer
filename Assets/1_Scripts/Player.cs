@@ -503,7 +503,7 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (other.CompareTag("Bullet")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
         {
-            damageFX = CanvasScripts.instance.transform.Find("MainScreen").GetChild(0).gameObject;
+            //damageFX = CanvasScripts.instance.transform.Find("MainScreen").GetChild(0).gameObject;
             StartCoroutine(dmgFX());
         }
     }
