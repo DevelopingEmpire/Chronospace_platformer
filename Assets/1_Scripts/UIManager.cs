@@ -28,7 +28,15 @@ public class UIManager : MonoBehaviour
     [Header("Main UI")]
     public GameObject pauseScreen; // 일시 정지 창
     public GameObject battleHUDScreen; // HUD 전체 
+    private GameObject itemLayOut; // 아이템 가진 현황 
+
+    public GameObject portalInpoText; // 포탈 입장 불가 텍스트 
+
     public Image fadeImg; // 암전 화면 
+    public Image damageFX; // 피격 화면 
+
+
+    [SerializeField]
     private float fadeDuration; // 암전 시간 
 
     [Header("NPC Dialogue UI")]
@@ -52,6 +60,7 @@ public class UIManager : MonoBehaviour
         itemFrame = itemLayOut.transform.GetChild(3).GetComponent<Image>();
 
         itemIcons = itemLayOut.transform.GetChild(4).gameObject;
+
 
     }
     public void OnClickEscButton(bool isPause)
@@ -141,8 +150,37 @@ public class UIManager : MonoBehaviour
             sequence.Append(fadeImg.DOFade(0, fadeDuration));
         }
 
-
         sequence.Play();
 
+    }
+
+    public void PortalImpossible(int stage)
+    {
+
+        portalInpoText.SetActive(true); // 켜준다 
+        portalInpoText.GetComponent<TextMeshProUGUI>().text = string.Format($"실험실{stage} 접근 권한을 가진 카드가 필요합니다");
+        StartCoroutine(PortalInfoTextFade());
+     
+
+    }
+
+    private IEnumerator PortalInfoTextFade()
+    {
+        yield return new WaitForSeconds(2f); // 2초 대기 
+
+        // fade 
+        portalInpoText.SetActive(false ); // 끈다 
+    }
+
+    // 피격 화면 
+    public IEnumerator DmgFX()
+    {
+        
+        damageFX.color = new Color(damageFX.color.r, damageFX.color.g, damageFX.color.b, 1f); // 보임
+            
+        yield return new WaitForSeconds(0.25f);
+
+        damageFX.DOFade(0, 0.25f);
+        
     }
 }

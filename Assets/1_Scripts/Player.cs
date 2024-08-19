@@ -14,10 +14,13 @@ public class Player : MonoBehaviour, IGravityControl
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽 
     public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
-    public float[] timeScaleMultiplier = new float[] {0.25f, 0.005f }; // 시간 계수 // roh 가라사대 감으로 값을 정했다 하시느니라 
+    public float timeScaleMultiplier = 0.005f; // 시간 계수. 거의 멈춤 
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
     public Vector3 respawnPosition; // 리스폰 위치 
+
+    [Header("UI")] //플레이어 외부 컴포넌트 변수
+    public CamController camController; // CamController 참조
 
     [Header("UI")] //플레이어 외부 컴포넌트 변수
     public CamController camController; // CamController 참조
@@ -51,7 +54,7 @@ public class Player : MonoBehaviour, IGravityControl
     //character status
     bool isJumping = false;
     bool isDodging = false;
-    bool isWinding = false; 
+    bool isWinding = false;
     #endregion
 
     //플레이어 상태 변수
@@ -101,7 +104,7 @@ public class Player : MonoBehaviour, IGravityControl
     private void Start()
     {
         camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
-        inventory = new Item.Type[]{ Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3
+        inventory = new Item.Type[] { Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3
         AntiGravityEnd();
     }
 
@@ -124,12 +127,12 @@ public class Player : MonoBehaviour, IGravityControl
     void Update() //플레이어 상태 관리 함수
     {
         GetInput();
-        if (!isAlive)  return;
+        if (!isAlive) return;
         if (isWinding) return; //플레이어가 살아있지 않거나, 플레이어가 윈드 업 중일 때에는 동작 불가능
 
         SetDir();
         if (inputInteraction) Interaction(); //interaction item이 주변에 있을 때 상호작용 활성화
-        if(inputKeyButton1 || inputKeyButton2 || inputKeyButton3) Swap(); //input key 버튼으로 아이템 선택 활성화
+        if (inputKeyButton1 || inputKeyButton2 || inputKeyButton3) Swap(); //input key 버튼으로 아이템 선택 활성화
         if (inputKeyF)
         {
             UseItem();
@@ -138,17 +141,17 @@ public class Player : MonoBehaviour, IGravityControl
     }
     void FixedUpdate() //플레이어 행동 관리 함수
     {
-        if (!isAlive)  return;
+        if (!isAlive) return;
         if (isWinding) return; //플레이어가 살아있지 않거나, 플레이어가 윈드 업 중일 때에는 동작 불가능
 
         Rotate();
         Move();
-        
+
     }
     void GetInput() //인풋 받는 함수
     {
         inputH = Input.GetAxisRaw("Horizontal");
-        inputV = Input.GetAxisRaw("Vertical"); 
+        inputV = Input.GetAxisRaw("Vertical");
         rotateX = Input.GetAxis("Mouse X");
         inputWalk = Input.GetButton("Walk"); // -> Dash
         inputJump = Input.GetButton("Jump");
@@ -201,9 +204,9 @@ public class Player : MonoBehaviour, IGravityControl
             moveDirection.z = inputV * movSpeed * (inputWalk ? 0.3f : 1f);
 
             // 대각선 노말라이제이션 
-            
+
             // 추가 중력 적용
-            moveDirection.y += Gravity *2* Time.unscaledDeltaTime; // 중력 적용에도 Time.deltaTime을 사용
+            moveDirection.y += Gravity * 2 * Time.unscaledDeltaTime; // 중력 적용에도 Time.deltaTime을 사용
         }
         moveDirection = transform.TransformDirection(moveDirection);
         controller.Move(moveDirection * Time.unscaledDeltaTime); // 이동 명령에 Time.deltaTime 적용
@@ -220,17 +223,6 @@ public class Player : MonoBehaviour, IGravityControl
         transform.Rotate((Vector3.up * rotateX * rotSpeed * Time.unscaledDeltaTime));
     }
 
-    // 대미지 및 사망
-    private IEnumerator dmgFX()
-    {
-        if (damageFX != null)
-        {
-            // shakeDuration 동안 대기
-            damageFX.SetActive(true);
-            yield return new WaitForSeconds(0.25f);
-            damageFX.SetActive(false);
-        }
-    }
     public void Die()
     {
         // 사망 처리
@@ -296,7 +288,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         isSwaping = true;
         Invoke("SwapOut", 0.4f); // 스왑 후 추가 로직 수행을 위해 0.4초 대기
-        
+
     }
 
     void EquipItem(Item.Type itemType, int itemIndex)
@@ -329,16 +321,16 @@ public class Player : MonoBehaviour, IGravityControl
 
         // 걍 설정 
         Application.targetFrameRate = 50; // 서주민 전용코드 
-        
+
         Gravity = -9.81f;
-        
+
         //controller.detectCollisions = false; // 이거 끄면.. 플레이어가 발판을 못 밟음 
         timer.TimerUIInit();
 
         if (StageManager.Instance.currentStageName == "stage0") timer.isPlaying = false;
         else timer.isPlaying = true;
 
-        
+
     }
 
     public void SetCheckpoint(Vector3 checkpointPosition)
@@ -350,7 +342,8 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (nearObject != null && nearObject.tag == "Item")
         {
-            if(interactionText != null){
+            if (interactionText != null)
+            {
                 interactionText.enabled = false; // ui 끄기 
             }
             Item.Type itemType = nearObject.GetComponent<Item>().type;
@@ -359,9 +352,9 @@ public class Player : MonoBehaviour, IGravityControl
 
             hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
 
-            for(int i=0; i< inventory.Length; i++)
+            for (int i = 0; i < inventory.Length; i++)
             {
-                if(inventory[i] == itemType)
+                if (inventory[i] == itemType)
                 {
                     // 이미 해당 아이템이 존재한다면
                     Debug.Log("아이템 중복!");
@@ -372,18 +365,19 @@ public class Player : MonoBehaviour, IGravityControl
                     // i 번째 슬롯이 비었다! 
                     inventory[i] = itemType; // 아이템 넣어주고~ 
                     UIManager.instance.hasItemUI(itemType, true, i);
-                    Debug.Log(i+"빈슬롯 색칠~");
+                    Debug.Log(i + "빈슬롯 색칠~");
                     Destroy(nearObject); //지역에 떨어진 아이템 삭제하기
                     break;
                 }
-                
+
             }
-            
-     
+
+
         }
         else if (nearObject != null && nearObject.tag == "Switch")
         {
-            if(interactionText != null){
+            if (interactionText != null)
+            {
                 interactionText.enabled = false; // ui 끄기 
             }
             SwitchTrigger targetSwitchScript = nearObject.GetComponent<SwitchTrigger>();
@@ -398,7 +392,7 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItem() 
+    void UseItem()
     {
         if (equipItemIndex < 0 || equipItemIndex >= inventory.Length)
         {
@@ -407,20 +401,20 @@ public class Player : MonoBehaviour, IGravityControl
         }
         switch (inventory[equipItemIndex])
         {
-            
+
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
 
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
-                StartCoroutine(TweakTimeEffect(timeScaleMultiplier[1], 5));
-                Debug.Log("Time speed has changed into " + timeScaleMultiplier[1] + "x.");
+                StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
+                Debug.Log("Time speed has changed into " + timeScaleMultiplier + "x.");
                 break;
 
             case Item.Type.WindKey: //윈드 키
                 timer.TimeChange(30f); // 30초 추가 
-                
+
                 break;
 
             case Item.Type.Shield:
@@ -440,7 +434,7 @@ public class Player : MonoBehaviour, IGravityControl
             default: //모든 확인할 수 없는 아이템이 잡혀 있는 경우 에러 메시지 전달
                 Debug.LogError("Unknown item type: " + equipItemIndex);
                 return;
-            
+
         }
 
         //사용 후 처리들 
@@ -493,34 +487,36 @@ public class Player : MonoBehaviour, IGravityControl
     //Winding
     public void WindKeyActivate() // 활성화되면서 
     {
-        windKey.SetActive(true); 
+        windKey.SetActive(true);
     }
 
     // 필수 조건 
     // 1. 둘 중에 하나에 무조건 rigidbody
     // 2. 둘 중에 하나에 무조건 isTrigger 체크 
-    private void OnTriggerEnter(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위에 있을 때
+    private void OnTriggerEnter(Collider other) 
     {
-        if (other.CompareTag("Bullet")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
+        if (other.CompareTag("Bullet")) 
         {
-            //damageFX = CanvasScripts.instance.transform.Find("MainScreen").GetChild(0).gameObject;
-            StartCoroutine(dmgFX());
+            camController.ShakeCam();
+            StartCoroutine(UIManager.instance.DmgFX());
         }
     }
 
-    private void OnTriggerStay(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위에 있을 때
+    private void OnTriggerStay(Collider other) 
     {
-        if (other.CompareTag("Item")) //태엽으로 돌릴 수 있는 아이템의 경우 근처 오브젝트를 활성화시킬 수 있다는 메시지 전송
+        if (other.CompareTag("Item"))
         {
             //UI 켜기
-            if(interactionText != null){
+            if (interactionText != null)
+            {
                 interactionText.enabled = true; // ui 끄기 
             }
             nearObject = other.gameObject;
         }
         else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
         {
-            if(interactionText != null){
+            if (interactionText != null)
+            {
                 interactionText.enabled = true; // ui 끄기 
             }
             nearObject = other.gameObject;
@@ -535,36 +531,31 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    private void OnTriggerExit(Collider other) //플레이어가 윈드키 영향을 줄 수 있는 범위를 벗어났을 때
+    private void OnTriggerExit(Collider other) 
     {
         if (other.CompareTag("Item"))
         {
-            if(interactionText != null){
+            if (interactionText != null)
+            {
                 interactionText.enabled = false; // ui 끄기 
             }
             nearObject = null;
         }
-        else if (other.CompareTag("Switch")) //플레이어면 플레이어임을 확인하고 true
+        else if (other.CompareTag("Switch")) 
         {
-            if(interactionText != null){
+            if (interactionText != null)
+            {
                 interactionText.enabled = false; // ui 끄기 
             }
             nearObject = null;
         }
-        /*
-        else if(other.CompareTag("Player"))
-        {
-            nearObject = null;
-            isPlayerNear = false;
-        }
-        */
     }
 
     // 상자 밀기 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         CharacterController hitController = hit.gameObject.GetComponent(typeof(CharacterController)) as CharacterController;
-        
+
         if (hitController)
         {
             // hitController.SimpleMove(moveDirection);
@@ -577,7 +568,7 @@ public class Player : MonoBehaviour, IGravityControl
         isBlackHoling = true;
         blackholeVector = fieldCenter - transform.position; // + new Vector3(0f,1.3f,0f)
         //blackholeVector = Vector3.Normalize(blackholeVector); // 방향만 구함 
-        controller.Move(blackholeVector* Time.deltaTime); //* blackholeStrength *Time.unscaledDeltaTime
+        controller.Move(blackholeVector * Time.deltaTime); //* blackholeStrength *Time.unscaledDeltaTime
 
     }
 

@@ -121,7 +121,6 @@ public class StageManager : MonoBehaviour
         // 현재 씬 이름 변경 
         currentStageName = sceneName;
         GameObject respawnPoint = GameObject.FindGameObjectWithTag("StartPosition");
-        //Player.Instance.SetCheckpoint(new Vector3(0,1.5f,0)); // 처음 시작 위치를 리스폰 위치로 설정 - 일단 하드코딩 ㅋㅋ 
         Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
 
         // 캐릭터 스폰 
