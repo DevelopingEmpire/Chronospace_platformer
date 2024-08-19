@@ -268,7 +268,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1086546274}
   m_LocalRotation: {x: 0.00999829, y: -0, z: -0, w: 0.99995005}
-  m_LocalPosition: {x: -21.56555, y: -0.50100005, z: 8.845999}
+  m_LocalPosition: {x: 1.9444504, y: -0.25100005, z: 0.45599937}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ImpulseDefinition:
     m_ImpulseChannel: 1
-    m_ImpulseShape: 2
+    m_ImpulseShape: 3
     m_CustomImpulseShape:
       serializedVersion: 2
       m_Curve: []
@@ -460,7 +460,7 @@ MonoBehaviour:
     m_DissipationMode: 2
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
-  m_DefaultVelocity: {x: 0, y: -1, z: 0}
+  m_DefaultVelocity: {x: 0.5, y: 0, z: 0}
 --- !u!1 &1762444059
 GameObject:
   m_ObjectHideFlags: 0
@@ -1879,6 +1879,7 @@ MonoBehaviour:
   timer: {fileID: 5360781343035164255}
   respawnPosition: {x: 0, y: 0, z: 0}
   camController: {fileID: 0}
+  damageFX: {fileID: 0}
   jumpForce: 8
   movSpeed: 4
   rotSpeed: 300
