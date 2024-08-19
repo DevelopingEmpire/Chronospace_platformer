@@ -28,7 +28,6 @@ public class UIManager : MonoBehaviour
     [Header("Main UI")]
     public GameObject pauseScreen; // 일시 정지 창
     public GameObject battleHUDScreen; // HUD 전체 
-    private GameObject itemLayOut; // 아이템 가진 현황 
 
     public GameObject portalInpoText; // 포탈 입장 불가 텍스트 
 

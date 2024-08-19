@@ -21,9 +21,6 @@ public class Player : MonoBehaviour, IGravityControl
 
     [Header("UI")] //플레이어 외부 컴포넌트 변수
     public CamController camController; // CamController 참조
-
-    [Header("UI")] //플레이어 외부 컴포넌트 변수
-    public CamController camController; // CamController 참조
     public GameObject damageFX;
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
