@@ -54,34 +54,40 @@ public class AudioManager : MonoBehaviour
     public AudioSource[] sfxPlayers;
     int channelIndex; //
 
-    //public enum Sfx { Coin, levelUp } // 나중에 추가 수정 
 
     public enum SFX
     {
         // UI
         SFX_UI_ClickSound = 0,
-        SFX_PurchaseSound = 1,
-        SFX_StageFailSound = 2,
-        SFX_StageClearSound = 3,
-        SFX_BattleStartSound = 4,
 
         // Skills
-        SFX_SkillSoundIncreaseAttack = 5,
-        SFX_SkillSoundCannon = 6,
-        SFX_SkillSoundMeteor = 7,
-        SFX_SkillSoundRanged = 8,
-        SFX_SkillSoundHeal = 9,
+        SFX_SkillSoundItem1 = 1,
+        SFX_SkillSoundItem2 = 2,
+        SFX_SkillSoundItem3 = 3,
+        SFX_SkillSoundItem4 = 4,
+        SFX_SkillSoundItem5 = 5,
 
         // Basic actions
-        SFX_BasicAttackSound = 10,
-        SFX_SlimeDeathSound = 11,
-        SFX_ObjectAttackSound = 12,
-        SFX_ObjectOpenSound = 13,
-        SFX_EnemyDeathSound = 14,
-        SFX_BowShootSound = 15,
+        SFX_PlayerDmgSound = 6,
+        SFX_PlayerWalkSound = 7,
+        SFX_PlayerDieSound = 8,
+        SFX_RespawnSound = 9,
+        SFX_JumpSound = 10,
+        SFX_ItemEquipSound = 11,
+        SFX_TimerTickSound = 12,
+
+        // interactions
+        SFX_ButtonPressed = 13,
+        SFX_EnterPortal = 14,
+        SFX_SwitchPressed = 15,
+        SFX_InteractionActivateSound = 16,
+
+        // enemy
+        SFX_DetectionSound = 17,
+        SFX_FireSound = 18,
 
         // 디폴트
-        SFX_None = 16
+        SFX_None = 19
     }
 
     public float BGMVolume
@@ -96,6 +102,11 @@ public class AudioManager : MonoBehaviour
         set => OnVolumeChanged(AudioType.SFX, value);
     }
 
+    private void Start()
+    {
+        Init();
+    }
+
     // 초기화 
     private void Init()
     {
@@ -104,6 +115,7 @@ public class AudioManager : MonoBehaviour
         bgmObject.transform.parent = transform;
         bgmPlayer = bgmObject.AddComponent<AudioSource>();
         bgmPlayer.playOnAwake = false;                          // 게임 시작 시 재생 끄기
+
         bgmPlayer.loop = true;
         bgmPlayer.volume = bgmVolume;
 
@@ -157,6 +169,13 @@ public class AudioManager : MonoBehaviour
             break;
         }
     }
+
+    // UI 클릭 음 재생 
+    public void PlayClickSound()
+    {
+        PlaySfx(SFX.SFX_UI_ClickSound);  // 특정 SFX를 재생
+    }
+
 
     public void OnChangedBGMVolume(float value)
     {
