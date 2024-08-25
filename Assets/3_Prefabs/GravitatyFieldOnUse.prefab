@@ -233,8 +233,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.4, z: 0.4}
-  m_Center: {x: 0, y: 0.2, z: 0}
+  m_Size: {x: 0.4, y: 1.8, z: 0.4}
+  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!1 &6392574276357548969
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,7 +262,7 @@ Transform:
   m_GameObject: {fileID: 6392574276357548969}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 402267444872087697}
@@ -285,6 +285,11 @@ MonoBehaviour:
   rb: {fileID: 7507105716042323706}
   colliderRange: {fileID: 7181190720172475480}
   meshRenderer: {fileID: 1575706543311156222}
+  duration: 10
+  throwforce: 20
+  brakeAfter: 1.2
+  rotationSpeed: 5
+  rotationY: 10
 --- !u!135 &7181190720172475480
 SphereCollider:
   m_ObjectHideFlags: 0

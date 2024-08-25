@@ -9,7 +9,6 @@ public class BulletDirectionDefined : MonoBehaviour
     public float spreadScale = 0.075f;
     public float lifetime = 5f;
     private float timeDilation = 1f;
-    private float timeElapsed = 0f;
     public Vector3 initialDirection;
     private Rigidbody rb;
 
@@ -30,7 +29,6 @@ public class BulletDirectionDefined : MonoBehaviour
     void Update()
     {
         timeDilation = Time.timeScale;
-        timeElapsed += Time.deltaTime;
     }
 
     void FixedUpdate()

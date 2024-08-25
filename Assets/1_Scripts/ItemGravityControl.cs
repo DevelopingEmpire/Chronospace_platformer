@@ -17,20 +17,26 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     {
         IsInRange = true;
         Gravity = 9.81f;
+        ApplyGravity();
         Debug.Log("AntiGravity On.");
-   
     }
     public void AntiGravityEnd()
     {
         IsInRange = false;
         Gravity = -9.81f; // 반전 해제 
-
+        ApplyGravity();
         Debug.Log("AntiGravity Off.");
     }
 
     private void Start()
     {
         Gravity = -9.81f;
+        AntiGravityEnd();
+    }
+    private void Awake()
+    {
+        Gravity = -9.81f;
+        AntiGravityEnd();
     }
     private void Update()
     {

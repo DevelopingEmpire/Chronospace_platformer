@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour, IGravityControl
 {
     public float speed = 20f;
     public float spreadScale = 0.075f;
@@ -10,6 +10,11 @@ public class Bullet : MonoBehaviour
     private float timeDilation = 1f;
     private Vector3 initialDirection;
     private Rigidbody rb;
+
+    public bool IsInRange { get; set; }
+
+    // 인터페이스 구현 
+    public float Gravity { get; set; }
 
     void Start()
     {
@@ -75,9 +80,29 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player")){
+        if(!other.CompareTag("Enemy")){
+            if(other.CompareTag("Player")){
+                Debug.Log("총알이 플레이어에 닿았기 때문에 사라졌습니다");
+            }
             Destroy(gameObject);
-            Debug.Log("총알이 플레이어에 닿았기 때문에 사라졌습니다");
         }
+    }
+
+    public void AntiGravity() // 중력 반전 함수 
+    {
+        IsInRange = true;
+        rb.velocity = initialDirection * speed * timeDilation;
+    }
+    public void AntiGravityEnd()
+    {
+        IsInRange = false;
+        rb.velocity = initialDirection * speed * timeDilation;
+    }
+
+    public void BlackHole(Vector3 fieldCenter)
+    {
+        Vector3 direction = fieldCenter - transform.position;
+        direction = Vector3.Normalize(direction); // 방향만 구함 
+        rb.velocity = speed * timeDilation * direction;
     }
 }

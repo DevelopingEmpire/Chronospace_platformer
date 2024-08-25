@@ -294,7 +294,6 @@ public class Player : MonoBehaviour, IGravityControl
         equipItem = equipItems[(int)itemType]; // 0중력 1 시간 2태엽 3블랙홀 4쉴드 
         equipItem.SetActive(true);
 
-
         // 아이템 UI에 장착 장비 표시
         UIManager.instance.equipItemUI(itemType, itemIndex);
     }
@@ -400,8 +399,12 @@ public class Player : MonoBehaviour, IGravityControl
         {
 
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
-                Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
-
+                if(itemPointTransform) {
+                    Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                }
+                else{
+                    Instantiate(gravityPrefebs[0], transform.position + transform.forward, transform.rotation);
+                }
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
@@ -421,7 +424,12 @@ public class Player : MonoBehaviour, IGravityControl
                 break;
 
             case Item.Type.Magneticgrav: // 블랙홀
-                Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                if(itemPointTransform) {
+                    Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                }
+                else{
+                    Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
+                }
                 break;
 
             case Item.Type.Null: //없음

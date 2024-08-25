@@ -70,7 +70,8 @@ public class Guards : MonoBehaviour, IGravityControl
     public void AntiGravityEnd()
     {
         IsInRange = false;
-        Gravity *= -1; // 반전 해제 
+        Gravity *= -1; // 반전 해제
+        navMeshAgent.enabled = true;
         Debug.Log("AntiGravity Off.");
 
     }
@@ -320,7 +321,7 @@ public class Guards : MonoBehaviour, IGravityControl
     public void BlackHole(Vector3 fieldCenter)
     {
         navMeshAgent.enabled = false;
-        isGravity = true;
+        isGravity = false;
         Vector3 direction = fieldCenter - transform.position;
         //direction = Vector3.Normalize(direction); // 방향만 구함 
         _controller.Move(direction * 2.0f * Time.deltaTime);
