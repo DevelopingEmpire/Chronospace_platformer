@@ -3203,7 +3203,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseScreen: {fileID: 1830360075}
   battleHUDScreen: {fileID: 1830360077}
+  portalInpoText: {fileID: 0}
   fadeImg: {fileID: 1830360078}
+  damageFX: {fileID: 0}
+  fadeDuration: 0
   dialogueUI: {fileID: 2049855800}
   extUI: {fileID: 60713267}
 --- !u!1001 &339077351
@@ -5520,6 +5523,10 @@ PrefabInstance:
     - target: {fileID: 1086546279, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.05554962
+      objectReference: {fileID: 0}
+    - target: {fileID: 1086546279, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0010000467
       objectReference: {fileID: 0}
     - target: {fileID: 1086546279, guid: 9a6c8eb5345187a4586e9bdb34055a05, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13688,47 +13695,15 @@ PrefabInstance:
     m_TransformParent: {fileID: 493046997}
     m_Modifications:
     - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: buttonID
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: buttonMat
-      value: 
-      objectReference: {fileID: 2100000, guid: 2da9ca9085e05e54590bc218aeb50490, type: 2}
-    - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
       propertyPath: controller
       value: 
       objectReference: {fileID: 1674106218}
-    - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: selfColor.b
-      value: 0.2407042
-      objectReference: {fileID: 0}
-    - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: selfColor.g
-      value: 0.21568626
-      objectReference: {fileID: 0}
-    - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: selfColor.r
-      value: 0.8666667
-      objectReference: {fileID: 0}
-    - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: triggerObject
-      value: 
-      objectReference: {fileID: 951275566}
-    - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: triggerObject.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1942766410056698604, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
       propertyPath: triggerObject.Array.data[0]
       value: 
       objectReference: {fileID: 992683983}
     - target: {fileID: 2197495882456201521, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
       propertyPath: m_Name
-      value: Button
-      objectReference: {fileID: 0}
-    - target: {fileID: 2197495882456201521, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
-      propertyPath: m_TagString
       value: Button
       objectReference: {fileID: 0}
     - target: {fileID: 2197495882456201522, guid: 02dabf4f1cbd6474e8b141a9ad491d35, type: 3}
