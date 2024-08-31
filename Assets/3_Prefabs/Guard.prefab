@@ -75,7 +75,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlayerDetected: 0
   nearestPlayer: {fileID: 0}
-  playersInRange: []
 --- !u!1 &621278534067018043
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,7 +327,7 @@ GameObject:
   - component: {fileID: 1135331722534134773}
   m_Layer: 0
   m_Name: Guard
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -382,7 +381,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nearestPlayer: {fileID: 0}
   initialPosition: {x: -25, y: 0, z: 0}
-  rotationSpeed: 5
+  rotationSpeedPatrol: 5
+  rotationSpeedFire: 1
   travelDistance: 2.5
   chaseRange: 10
   chaseRangeErratum: 1
@@ -392,13 +392,14 @@ MonoBehaviour:
   anim: {fileID: 1538759538}
   bullet: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
   fireRange: 15
-  fireDelay: 0.5
+  fireDelay: 1
   fireOffset: {x: 0, y: 1.11, z: 0}
   bulletAmount: 20
   bulletReloadTime: 2
   bulletReloadTimeCurrent: 0
   navMeshAgent: {fileID: 1135331722534134773}
   isPlayerDetected: 0
+  isPlayerInAttackRange: 0
   _controller: {fileID: 1135331722534134775}
   isGravity: 0
 --- !u!195 &1135331722534134773
