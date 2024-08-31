@@ -189,6 +189,8 @@ public class Player : MonoBehaviour, IGravityControl
 
             if (inputJump)
             {
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_JumpSound);
+
                 moveDirection.y += jumpForce;
                 isJumping = true;
                 anim.SetTrigger("doJump");
@@ -222,6 +224,9 @@ public class Player : MonoBehaviour, IGravityControl
 
     public void Die()
     {
+        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerDieSound);
+
+
         // 사망 처리
         isAlive = false;
 
@@ -343,8 +348,11 @@ public class Player : MonoBehaviour, IGravityControl
             {
                 interactionText.enabled = false; // ui 끄기 
             }
+
+            AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound);  // 버튼 클릭 소리 재생
+
             Item.Type itemType = nearObject.GetComponent<Item>().type;
-            int itemIndex = (int)itemType; // gravity 0, time 1, wind 2 
+            int itemIndex = (int)itemType; // gravity 0, time 1, mag 2, shield 3 wind4  
             //Debug.Log("itemIndex" + itemIndex);
 
             hasItems[itemIndex] = true;  //아이템 인덱스 활성화(활성화된 인덱스에서의 아이템 꺼내기가 활성화됨)
@@ -401,27 +409,39 @@ public class Player : MonoBehaviour, IGravityControl
 
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
-
+                
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
+                
+
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
                 Debug.Log("Time speed has changed into " + timeScaleMultiplier + "x.");
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+
                 break;
 
-            case Item.Type.WindKey: //윈드 키
-                timer.TimeChange(30f); // 30초 추가 
+            case Item.Type.Magneticgrav: // 블랙홀
+
+                Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
 
                 break;
 
             case Item.Type.Shield:
+
                 timer.isPlaying = false;
                 StartCoroutine(WaitAndExecute(3.0f));
                 timer.isPlaying = true;
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+
                 break;
 
-            case Item.Type.Magneticgrav: // 블랙홀
-                Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+            case Item.Type.WindKey: //윈드 키
+                timer.TimeChange(30f); // 30초 추가 
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+
                 break;
 
             case Item.Type.Null: //없음

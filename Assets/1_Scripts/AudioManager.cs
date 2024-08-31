@@ -50,7 +50,7 @@ public class AudioManager : MonoBehaviour
     [Header("SFX")]
     public AudioClip[] sfxClips; // 효과음
     public float sfxVolume; // 효과음 볼륨
-    public int channels; 
+    public int channels =5 ; 
     public AudioSource[] sfxPlayers;
     int channelIndex; //
 
@@ -58,36 +58,30 @@ public class AudioManager : MonoBehaviour
     public enum SFX
     {
         // UI
-        SFX_UI_ClickSound = 0,
-
-        // Skills
-        SFX_SkillSoundItem1 = 1,
-        SFX_SkillSoundItem2 = 2,
-        SFX_SkillSoundItem3 = 3,
-        SFX_SkillSoundItem4 = 4,
-        SFX_SkillSoundItem5 = 5,
+        SFX_UI_ClickSound ,
 
         // Basic actions
-        SFX_PlayerDmgSound = 6,
-        SFX_PlayerWalkSound = 7,
-        SFX_PlayerDieSound = 8,
-        SFX_RespawnSound = 9,
-        SFX_JumpSound = 10,
-        SFX_ItemEquipSound = 11,
-        SFX_TimerTickSound = 12,
+        SFX_PlayerDmgSound ,
+        SFX_PlayerWalkSound ,
+        SFX_PlayerDieSound ,
+        SFX_RespawnSound ,
+        SFX_JumpSound ,
+        SFX_ItemEquipSound ,
+        SFX_TimerTickSound ,
 
         // interactions
-        SFX_ButtonPressed = 13,
-        SFX_EnterPortal = 14,
-        SFX_SwitchPressed = 15,
-        SFX_InteractionActivateSound = 16,
+        SFX_ItemUseSound,
+        SFX_ButtonPressed ,
+        SFX_EnterPortal ,
+        SFX_SwitchPressed ,
+        SFX_InteractionActivateSound,
 
         // enemy
-        SFX_DetectionSound = 17,
-        SFX_FireSound = 18,
+        SFX_DetectionSound ,
+        SFX_FireSound ,
 
         // 디폴트
-        SFX_None = 19
+        SFX_None ,
     }
 
     public float BGMVolume
