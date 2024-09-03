@@ -67,6 +67,8 @@ public class Portal : StageMechanicsController
                     StageManager.Instance.SetStageCleared(); // 현재 스테이지 클리어 됨 
                 }
                 Debug.Log("게임매니저 - 로드씬 요청 됨 ");
+
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_EnterPortal);
                 GameManager.Instance.LoadSceneCall(targetScene); // 다음 스테이지 로드 요청
             }
             else {

@@ -65,6 +65,8 @@ public class UIManager : MonoBehaviour
     public void OnClickEscButton(bool isPause)
     {
         if(pauseScreen){
+            AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound);
+
             pauseScreen.SetActive(isPause);
         }
     }

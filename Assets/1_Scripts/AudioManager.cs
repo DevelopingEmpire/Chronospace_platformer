@@ -58,30 +58,32 @@ public class AudioManager : MonoBehaviour
     public enum SFX
     {
         // UI
-        SFX_UI_ClickSound ,
+        SFX_UI_ClickSound ,         //0
 
         // Basic actions
-        SFX_PlayerDmgSound ,
-        SFX_PlayerWalkSound ,
-        SFX_PlayerDieSound ,
-        SFX_RespawnSound ,
-        SFX_JumpSound ,
-        SFX_ItemEquipSound ,
-        SFX_TimerTickSound ,
+        SFX_PlayerDmgSound ,        //1
+        SFX_PlayerWalkSound ,       //2
+        SFX_PlayerDieSound ,        //3
+        SFX_RespawnSound ,          //4
+        SFX_JumpSound ,             //5
+        SFX_ItemEquipSound ,        //6
+        SFX_TimerTickSound ,        //7
 
         // interactions
-        SFX_ItemUseSound,
-        SFX_ButtonPressed ,
-        SFX_EnterPortal ,
-        SFX_SwitchPressed ,
-        SFX_InteractionActivateSound,
+        SFX_ItemUseSound,           //8
+        SFX_ButtonPressed ,         //9
+        SFX_EnterPortal ,           //10
+        SFX_SwitchPressed ,         //11
+        SFX_InteractionActivateSound,   //12
+        SFX_DoorOpen,               // 13
+        SFX_VendingMachineWork,     //14
 
         // enemy
-        SFX_DetectionSound ,
-        SFX_FireSound ,
+        SFX_DetectionSound ,        //15
+        SFX_FireSound ,             //16
 
         // 디폴트
-        SFX_None ,
+        SFX_None                    //17
     }
 
     public float BGMVolume
