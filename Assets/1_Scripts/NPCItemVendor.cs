@@ -27,10 +27,11 @@ public class NPCItemVendor : MonoBehaviour
     {
         if(vendedObject == null)
         {
-            Debug.LogError("Dialogue file is not defined.");
+            Debug.LogError("Vended Object is not defined.");
         }
         timeElapsed = timeDuration;
-        Instantiate(vendedObject, objectExampleSpawnPos.transform);
+        //Rendered Object Spawn
+        AssignMeshToRoot(vendedObject);
     }
 
     // Update is called once per frame
@@ -81,6 +82,47 @@ public class NPCItemVendor : MonoBehaviour
                     Instantiate(vendedObject, transform);
                 }
                 timeElapsed = 0f;
+                AssignMeshToRoot(vendedObject);
+
+            }
+        }
+    }
+
+    void AssignMeshToRoot(GameObject instantiatedObject)
+    {
+        // 자식 오브젝트 중 첫 번째로 발견된 메시 필터와 메시 렌더러를 objectExampleSpawnPos에 할당합니다.
+        MeshFilter rootMeshFilter = objectExampleSpawnPos.GetComponent<MeshFilter>();
+        MeshRenderer rootMeshRenderer = objectExampleSpawnPos.GetComponent<MeshRenderer>();
+        Debug.Log(instantiatedObject + "의 메시" + rootMeshFilter.mesh + "좌표에 표시함");
+
+        // 기존에 없을 경우 추가합니다.
+        if (rootMeshFilter == null)
+        {
+            rootMeshFilter = objectExampleSpawnPos.AddComponent<MeshFilter>();
+        }
+
+        if (rootMeshRenderer == null)
+        {
+            rootMeshRenderer = objectExampleSpawnPos.AddComponent<MeshRenderer>();
+        }
+
+        // 자식 오브젝트들 탐색
+        foreach (Transform child in instantiatedObject.transform)
+        {
+            MeshFilter childMeshFilter = child.GetComponent<MeshFilter>();
+            MeshRenderer childMeshRenderer = child.GetComponent<MeshRenderer>();
+            Debug.Log(child + "의 메시" + childMeshFilter.mesh + "좌표에 표시함");
+
+            if (childMeshFilter != null)
+            {
+                // 자식의 메시를 복사하여 objectExampleSpawnPos의 MeshFilter에 할당합니다.
+                rootMeshFilter.mesh = childMeshFilter.mesh;
+            }
+
+            if (childMeshRenderer != null)
+            {
+                // 자식의 머티리얼을 복사하여 objectExampleSpawnPos의 MeshRenderer에 할당합니다.
+                rootMeshRenderer.materials = childMeshRenderer.materials;
             }
         }
     }
