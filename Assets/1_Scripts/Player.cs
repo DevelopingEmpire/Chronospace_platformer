@@ -12,7 +12,7 @@ public class Player : MonoBehaviour, IGravityControl
     [Header("Component")] //플레이어 외부 컴포넌트 변수
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
-    public GameObject windKey; // 내 태엽 
+    public GameObject windKey; // 내 태엽
     public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
     public float timeScaleMultiplier = 0.005f; // 시간 계수. 거의 멈춤 
     public Transform itemPointTransform; // 탬 생성 위치
@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, IGravityControl
     [Header("UI")] //플레이어 외부 컴포넌트 변수
     public CamController camController; // CamController 참조
     public GameObject damageFX;
+
     [Header("PhysicsValue")] //플레이어 물리 효과 컨트롤 변수
     public float jumpForce = 8f;
     public float movSpeed = 5f;
@@ -351,6 +352,7 @@ public class Player : MonoBehaviour, IGravityControl
             AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound);  // 버튼 클릭 소리 재생
 
             Item.Type itemType = nearObject.GetComponent<Item>().type;
+            bool enabled = nearObject.GetComponent<Item>().enabledToUse;
             int itemIndex = (int)itemType; // gravity 0, time 1, mag 2, shield 3 wind4  
             //Debug.Log("itemIndex" + itemIndex);
 
@@ -358,10 +360,10 @@ public class Player : MonoBehaviour, IGravityControl
 
             for (int i = 0; i < inventory.Length; i++)
             {
-                if (inventory[i] == itemType)
+                if (inventory[i] == itemType || !enabled)
                 {
                     // 이미 해당 아이템이 존재한다면
-                    Debug.Log("아이템 중복!");
+                    Debug.Log("아이템이 중복되거나 비활성화되어 있습니다.");
                     break;
                 }
                 if (inventory[i] == Item.Type.Null)
