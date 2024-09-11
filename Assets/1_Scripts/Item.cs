@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 {
     public enum Type { Gravity, TimeStop, Magneticgrav, Shield, WindKey, Null }; // 중력, 시간, 태엽 
     public Type type;
+    public bool enabledToUse = true;
 
     // Update is called once per frame
     void Update()
