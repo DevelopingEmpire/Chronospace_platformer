@@ -445,7 +445,9 @@ public class Player : MonoBehaviour, IGravityControl
             case Item.Type.WindKey: //윈드 키
                 timer.TimeChange(30f); // 30초 추가 
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+                break;
 
+            /*
             case Item.Type.Magneticgrav: // 블랙홀
                 if(itemPointTransform) {
                     Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
@@ -454,6 +456,7 @@ public class Player : MonoBehaviour, IGravityControl
                     Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
                 }
                 break;
+            */
 
             case Item.Type.Null: //없음
                 // Handle no item selected
