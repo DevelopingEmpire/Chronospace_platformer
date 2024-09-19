@@ -454,7 +454,6 @@ public class Player : MonoBehaviour, IGravityControl
 
                 break;
 
-
             case Item.Type.Shield:
 
                 timer.isPlaying = false;
@@ -469,8 +468,6 @@ public class Player : MonoBehaviour, IGravityControl
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
                 break;
 
-                break;
-            /*
             case Item.Type.Magneticgrav: // 블랙홀
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
                 if (itemPointTransform) {
@@ -480,7 +477,7 @@ public class Player : MonoBehaviour, IGravityControl
                     Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
                 }
                 break;
-            */
+            
             case Item.Type.Null: //없음
                 // Handle no item selected
                 return;

@@ -95,6 +95,8 @@ public class UIManager : MonoBehaviour
             itemIcon.color = new Color(itemIcon.color.r, itemIcon.color.g, itemIcon.color.b, 0f); // 투명
         }
 
+        Debug.Log("useItem: " + useItem + ", has:"+ has+", slot: " + slot);
+
     }
 
     // 몇 번째 위치가 선택되었는가? 

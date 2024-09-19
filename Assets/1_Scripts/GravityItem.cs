@@ -5,7 +5,6 @@ using UnityEngine;
 public class GravityItem : MonoBehaviour
 {
     public GameObject itemMeshObj; // 이름이 아이템 어쩌구로 수정
-    //public GameObject effectObj; // 폭발 효과 
     public Rigidbody rb;
     public BoxCollider colliderRange; // 탬 적용 범위 콜라이더 
     public MeshRenderer meshRenderer; // 템 범위 mesh 
@@ -21,7 +20,10 @@ public class GravityItem : MonoBehaviour
 
     private void Awake()
     {
-        rb.AddForce(transform.forward * 10, ForceMode.Impulse); // 앞으로 슝~
+        // 카메라가 보는 방향으로 아이템이 날아가도록 설정
+        Vector3 cameraForward = Camera.main.transform.forward; // 카메라의 앞방향
+        rb.AddForce(cameraForward * 10, ForceMode.Impulse); // 카메라가 보는 방향으로 힘을 가함
+
         StartCoroutine(Explosion());
     }
 
@@ -34,15 +36,11 @@ public class GravityItem : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        rb.useGravity = false; // 리지드의 중력 끄기 \
-        /*
-        if(itemMeshObj != null) {
-            itemMeshObj.SetActive(false); // 비활성화 
-        }
-        */
-        //effectObj.SetActive(true); // 효과 보여주는거
+        rb.useGravity = false; // 리지드의 중력 끄기 
+
+        // 켜짐 
         colliderRange.enabled = true; // 콜라이더 켜기 
-        meshRenderer.enabled = true;
+        meshRenderer.enabled = true;  // 효과 보여주기 
 
         yield return new WaitForSeconds(effectDuration); // effectDuration 동안 대기 
 

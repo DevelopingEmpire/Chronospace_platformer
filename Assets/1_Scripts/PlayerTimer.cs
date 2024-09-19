@@ -20,6 +20,11 @@ public class PlayerTimer : MonoBehaviour
     public TextMeshProUGUI timerText;
     public Image timerBar;
 
+    [Header("warning")]
+    private float warningTime = 10f; // 경고 사운드를 시작할 기준 시간
+    private float soundTickInterval = 1f; // 1초마다 경고음
+    private float nextTickTime = 0f; // 다음 경고음 재생 시간
+
     public void TimerUIInit()
     {
         currentTime = checkPointTimeLimit;
@@ -77,6 +82,16 @@ public class PlayerTimer : MonoBehaviour
             currentTime -= speed * Time.deltaTime;
             timerText.text = ((int)currentTime+1).ToString(); // 0까지 나오므로 +1 해줌 
             timerBar.fillAmount = currentTime / timeLimit;
+
+            // 남은 시간이 경고 시간 이하일 때 1초마다 경고음 재생
+            if (currentTime <= warningTime && currentTime > 0)
+            {
+                if (Time.time >= nextTickTime)
+                {
+                    AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_TimerTickSound); // 경고음 재생
+                    nextTickTime = Time.time + soundTickInterval; // 다음 경고음 재생 시간 설정
+                }
+            }
         }
         else
         {
