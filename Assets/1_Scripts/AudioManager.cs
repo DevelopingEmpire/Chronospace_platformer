@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using DG.Tweening;
 using static AudioManager;
 
 public class AudioManager : MonoBehaviour
@@ -29,8 +31,17 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] bgmClips; // 배경음악
     public float bgmVolume; // 배경음악 볼륨
     public AudioSource bgmPlayer; // 재생해줄 오디오 소스 컴포넌트 
+    public float fadeDuration = 2.0f;  // 페이드 아웃에 걸리는 시간
 
     public enum BGM
+    {
+        BGM_Title = 0,
+        BGM_Lobby = 1,
+        BGM_InStage = 2
+    }
+
+    /*
+     *    public enum BGM
     {
         BGM_Lobby = 0,
         BGM_NormalStage1 = 1,
@@ -46,6 +57,7 @@ public class AudioManager : MonoBehaviour
         BGM_ChaosStage8 = 11,
         BGM_ChaosStage10 = 12,
     }
+     */
 
     [Header("SFX")]
     public AudioClip[] sfxClips; // 효과음
@@ -58,30 +70,32 @@ public class AudioManager : MonoBehaviour
     public enum SFX
     {
         // UI
-        SFX_UI_ClickSound ,
+        SFX_UI_ClickSound ,         //0
 
         // Basic actions
-        SFX_PlayerDmgSound ,
-        SFX_PlayerWalkSound ,
-        SFX_PlayerDieSound ,
-        SFX_RespawnSound ,
-        SFX_JumpSound ,
-        SFX_ItemEquipSound ,
-        SFX_TimerTickSound ,
+        SFX_PlayerDmgSound ,        //1
+        SFX_PlayerWalkSound ,       //2
+        SFX_PlayerDieSound ,        //3
+        SFX_RespawnSound ,          //4
+        SFX_JumpSound ,             //5
+        SFX_ItemEquipSound ,        //6
+        SFX_TimerTickSound ,        //7
 
         // interactions
-        SFX_ItemUseSound,
-        SFX_ButtonPressed ,
-        SFX_EnterPortal ,
-        SFX_SwitchPressed ,
-        SFX_InteractionActivateSound,
+        SFX_ItemUseSound,           //8
+        SFX_ButtonPressed ,         //9
+        SFX_EnterPortal ,           //10
+        SFX_SwitchPressed ,         //11
+        SFX_InteractionActivateSound,   //12
+        SFX_DoorOpen,               // 13
+        SFX_VendingMachineWork,     //14
 
         // enemy
-        SFX_DetectionSound ,
-        SFX_FireSound ,
+        SFX_DetectionSound ,        //15
+        SFX_FireSound ,             //16
 
         // 디폴트
-        SFX_None ,
+        SFX_None                    //17
     }
 
     public float BGMVolume
@@ -99,6 +113,21 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         Init();
+
+        Scene scene = SceneManager.GetActiveScene(); //함수 안에 선언하여 사용한다.
+
+        if (scene.name == "Title")
+        {
+            PlayBgm(BGM.BGM_Title);
+        }
+        else if(scene.name == "Stage0")
+        {
+            PlayBgm(BGM.BGM_Lobby);
+        }
+        else
+        {
+            PlayBgm(BGM.BGM_InStage);
+        }
     }
 
     // 초기화 
@@ -145,8 +174,17 @@ public class AudioManager : MonoBehaviour
 
     public void StopBgm()
     {
-        if (bgmPlayer != null) bgmPlayer.Stop();
+        if (bgmPlayer != null) 
+        {
+            // bgmPlayer.Stop();
+
+            // 페이드 아웃 
+            bgmPlayer.DOFade(0f, fadeDuration).OnComplete(() => bgmPlayer.Stop());  // 볼륨을 0으로 줄이고 종료
+        }
+
     }
+
+    
 
     public void PlaySfx(SFX sfx)
     {

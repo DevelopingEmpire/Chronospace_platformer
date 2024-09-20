@@ -21,17 +21,13 @@ public class Turret : MonoBehaviour
     public Vector3 fireOffset;
     public Vector3 direction;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
         DetectPlayer();
         if(isPlayerDetected) {
+
             StareAtPlayer();
             Fire();
         }
@@ -59,6 +55,8 @@ public class Turret : MonoBehaviour
             //Debug.Log("Is Player Detected: " + isDetected);
             if (nearestPlayer != null)
             {
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DetectionSound);
+
                 isPlayerDetected = true;
                 //Debug.Log("Nearest Player: " + nearestPlayer.name);
             }
@@ -122,6 +120,8 @@ public class Turret : MonoBehaviour
 
         if (fireTimer >= fireDelay)
         {
+            AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_FireSound);
+
             GameObject projectileIns = Instantiate(bullet);
             projectileIns.transform.position = transform.position + fireOffset;
             BulletDirectionDefined projectileInsScript = projectileIns.GetComponent<BulletDirectionDefined>();

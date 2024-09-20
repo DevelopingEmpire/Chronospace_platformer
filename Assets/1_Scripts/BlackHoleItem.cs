@@ -8,11 +8,11 @@ using UnityEngine;
 public class BlackHoleItem : MonoBehaviour
 {
     public GameObject itemMeshObj; // 이름이 아이템 어쩌구로 수정
-    //public GameObject effectObj; // 폭발 효과 
+
     public Rigidbody rb;
     public SphereCollider colliderRange; // 탬 적용 범위 콜라이더 
     public MeshRenderer meshRenderer; // 템 범위 mesh 
-    public float duration = 10f; // 템 범위 mesh 
+    public float duration = 4f; // 템 범위 mesh 
     public float throwforce = 18f; // 템 범위 mesh 
     public float brakeAfter = 1.2f;
     public float rotationSpeed = 5.0f;
@@ -28,8 +28,11 @@ public class BlackHoleItem : MonoBehaviour
 
     private void Awake()
     {
-        //rb.AddForce(((transform.forward * math.sin(rotationY) + transform.up * math.cos(rotationY))) * throwforce, ForceMode.Impulse); // 앞으로 슝~
-        rb.AddForce((transform.forward) * throwforce, ForceMode.Impulse); // 앞으로 슝~
+
+        // 카메라가 보는 방향으로 아이템이 날아가도록 설정
+        Vector3 cameraForward = Camera.main.transform.forward; // 카메라의 앞방향
+        rb.AddForce(cameraForward * 10, ForceMode.Impulse); // 카메라가 보는 방향으로 힘을 가함
+
         StartCoroutine(Explosion());
         StartCoroutine(Brake());
     }
@@ -37,21 +40,18 @@ public class BlackHoleItem : MonoBehaviour
     // 시간차를 위해 코루틴으로
     IEnumerator Explosion()
     {
-        yield return new WaitForSeconds(duration); // 1초 길어서 줄임  
+        yield return new WaitForSeconds(0.5f); // 잠시 대기 
 
         // 물리적인 속도들 모두 0으로 해줌 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
         rb.useGravity = false; // 리지드의 중력 끄기
-        if(itemMeshObj != null) {
-            itemMeshObj.SetActive(false); // 비활성화 
-        }
-        //effectObj.SetActive(true); // 효과 보여주는거
+
         colliderRange.enabled = true; // 콜라이더 켜기 
         meshRenderer.enabled = true;
 
-        yield return new WaitForSeconds(duration); // 4초 대기
+        yield return new WaitForSeconds(duration); // 4초간 지속
 
         foreach(GameObject obj in objInBlackHoleRange){
             iGravityControl = obj.GetComponent<IGravityControl>();

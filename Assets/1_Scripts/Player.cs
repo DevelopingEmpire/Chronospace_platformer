@@ -45,6 +45,10 @@ public class Player : MonoBehaviour, IGravityControl
     private bool inputKeyButton3; // 템 스왑 3
     private bool inputKeyF; // 탬사용
 
+    [Header("Sound")]
+    public float footstepInterval = 0.2f; // 발소리 재생 간격
+    private float footstepTimer = 0f;     // 발소리 타이머
+
     bool isSwaping = false; //사용하고 있는 변수. Console에 사용하지 않는다고 뜬다. 
 
     //플레이어 애니메이션 작동 변수
@@ -211,8 +215,23 @@ public class Player : MonoBehaviour, IGravityControl
         moveDirection = transform.TransformDirection(moveDirection);
         controller.Move(moveDirection * Time.unscaledDeltaTime); // 이동 명령에 Time.deltaTime 적용
 
+        // 이동 중인 상태 확인
         bool isRunning = Mathf.Abs(inputH) > 0f || Mathf.Abs(inputV) > 0f; // 입력에 따른 달리기 상태 결정
         anim.SetBool("isRunning", isRunning); // Animator에 달리기 상태 전달
+
+        // 발소리 재생
+        if (isRunning && controller.isGrounded) // 캐릭터가 이동 중이고 지면에 있을 때
+        {
+            footstepTimer += Time.deltaTime;
+
+            if (footstepTimer >= footstepInterval)
+            {
+                Debug.Log("발소리 ");
+
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerWalkSound);
+                footstepTimer = 0f; // 타이머 리셋
+            }
+        }
 
         // 끌어당김 상태 업데이트
         isBlackHoling = false;
@@ -258,6 +277,10 @@ public class Player : MonoBehaviour, IGravityControl
         // 3인칭 전환
         camController.ToggleCamera(1);
 
+        //
+        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_RespawnSound);
+
+
     }
 
 
@@ -267,6 +290,8 @@ public class Player : MonoBehaviour, IGravityControl
     void Swap() //아이템 스왑 함수
     {
         Debug.Log("스왑 눌림");
+        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemEquipSound);
+
 
         // 현재 장착된 아이템 비활성화
         if (equipItem != null)
@@ -405,6 +430,7 @@ public class Player : MonoBehaviour, IGravityControl
             Debug.LogError("EquipItemIndex is out of range.");
             return;
         }
+
         switch (inventory[equipItemIndex])
         {
 
@@ -428,13 +454,6 @@ public class Player : MonoBehaviour, IGravityControl
 
                 break;
 
-            case Item.Type.Magneticgrav: // 블랙홀
-
-                Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
-                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
-
-                break;
-
             case Item.Type.Shield:
 
                 timer.isPlaying = false;
@@ -447,18 +466,18 @@ public class Player : MonoBehaviour, IGravityControl
             case Item.Type.WindKey: //윈드 키
                 timer.TimeChange(30f); // 30초 추가 
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
-
                 break;
-            /*
+
             case Item.Type.Magneticgrav: // 블랙홀
-                if(itemPointTransform) {
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+                if (itemPointTransform) {
                     Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
                 }
                 else{
                     Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
                 }
                 break;
-            */
+            
             case Item.Type.Null: //없음
                 // Handle no item selected
                 return;
@@ -529,6 +548,9 @@ public class Player : MonoBehaviour, IGravityControl
     {
         if (other.CompareTag("Bullet")) 
         {
+            // 피격 
+            AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerDmgSound);
+
             camController.ShakeCam();
             StartCoroutine(UIManager.instance.DmgFX());
         }

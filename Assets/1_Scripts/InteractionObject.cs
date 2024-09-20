@@ -58,6 +58,8 @@ public class InteractionObject : StageMechanicsController
 
     public override void Trigger()
     {
+        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DoorOpen);
+
         //Debug.Log("Trigger");
         for (int i = 0; i < targetObjects.Length; i++)
         {
@@ -79,6 +81,8 @@ public class InteractionObject : StageMechanicsController
 
     public override void Exit()
     {
+        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DoorOpen);
+
         for (int i = 0; i < targetObjects.Length; i++)
         {
             targetObjects[i].transform.DOLocalMove(originalLoc[i], duration);

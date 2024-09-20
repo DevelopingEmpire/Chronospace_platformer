@@ -133,6 +133,7 @@ public class Guards : MonoBehaviour, IGravityControl
             // If the player is in sight, set the target position to the player's position
             if (isPlayerDetected) // 범위 안이면 
             {
+
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
                 anim.SetBool("isDetected", true); // 발견! 공격 
@@ -308,6 +309,8 @@ public class Guards : MonoBehaviour, IGravityControl
     //Fire projectile into player
     void Fire()
     {
+        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_FireSound);
+
         bulletAmountCurrent--; // 총알 발사
         // Check if enough time has passed to fire a bullet
         GameObject projectileIns = Instantiate(bullet);

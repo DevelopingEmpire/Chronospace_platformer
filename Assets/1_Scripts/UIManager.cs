@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Main UI")]
     public GameObject pauseScreen; // 일시 정지 창
-    public GameObject battleHUDScreen; // HUD 전체 
+    public GameObject battleHUDScreen; // HUD - 아이템, 시간초 
 
     public GameObject portalInpoText; // 포탈 입장 불가 텍스트 
 
@@ -65,6 +65,8 @@ public class UIManager : MonoBehaviour
     public void OnClickEscButton(bool isPause)
     {
         if(pauseScreen){
+            AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound);
+
             pauseScreen.SetActive(isPause);
         }
     }
@@ -92,6 +94,8 @@ public class UIManager : MonoBehaviour
             itemImage.color = Color.gray; // 비활
             itemIcon.color = new Color(itemIcon.color.r, itemIcon.color.g, itemIcon.color.b, 0f); // 투명
         }
+
+        Debug.Log("useItem: " + useItem + ", has:"+ has+", slot: " + slot);
 
     }
 
@@ -125,6 +129,13 @@ public class UIManager : MonoBehaviour
         {
             // Stage에서 보일 UI 요소 설정
             battleHUDScreen.SetActive(true);
+
+
+
+
+            // UIManager.instance.OnClickBattleButton();
+            // UIManager.instance.pickUpScreen.SetActive(true);
+            // UIManager.instance.selectedStageName = preStageName;
         }
     }
 
