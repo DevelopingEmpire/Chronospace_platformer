@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Main UI")]
     public GameObject pauseScreen; // 일시 정지 창
-    public GameObject battleHUDScreen; // HUD 전체 
+    public GameObject battleHUDScreen; // HUD - 아이템, 시간초 
 
     public GameObject portalInpoText; // 포탈 입장 불가 텍스트 
 
@@ -129,6 +129,13 @@ public class UIManager : MonoBehaviour
         {
             // Stage에서 보일 UI 요소 설정
             battleHUDScreen.SetActive(true);
+
+
+
+
+            // UIManager.instance.OnClickBattleButton();
+            // UIManager.instance.pickUpScreen.SetActive(true);
+            // UIManager.instance.selectedStageName = preStageName;
         }
     }
 

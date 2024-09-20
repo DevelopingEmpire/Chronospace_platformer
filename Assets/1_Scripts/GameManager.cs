@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined; // 마우스 커서 이탈 방지
         // StageManager.Instance.InitializeStageClearStatus(); // 기본 정보 초기화.. 는 처음에만 수행해야지
         // StageManager.Instance.StageInit("Stage0");
+
     }
 
     // potal은 씬 생성 호출 후 사라지므로, 생성은 게임 매니저가 맡는다.
@@ -72,34 +73,36 @@ public class GameManager : MonoBehaviour
         PlayerTimer playerTimer = FindObjectOfType<PlayerTimer>();
         playerObject = GameObject.FindWithTag("Player");
 
+        
         // 로비로 가는 경우
         if (sceneName == "Stage0")
         {
-            /*
+            
             if (playerTimer != null)
             {
                 playerTimer.enabled = false; // PlayerTimer 비활성화
             }
-            */
-
-            // UIManager.instance.OnClickBattleButton();
-            // UIManager.instance.pickUpScreen.SetActive(true);
-            // UIManager.instance.selectedStageName = preStageName;
-
-            // 브금 틀기 
-            // AudioManager.instance.PlayBgm(AudioManager.BGM.BGM_Lobby);
+            
+            // 로비 브금 틀기 
+            AudioManager.instance.PlayBgm(AudioManager.BGM.BGM_Lobby);
         }
         else
         {
-            /*
+            
             // 게임 맵 들어가는 경우 
             if (playerTimer != null)
             {
                 playerTimer.enabled = true; // PlayerTimer 활성화
             }
-            */
+
+
+            // 인게임 브금 틀기 
+            AudioManager.instance.PlayBgm(AudioManager.BGM.BGM_InStage);
 
         }
+
+        // UI 처리
+        UIManager.instance.SetUIForScene(sceneName);
 
         // 바뀐 씬을 현재 씬으로 변경하고 초기화해줌
         StageManager.Instance.StageInit(sceneName);
