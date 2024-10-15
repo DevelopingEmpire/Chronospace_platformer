@@ -67,8 +67,9 @@ public class InteractionObject : StageMechanicsController
             targetObjects[i].transform.DOLocalRotate(originalRot[i] + transitionRot[i], duration);
             targetObjects[i].transform.DOScale(transitionScale[i], duration);
         }
-
-        selfMeshLight.SetActive(true);
+        if(selfMeshLight) {
+            selfMeshLight.SetActive(true);
+        }
         for (int i = 0; i<selfMesh.Length; i++){
             if(selfRecoloredMaterialsGlow[i] != -1) {
                 meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
@@ -106,7 +107,7 @@ public class InteractionObject : StageMechanicsController
         importedMaterial = targetColor;
         importedMaterialGlow = targetColorGlow;
         for (int i = 0; i<selfMesh.Length; i++){
-            if(selfRecoloredMaterialsGlow[i] != -1) {
+            if(selfRecoloredMaterialsGlow[i] != -1 && selfRecoloredMaterials[i] != -1) {
                 meshRenderer = selfMesh[i].GetComponent<MeshRenderer>();
                 originalMaterials = meshRenderer.sharedMaterials;
                 originalMaterials[selfRecoloredMaterials[i]] = importedMaterial;
