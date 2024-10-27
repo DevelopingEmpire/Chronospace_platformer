@@ -101,6 +101,7 @@ public class Guards : MonoBehaviour, IGravityControl
         isGroundChecker = _controller.isGrounded;
         //_controller.detectCollisions = false;
         Gravity = -9.81f;
+        bulletAmountCurrent = bulletAmount;
     }
 
     // Update is called once per frame
