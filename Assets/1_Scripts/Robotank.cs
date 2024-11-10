@@ -5,7 +5,7 @@ using UnityEngine.Diagnostics;
 using UnityEngine.InputSystem.XR;
 using System.Collections.Generic;
 
-public class Guards : MonoBehaviour, IGravityControl
+public class Robotank : MonoBehaviour, IGravityControl
 {
     public GameObject nearestPlayer;
 
@@ -25,8 +25,8 @@ public class Guards : MonoBehaviour, IGravityControl
     public Animator anim;
 
     [Header("Bullet")]
-    public GameObject bullet; // 총알
-    public float fireRange = 0f;
+    public GameObject bullet; // 총알 
+    public float fireRange = 8f;
     public float fireDelay = 1f;
     private float fireTimer = 0f;
     public Vector3 fireOffset;
@@ -137,9 +137,9 @@ public class Guards : MonoBehaviour, IGravityControl
 
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
-                if(anim) anim.SetBool("isDetected", true); // 발견! 공격 
+                anim.SetBool("isDetected", true); // 발견! 공격 
 
-                if (PlayerInFireRange() && bullet) // 사거리 내 + 장전수가 남아 있고 총알이 정의되어 있다면 공격
+                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면 공격
                 {
                     // 목표 회전 계산
                     StareAtPlayer();
@@ -156,15 +156,15 @@ public class Guards : MonoBehaviour, IGravityControl
                     isPlayerInAttackRange = false;
 
                     MoveTowardsTarget(); // 움직이면서 사격 
-                    if(anim) anim.SetBool("isInAttackRange", false);
+                    anim.SetBool("isInAttackRange", false);
                 }
                 else 
                 {
                     // 고정사격 거리보다 작다면 멈춰서 사격 
                     navMeshAgent.ResetPath();
                     isPlayerInAttackRange = true;
-                    if(anim) anim.SetBool("isDetected", true);
-                    if(anim) anim.SetBool("isInAttackRange", true);
+                    anim.SetBool("isDetected", true);
+                    anim.SetBool("isInAttackRange", true);
                 }
 
             }
@@ -176,8 +176,8 @@ public class Guards : MonoBehaviour, IGravityControl
                     // Set the next patrol time
                     nextPatrolTime = Time.time + patrolDelay;
                     MoveTowardsTarget();
-                    if(anim) anim.SetBool("isDetected", false);
-                    if(anim) anim.SetBool("isInAttackRange", false);
+                    anim.SetBool("isDetected", false);
+                    anim.SetBool("isInAttackRange", false);
 
                 }
             }
@@ -187,7 +187,7 @@ public class Guards : MonoBehaviour, IGravityControl
             ApplyGravity();
             if (isPlayerDetected) // 범위 안이면 
             {
-                if (PlayerInFireRange() && bullet) // 사거리 내 + 장전수가 남아 있고 총알이 정의되어 있다면 공격
+                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면
                 {
                     // 목표 회전 계산
                     StareAtPlayer();
@@ -214,8 +214,8 @@ public class Guards : MonoBehaviour, IGravityControl
     void Patrol()
     {
         //범위내에서 랜덤하게 patrol
-        if(anim) anim.SetBool("isDetected", false);
-        if(anim) anim.SetBool("isInAttackRange", true); //isInAttackWithRunning
+        anim.SetBool("isDetected", false);
+        anim.SetBool("isInAttackRange", true); //isInAttackWithRunning
         Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * travelDistance;
         targetPosition = initialPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
     }
@@ -247,8 +247,8 @@ public class Guards : MonoBehaviour, IGravityControl
     {
         // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
-        if(anim) anim.SetBool("isDetected", true);
-        if(anim) anim.SetBool("isInAttackRange", false); 
+        anim.SetBool("isDetected", true);
+        anim.SetBool("isInAttackRange", false); 
     }
 
     bool PlayerOutOfChaseRange()
