@@ -47,7 +47,7 @@ public class Turret : MonoBehaviour
         if (detector != null)
         {
             // MeshCollisionDetector의 변수에 접근
-            bool isDetected = detector.isPlayerDetected;
+            bool isDetected = detector.isDetected;
             nearestPlayer = detector.nearestPlayer;
             //List<GameObject> players = detector.playersInRange;
 

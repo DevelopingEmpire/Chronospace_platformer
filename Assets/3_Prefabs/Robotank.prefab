@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &482032016520418568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4826296851266648306}
+  - component: {fileID: 6891612263892807217}
+  - component: {fileID: 1719147387016521901}
+  m_Layer: 0
+  m_Name: Guard_collision_F
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4826296851266648306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482032016520418568}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.3, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.4, z: 0.25}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1135331722534134772}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6891612263892807217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482032016520418568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f84e702ef71aa694985e620e15dc577a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDetected: 0
+  target: Obstacle
+  nearestPlayer: {fileID: 0}
+--- !u!64 &1719147387016521901
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482032016520418568}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3226932258480928802, guid: 21798186390ce1d46b3382b5325397cd, type: 3}
 --- !u!1 &594351123460640692
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,7 +94,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1135331722534134772}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!64 &6784990059728491147
 MeshCollider:
@@ -73,7 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f84e702ef71aa694985e620e15dc577a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayerDetected: 0
+  isDetected: 0
+  target: Player
   nearestPlayer: {fileID: 0}
 --- !u!1 &1135331722534134537
 GameObject:
@@ -106,6 +169,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4826296851266648306}
   - {fileID: 6850570268413608707}
   - {fileID: 3982350729207266386}
   - {fileID: 1155462693387067094}
@@ -151,6 +215,7 @@ MonoBehaviour:
   chaseRangeErratum: 0
   patrolDelay: 2
   detectionRangeObj: {fileID: 594351123460640692}
+  detectionCollisionObj: {fileID: 482032016520418568}
   detectionInterval: 0.5
   anim: {fileID: 0}
   bullet: {fileID: 0}
@@ -164,6 +229,7 @@ MonoBehaviour:
   isPlayerDetected: 0
   isPlayerInAttackRange: 0
   _controller: {fileID: 1135331722534134775}
+  isObstacleDetected: 0
   isGravity: 0
 --- !u!195 &1135331722534134773
 NavMeshAgent:
@@ -222,7 +288,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1135331722534134772}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!33 &6100685795507167508
 MeshFilter:
@@ -377,7 +443,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3773970521747868932}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 476fa6feca25874429612ced6115e87c, type: 3}
   m_Name: 
@@ -392,7 +458,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b1ea2710518f7e145818aa39a693bbaa, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b1ea2710518f7e145818aa39a693bbaa, type: 3}
       propertyPath: m_LocalPosition.x

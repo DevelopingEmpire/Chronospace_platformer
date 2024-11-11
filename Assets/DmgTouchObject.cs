@@ -13,7 +13,7 @@ public class DmgTouchObject : MonoBehaviour
             col.isTrigger = true;
         }
         else {
-            col.active = false;
+            col.isTrigger = false;
         }
     }
 }

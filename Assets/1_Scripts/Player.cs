@@ -543,7 +543,9 @@ public class Player : MonoBehaviour, IGravityControl
 
     // 필수 조건 
     // 1. 둘 중에 하나에 무조건 rigidbody
-    // 2. 둘 중에 하나에 무조건 isTrigger 체크 
+    // 2. 둘 중에 하나에 무조건 isTrigger 체크
+
+    /*
     private void OnTriggerEnter(Collider other) 
     {
         if (other.CompareTag("Bullet")) 
@@ -555,6 +557,7 @@ public class Player : MonoBehaviour, IGravityControl
             StartCoroutine(UIManager.instance.DmgFX());
         }
     }
+    */
 
     private void OnTriggerStay(Collider other) 
     {
@@ -575,6 +578,16 @@ public class Player : MonoBehaviour, IGravityControl
             }
             nearObject = other.gameObject;
         }
+        else if (other.CompareTag("Bullet")) //스위치이면 활성화 준비
+        {
+            if (Time.time % 1 == 0){
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerDmgSound);
+
+                camController.ShakeCam();
+                StartCoroutine(UIManager.instance.DmgFX());
+            }
+        }
+
         if (other.CompareTag("CheckPoint"))
         {
             respawnPosition = other.transform.position;
