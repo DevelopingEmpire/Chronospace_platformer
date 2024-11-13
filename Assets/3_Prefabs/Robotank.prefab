@@ -1,67 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &482032016520418568
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4826296851266648306}
-  - component: {fileID: 6891612263892807217}
-  - component: {fileID: 1719147387016521901}
-  m_Layer: 0
-  m_Name: Guard_collision_F
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4826296851266648306
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482032016520418568}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3, z: 1}
-  m_LocalScale: {x: 0.8, y: 0.4, z: 0.25}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1135331722534134772}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6891612263892807217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482032016520418568}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84e702ef71aa694985e620e15dc577a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDetected: 0
-  target: Obstacle
-  nearestPlayer: {fileID: 0}
---- !u!64 &1719147387016521901
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482032016520418568}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3226932258480928802, guid: 21798186390ce1d46b3382b5325397cd, type: 3}
 --- !u!1 &594351123460640692
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1135331722534134772}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!64 &6784990059728491147
 MeshCollider:
@@ -169,7 +107,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4826296851266648306}
   - {fileID: 6850570268413608707}
   - {fileID: 3982350729207266386}
   - {fileID: 1155462693387067094}
@@ -188,12 +125,12 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 1
-  m_Radius: 1
+  m_Radius: 0.5
   m_SlopeLimit: 10
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &1135331722534134774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,9 +150,9 @@ MonoBehaviour:
   travelDistance: 2.5
   chaseRange: 0
   chaseRangeErratum: 0
+  chaseRangeExtension: 2.5
   patrolDelay: 2
   detectionRangeObj: {fileID: 594351123460640692}
-  detectionCollisionObj: {fileID: 482032016520418568}
   detectionInterval: 0.5
   anim: {fileID: 0}
   bullet: {fileID: 0}
@@ -229,7 +166,6 @@ MonoBehaviour:
   isPlayerDetected: 0
   isPlayerInAttackRange: 0
   _controller: {fileID: 1135331722534134775}
-  isObstacleDetected: 0
   isGravity: 0
 --- !u!195 &1135331722534134773
 NavMeshAgent:
@@ -240,16 +176,16 @@ NavMeshAgent:
   m_GameObject: {fileID: 1135331722534134537}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Radius: 1
+  m_Speed: 4
+  m_Acceleration: 6.5
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.25
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 0.8
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -288,7 +224,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1135331722534134772}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!33 &6100685795507167508
 MeshFilter:
@@ -458,7 +394,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b1ea2710518f7e145818aa39a693bbaa, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b1ea2710518f7e145818aa39a693bbaa, type: 3}
       propertyPath: m_LocalPosition.x

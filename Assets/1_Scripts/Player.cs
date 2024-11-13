@@ -498,8 +498,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         UIManager.instance.equipItemUI(inventory[equipItemIndex], equipItemIndex); // itemFrame 꺼진다 . 몇번째 슬롯인지 받아온다 
 
-        equipItem.SetActive(false);
-
+        //equipItem.SetActive(false);
     }
 
 

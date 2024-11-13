@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8320168705193386687}
   - component: {fileID: 3582423212967517042}
   - component: {fileID: 283523476205140430}
+  - component: {fileID: 3802484507298091989}
   m_Layer: 0
   m_Name: interaction_door_01a_panel_L
   m_TagString: Obstacle
@@ -100,6 +101,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9, y: 0.24000004, z: 2.4637916}
   m_Center: {x: -0.44999987, y: 0.16999997, z: 1.2318958}
+--- !u!208 &3802484507298091989
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283523476205140425}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.45000002, y: 0.120000005, z: 1.2320001}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.45000002, y: 0.17, z: 1.2320001}
+  m_TimeToStationary: 0.5
 --- !u!1 &2149289160604234299
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,6 +232,7 @@ GameObject:
   - component: {fileID: 6198390996565197625}
   - component: {fileID: 2447647684989619481}
   - component: {fileID: 102301022190262702}
+  - component: {fileID: 2935782866245557041}
   m_Layer: 0
   m_Name: interaction_door_01a_panel_R
   m_TagString: Obstacle
@@ -303,6 +321,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9, y: 0.24000004, z: 2.4637916}
   m_Center: {x: 0.44999987, y: 0.16999997, z: 1.2318958}
+--- !u!208 &2935782866245557041
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5277361846808036834}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.45000002, y: 0.120000005, z: 1.2320001}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.45000002, y: 0.17, z: 1.2320001}
+  m_TimeToStationary: 0.5
 --- !u!1 &7737218875718204848
 GameObject:
   m_ObjectHideFlags: 0

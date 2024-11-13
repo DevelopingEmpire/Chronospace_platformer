@@ -55,7 +55,7 @@ public class NPCInteractionDialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        showDialogue();
+        if (dialogueSource) showDialogue();
     }
 
     private void OnTriggerEnter(Collider other)

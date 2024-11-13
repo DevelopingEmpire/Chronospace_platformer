@@ -16,12 +16,14 @@ public class Guards : MonoBehaviour, IGravityControl
     public float travelDistance = 5f;
     public float chaseRange = 5f; //플레이어 추격 거리
     public float chaseRangeErratum = 1f; //플레이어 추격 거리의 이동시 오차
+    public float chaseRangeExtension = 2.35f; //플레이어 추적 시 추적 범위 확대 수준
+    private Vector3 chaseRangeScaleOriginal;
     public float patrolDelay = 2f; //순찰 텀
     public GameObject detectionRangeObj;
-    public GameObject detectionCollisionObj;
 
     public float detectionInterval = 0.5f; //순찰 때 플레이어를 찾는 판단 시간
-    float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
+    float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임
+
 
     [Header("Animation")]
     public Animator anim;
@@ -47,9 +49,6 @@ public class Guards : MonoBehaviour, IGravityControl
 
     private float nextPatrolTime;
     public CharacterController _controller; // 컨트롤러
-
-    //public float obstacleDetectionDistance = 1f;
-    public bool isObstacleDetected;
 
     [Header("Gravity")]
     // 중력 관련 변수들 
@@ -106,6 +105,9 @@ public class Guards : MonoBehaviour, IGravityControl
         //_controller.detectCollisions = false;
         Gravity = -9.81f;
         bulletAmountCurrent = bulletAmount;
+
+        //경계 범위 저장하기
+        chaseRangeScaleOriginal = detectionRangeObj.transform.localScale;
     }
 
     // Update is called once per frame
@@ -114,8 +116,7 @@ public class Guards : MonoBehaviour, IGravityControl
         // detectionTimer의 주기적인 초기화
         detectionTimer += Time.deltaTime;
 
-        //장애물 탐지
-        DetectObstacle();
+        //장애물 탐지는 NavMeshObstacle로 대체
 
         if (detectionTimer >= detectionInterval)
         {
@@ -142,6 +143,8 @@ public class Guards : MonoBehaviour, IGravityControl
             // If the player is in sight, set the target position to the player's position
             if (isPlayerDetected) // 범위 안이면 
             {
+                //플레이어 추적 범위를 확장하기
+                detectionRangeObj.transform.localScale = chaseRangeScaleOriginal * chaseRangeExtension;
 
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
@@ -178,6 +181,9 @@ public class Guards : MonoBehaviour, IGravityControl
             }
             else // 평화로운 상태. idle
             {
+                //경계 범위 원상태로 되돌리기
+                detectionRangeObj.transform.localScale = chaseRangeScaleOriginal;
+
                 if (Time.time >= nextPatrolTime)
                 {
                     Patrol();
@@ -251,39 +257,11 @@ public class Guards : MonoBehaviour, IGravityControl
     // Move the opponent towards the target position using NavMeshAgent
     void MoveTowardsTarget()
     {
-        // 장애물 감지
-        if (isObstacleDetected)
-        {
-            // 장애물이 감지되면 이동 중지
-            navMeshAgent.isStopped = true;
-            if (anim) anim.SetBool("isDetected", true);
-            if (anim) anim.SetBool("isInAttackRange", false);
-        }
-        else
-        {
-            // 장애물이 없으면 목적지로 이동
-            navMeshAgent.SetDestination(targetPosition);
-            navMeshAgent.isStopped = false;
-            if (anim) anim.SetBool("isDetected", true);
-            if (anim) anim.SetBool("isInAttackRange", false);
-        }
+        navMeshAgent.SetDestination(targetPosition);
+        navMeshAgent.isStopped = false;
+        if (anim) anim.SetBool("isDetected", true);
+        if (anim) anim.SetBool("isInAttackRange", false);
     }
-
-    private void DetectObstacle()
-    {
-        MeshCollisionDetector obstacleDetector = detectionCollisionObj.GetComponent<MeshCollisionDetector>();
-
-        if (obstacleDetector != null)
-        {
-            // MeshCollisionDetector의 변수에 접근
-            isObstacleDetected = obstacleDetector.isDetected;
-        }
-        else
-        {
-            Debug.LogError("MeshCollisionDetector obstacleDetector 컴포넌트를 찾을 수 없습니다!");
-        }
-    }
-
 
     bool PlayerOutOfChaseRange()
     {
