@@ -9,6 +9,7 @@ public class NPCInteractionDialogue : MonoBehaviour
 {
     [Header("NPC & Dialogue Content")]
     public string npcName = "NPC";
+    public string npcInteractionDesc = "와/과의 대화를 위해 [E]를 누르십시오.";
     public TextAsset dialogueSource;
 
     [Header("Content Display")]
@@ -67,7 +68,7 @@ public class NPCInteractionDialogue : MonoBehaviour
             Debug.Log("Interaction with NPC will be started.");
 
             dialogueUIName.text = npcName;
-            dialogueUIExt.text = npcName + "와/과의 대화를 위해 [E]를 누르십시오.";
+            dialogueUIExt.text = npcName + npcInteractionDesc;
             dialogueUIExt.enabled = true;
         }
     }
@@ -112,17 +113,15 @@ public class NPCInteractionDialogue : MonoBehaviour
                         }
                         dialogueUI.SetActive(true);
                     }
-                    dialogueUIContent.text = dialogueList[dialogueLnNumber];
-                    //Debug.Log(dialogueList[dialogueLnNumber]);
+                    dialogueUIContent.text = dialogueList[dialogueLnNumber].Replace("\\n", "\n");
+                    //줄바꿈 문자 지원하기
                     dialogueLnNumber++;
                 }
                 else {
                     dialogueLnNumber = 0;
-                    dialogueUIContent.text = dialogueList[dialogueLnNumber];
-                    //dialogueUIContent.enabled = false; // ui 끄기 
+                    dialogueUIContent.text = dialogueList[dialogueLnNumber].Replace("\\n", "\n");
                 }
             }
         }
     }
-
 }
