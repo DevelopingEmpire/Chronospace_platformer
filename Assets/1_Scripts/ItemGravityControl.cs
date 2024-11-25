@@ -31,11 +31,13 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     private void Start()
     {
         Gravity = -9.81f;
+        AntiGravity();
         AntiGravityEnd();
     }
     private void Awake()
     {
         Gravity = -9.81f;
+        AntiGravity();
         AntiGravityEnd();
     }
     private void Update()

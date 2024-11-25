@@ -13,7 +13,7 @@ public class Guards : MonoBehaviour, IGravityControl
     public Vector3 initialPosition; // 초기 위치
     public float rotationSpeedPatrol = 5f;
     public float rotationSpeedFire = 1f;
-    public float travelDistance = 5f;
+    public float travelDistance = 5f; //정찰 거리
     public float chaseRange = 5f; //플레이어 추격 거리
     public float chaseRangeErratum = 1f; //플레이어 추격 거리의 이동시 오차
     public float chaseRangeExtension = 2.35f; //플레이어 추적 시 추적 범위 확대 수준

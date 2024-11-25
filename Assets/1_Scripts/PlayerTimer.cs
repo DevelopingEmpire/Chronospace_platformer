@@ -102,19 +102,17 @@ public class PlayerTimer : MonoBehaviour
         }
     }
 
-    /*
     public void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Bullet")){
+        if(other.CompareTag("Bullet") && !player.isInShield){
             currentTime -= paneltyTimeDecrease;
         }
     }
-    */
 
     public void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Bullet")){
-            if (Time.time % 1 == 0) currentTime -= paneltyTimeDecrease;
+        if(other.CompareTag("Bullet") && !player.isInShield){
+            if (Time.time % 0.5f == 0) currentTime -= paneltyTimeDecrease;
         }
     }
 }

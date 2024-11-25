@@ -9,6 +9,7 @@ using Cinemachine;
 
 public class Player : MonoBehaviour, IGravityControl
 {
+    #region Variables
     [Header("Component")] //플레이어 외부 컴포넌트 변수
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
@@ -52,22 +53,23 @@ public class Player : MonoBehaviour, IGravityControl
     bool isSwaping = false; //사용하고 있는 변수. Console에 사용하지 않는다고 뜬다. 
 
     //플레이어 애니메이션 작동 변수
-    #region animValue
     //character status
     bool isJumping = false;
     bool isDodging = false;
     bool isWinding = false;
-    #endregion
 
     //플레이어 상태 변수
     public bool isAlive = true;
-    public bool isBlackHoling; // 블랙홀에 잡혀있는 중 
+    public bool isBlackHoling; // 블랙홀에 잡혀있는 중
+    public bool isInShield = false;
 
     //주변 아이템 변수
     [SerializeField]
     public GameObject nearObject;
     public GameObject equipItem; // 현재 손에 들고있는 아이템 
     public int equipItemIndex = -1; // 현재 선택된 템 번호 
+    
+    public float shieldDuration = 8f;
 
     // 아이템 습득 UI 관련  
     public TextMeshProUGUI interactionText; // interaction 안내 UI 
@@ -75,10 +77,10 @@ public class Player : MonoBehaviour, IGravityControl
     public bool[] hasItems; // 아이템 가졌는지
     public Item.Type[] inventory; // 가진 아이템 목록
 
-
     private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
-    /// <summary>
-    /// 중력 인터페이스 구현부 
+
+    #endregion
+
     public bool IsInRange { get; set; }
 
     public float Gravity { get; set; }
@@ -457,7 +459,9 @@ public class Player : MonoBehaviour, IGravityControl
             case Item.Type.Shield:
 
                 timer.isPlaying = false;
-                StartCoroutine(WaitAndExecute(3.0f));
+                isInShield = true;
+                StartCoroutine(WaitAndExecute(shieldDuration));
+                isInShield = false;
                 timer.isPlaying = true;
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
 
@@ -501,7 +505,8 @@ public class Player : MonoBehaviour, IGravityControl
         //equipItem.SetActive(false);
     }
 
-
+    #endregion
+    #region Time Tweak
     IEnumerator TweakTimeEffect(float scale, float duration)
     {
         TweakTimeStart(scale); //지정된 값만큼 시간 속도를 조절
@@ -544,10 +549,11 @@ public class Player : MonoBehaviour, IGravityControl
     // 1. 둘 중에 하나에 무조건 rigidbody
     // 2. 둘 중에 하나에 무조건 isTrigger 체크
 
-    /*
+    #endregion
+    #region Colli Interaction
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.CompareTag("Bullet")) 
+        if (other.CompareTag("Bullet") && !isInShield) 
         {
             // 피격 
             AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerDmgSound);
@@ -556,7 +562,6 @@ public class Player : MonoBehaviour, IGravityControl
             StartCoroutine(UIManager.instance.DmgFX());
         }
     }
-    */
 
     private void OnTriggerStay(Collider other) 
     {
@@ -577,7 +582,7 @@ public class Player : MonoBehaviour, IGravityControl
             }
             nearObject = other.gameObject;
         }
-        else if (other.CompareTag("Bullet")) //스위치이면 활성화 준비
+        else if (other.CompareTag("Bullet") && !isInShield) //총알이면 대미지 입기
         {
             if (Time.time % 1 == 0){
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerDmgSound);
