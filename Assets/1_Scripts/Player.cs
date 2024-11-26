@@ -297,7 +297,7 @@ public class Player : MonoBehaviour, IGravityControl
 
         // 현재 장착된 아이템 비활성화
         if (equipItem != null)
-            equipItem.SetActive(false);
+            //equipItem.SetActive(false);
 
         // 각 키에 맞는 아이템 선택 및 활성화
         if (inputKeyButton1 && inventory[0] != Item.Type.Null)
