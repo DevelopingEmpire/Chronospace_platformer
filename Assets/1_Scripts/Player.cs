@@ -294,7 +294,6 @@ public class Player : MonoBehaviour, IGravityControl
         Debug.Log("스왑 눌림");
         AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemEquipSound);
 
-
         // 현재 장착된 아이템 비활성화
         if (equipItem != null)
             //equipItem.SetActive(false);
