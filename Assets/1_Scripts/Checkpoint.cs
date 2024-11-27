@@ -12,12 +12,6 @@ public class Checkpoint : MonoBehaviour
         checkpointLocation = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player")){
