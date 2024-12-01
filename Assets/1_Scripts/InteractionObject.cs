@@ -58,7 +58,7 @@ public class InteractionObject : StageMechanicsController
 
     public override void Trigger()
     {
-        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DoorOpen);
+        //AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DoorOpen);
 
         //Debug.Log("Trigger");
         for (int i = 0; i < targetObjects.Length; i++)

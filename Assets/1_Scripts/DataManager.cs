@@ -11,7 +11,8 @@ public class SaveData
 
 public class DataManager : MonoBehaviour
 {
-    public static DataManager Instance { get; private set; }  
+    public static DataManager Instance { get; private set; }
+    public SaveData saveData; 
     private void Awake()
     {
         // If an instance already exists and it's not this one, destroy this one
@@ -33,6 +34,7 @@ public class DataManager : MonoBehaviour
     {
         // 안드로이드나 다른 플랫폼에 배포할 때를 고려하여 persistentDataPath 사용
         path = Path.Combine(Application.persistentDataPath, "StageData.json");
+        Debug.Log("Saving in " + path);
         JsonLoad(); // 게임 시작 시 데이터 불러오기
     }
 
@@ -48,7 +50,7 @@ public class DataManager : MonoBehaviour
         else
         {
             string loadJson = File.ReadAllText(path);
-            SaveData saveData = JsonUtility.FromJson<SaveData>(loadJson);
+            saveData = JsonUtility.FromJson<SaveData>(loadJson);
 
             if (saveData != null)
             {
@@ -68,7 +70,7 @@ public class DataManager : MonoBehaviour
 
     public void SaveJson()
     {
-        SaveData saveData = new SaveData{};
+        saveData = new SaveData{};
 
         foreach (var stage in StageManager.Instance.stageClearStatus)
         {
