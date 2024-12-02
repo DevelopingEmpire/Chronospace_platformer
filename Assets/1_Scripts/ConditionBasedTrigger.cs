@@ -51,8 +51,21 @@ public class ConditionBasedTrigger : MonoBehaviour
         }
         targetFuncScript = null;
 
+        IsOpen();
+
+        /*
         if(activated){
             OnSwitchController();
+        }
+        */
+    }
+
+    void Update(){
+        if(activated){
+            OnSwitchController();
+        }
+        else{
+            OffSwitchController();
         }
     }
 
@@ -62,9 +75,11 @@ public class ConditionBasedTrigger : MonoBehaviour
         SaveData saveData = JsonUtility.FromJson<SaveData>(loadJson);
         if((saveData.stageClearStatus[requiredLevels]) || (requiredLevels == -1)){
             activated = true;
+            Debug.Log("Stage " + (requiredLevels + 1) + " is cleared, Opening Requested Part");
         }
         else{
             activated = false;
+            Debug.Log("Stage " + (requiredLevels + 1) + " is not cleared");
         }
     }
 
