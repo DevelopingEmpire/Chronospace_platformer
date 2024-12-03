@@ -207,15 +207,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: f0744138b2044fd42940c61f571eda7f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.34665
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: f0744138b2044fd42940c61f571eda7f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.39927
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: f0744138b2044fd42940c61f571eda7f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -41.58806
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: f0744138b2044fd42940c61f571eda7f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -414,7 +414,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 340348292}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.34665, y: 8.39927, z: 41.58806}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1548,15 +1548,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: cf1ae295204de5d4f968d4605a86b0aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.34665
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: cf1ae295204de5d4f968d4605a86b0aa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.39927
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: cf1ae295204de5d4f968d4605a86b0aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -36.58806
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1169022194544265651, guid: cf1ae295204de5d4f968d4605a86b0aa, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1646,7 +1646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentStageName: Stage2
-  idx: 0
+  lastClearedStageIndex: 0
   spawnCharacterOffset: {x: 0, y: 0, z: 0}
   npcDialogueUI: {fileID: 1710316982}
   isPause: 1
@@ -2311,6 +2311,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2d364c53d6a3f4bb509d9ef431f44a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveData:
+    stageNames: []
+    stageClearStatus: 
   path: C:\Users\jumin\Documents\GitHub\new
 --- !u!224 &1640989860
 RectTransform:

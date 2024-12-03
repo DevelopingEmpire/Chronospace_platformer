@@ -11,8 +11,10 @@ public class Turret : MonoBehaviour
     public float rotationSpeedPatrol = 1f;
     public GameObject detectionRangeObj;
     public GameObject turretHead;
+    public bool isInstalledInModule;
     private bool isPlayerDetected = false; // 사람 발견시 true 
     private GameObject nearestPlayer;
+
 
     [Header("Bullet")]
     public GameObject bullet; // 총알 
@@ -32,9 +34,11 @@ public class Turret : MonoBehaviour
             Fire();
         }
         else {
-            Quaternion currentRotation = turretHead.transform.rotation;
-            turretHead.transform.rotation = Quaternion.Lerp(currentRotation, transform.rotation, Time.deltaTime * rotationSpeedPatrol);
-            transform.Rotate(Vector3.up * rotSpeed * Time.deltaTime);
+            if(!isInstalledInModule){
+                Quaternion currentRotation = turretHead.transform.rotation;
+                turretHead.transform.rotation = Quaternion.Lerp(currentRotation, transform.rotation, Time.deltaTime * rotationSpeedPatrol);
+                transform.Rotate(Vector3.up * rotSpeed * Time.deltaTime);
+            }
         }
     }
 
