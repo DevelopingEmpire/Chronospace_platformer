@@ -16,32 +16,35 @@ public class ItemGravityControl : MonoBehaviour, IGravityControl
     public void AntiGravity() // 중력 반전 함수 
     {
         IsInRange = true;
-        Gravity = 9.81f;
+        Gravity = 9.81f; // 반전
         ApplyGravity();
-        Debug.Log("AntiGravity On.");
+        Debug.Log(name + " has set to AntiGravity On.");
     }
     public void AntiGravityEnd()
     {
         IsInRange = false;
         Gravity = -9.81f; // 반전 해제 
         ApplyGravity();
-        Debug.Log("AntiGravity Off.");
+        Debug.Log(name + " has set to AntiGravity Off.");
     }
 
     private void Start()
     {
-        Gravity = -9.81f;
-        AntiGravity();
-        AntiGravityEnd();
+
     }
     private void Awake()
     {
-        Gravity = -9.81f;
-        AntiGravity();
-        AntiGravityEnd();
+
     }
     private void Update()
     {
+        if(IsInRange){
+            Gravity = 9.81f;
+        }
+        else{
+            Gravity = -9.81f;
+        }
+        
         ApplyGravity();
     }
 

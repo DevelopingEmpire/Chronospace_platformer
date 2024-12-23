@@ -14,7 +14,8 @@ public class Player : MonoBehaviour, IGravityControl
     public Animator anim;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽
-    public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
+    public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장
+    public float duration = 6f;  
     public float timeScaleMultiplier = 0.005f; // 시간 계수. 거의 멈춤 
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
@@ -427,8 +428,11 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItem()
+    private void UseItem()
     {
+        GameObject itemObjResult;
+        float elapsedTime = 0f;
+
         if (equipItemIndex < 0 || equipItemIndex >= inventory.Length)
         {
             Debug.LogError("EquipItemIndex is out of range.");
@@ -441,17 +445,24 @@ public class Player : MonoBehaviour, IGravityControl
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+
                 if(itemPointTransform) {
-                    Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
                 }
                 else{
-                    Instantiate(gravityPrefebs[0], transform.position + transform.forward, transform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[0], transform.position + transform.forward, transform.rotation);
+                }
+                
+                //투척 후 시간 종료 시 아이템 삭제하기
+                elapsedTime += Time.deltaTime;
+                if (elapsedTime >= duration)
+                {
+                    Destroy(itemObjResult);
                 }
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 
-
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
                 Debug.Log("Time speed has changed into " + timeScaleMultiplier + "x.");
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
@@ -477,10 +488,16 @@ public class Player : MonoBehaviour, IGravityControl
             case Item.Type.Magneticgrav: // 블랙홀
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
                 if (itemPointTransform) {
-                    Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
                 }
                 else{
-                    Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
+                }
+
+                elapsedTime += Time.deltaTime;
+                if (elapsedTime >= duration)
+                {
+                    Destroy(itemObjResult);
                 }
                 break;
             
