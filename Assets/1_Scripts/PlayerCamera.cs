@@ -18,7 +18,7 @@ public class PlayerCamera : MonoBehaviour
         // Optional: Initialize rotationY with the current rotation to prevent jumps in camera angle at start
         Vector3 angles = transform.eulerAngles;
         rotationY = angles.x;
-        originalPos = transform.position;
+        originalPos = transform.localPosition;
     }
 
     // Update is called once per frame
