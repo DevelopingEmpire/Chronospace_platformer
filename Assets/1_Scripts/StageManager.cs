@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StageManager : MonoBehaviour
@@ -28,7 +29,8 @@ public class StageManager : MonoBehaviour
     [SerializeField]
     public Dictionary<string, bool> stageClearStatus;
     public string currentStageName; // 이 변수에 꼭 현재 진행중인 스테이지를 넣어줘야한다. 
-    public int lastClearedStageIndex = 0; // 클리어 한 stage num 널어준다. 0으로 시작 
+    public int lastClearedStageIndex = 0; // 클리어 한 stage num 널어준다. 0으로 시작
+    [SerializeField]
     public Vector3 spawnCharacterOffset; 
     public GameObject npcDialogueUI;
 
@@ -107,7 +109,8 @@ public class StageManager : MonoBehaviour
     public void SetStageCleared()
     {
         stageClearStatus[currentStageName] = true;
-        DataManager.Instance.SaveJson();
+        //DataManager.Instance.SaveJsonInitialized();
+        DataManager.Instance.SaveJson(int.Parse(new string(currentStageName.Where(char.IsDigit).ToArray())));
         lastClearedStageIndex++; // 클리어한 stage index 증가 
     }
 

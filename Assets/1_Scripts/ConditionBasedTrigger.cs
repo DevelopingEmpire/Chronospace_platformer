@@ -85,8 +85,6 @@ public class ConditionBasedTrigger : MonoBehaviour
 
     public void Activate()
     {
-        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_SwitchPressed);
-
         if (!activated)
         {
             OnSwitchController();

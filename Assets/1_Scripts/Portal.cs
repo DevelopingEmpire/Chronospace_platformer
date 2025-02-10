@@ -62,7 +62,8 @@ public class Portal : StageMechanicsController
         if(other.CompareTag("Player")) {
             Debug.Log("활성화 확인");
             if(isActivated) {
-                if(targetScene == "Stage0" || targetScene == "Stage1")
+                if(targetScene == "Stage0")
+                // || targetScene == "Stage1"
                 {
                     StageManager.Instance.SetStageCleared(); // 현재 스테이지 클리어 됨 
                 }

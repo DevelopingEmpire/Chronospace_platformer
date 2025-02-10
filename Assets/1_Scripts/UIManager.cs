@@ -60,7 +60,9 @@ public class UIManager : MonoBehaviour
 
         itemIcons = itemLayOut.transform.GetChild(4).gameObject;
 
-
+        // 게임 시작 시 암전 해제
+        var sequence = DOTween.Sequence();
+        sequence.Append(fadeImg.DOFade(0, fadeDuration));
     }
     public void OnClickEscButton(bool isPause)
     {

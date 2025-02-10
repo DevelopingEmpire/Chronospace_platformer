@@ -7,6 +7,7 @@ public class PlayerCamera : MonoBehaviour
     public float rotationSpeed = 5.0f;
     public GameObject target;
     private Vector3 originalPos;
+
     private float mouseY;
     private float rotationY = 0f; // Added to store the accumulated vertical rotation
     public float minY = -60f; // Minimum vertical angle
@@ -33,10 +34,7 @@ public class PlayerCamera : MonoBehaviour
 
         // Apply the calculated and clamped rotation along the X axis for vertical tilt,
         // while keeping the current Y (horizontal) and Z (roll) angles the same.
-        transform.position = target.transform.position + originalPos; // Follow the target
         transform.rotation = Quaternion.Euler(-rotationY, target.transform.eulerAngles.y, 0);
-        
-        
     }
 
 

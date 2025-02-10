@@ -44,7 +44,7 @@ public class DataManager : MonoBehaviour
         {
             
             StageManager.Instance.InitializeStageClearStatus();
-            SaveJson(); // 초기 데이터를 파일에 저장
+            SaveJsonInitialized(); // 초기 데이터를 파일에 저장
             Debug.Log("stagedata.json 생성됨");
         }
         else
@@ -68,7 +68,7 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public void SaveJson()
+    public void SaveJsonInitialized()
     {
         saveData = new SaveData{};
 
@@ -82,11 +82,21 @@ public class DataManager : MonoBehaviour
         File.WriteAllText(path, json);
     }
 
+    public void SaveJson(int stageIndex){
+        string loadJson = File.ReadAllText(path);
+        saveData = JsonUtility.FromJson<SaveData>(loadJson);
+
+        saveData.stageClearStatus[stageIndex] = true;
+
+        string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(path, json);
+    }
+
     // 데이터 초기화. 새 게임 생성시
     public void InitJson()
     {
         StageManager.Instance.InitializeStageClearStatus();
-        SaveJson(); // 초기 데이터를 파일에 저장
+        SaveJsonInitialized(); // 초기 데이터를 파일에 저장
         Debug.Log("stagedata.json 생성됨");
     }
 }

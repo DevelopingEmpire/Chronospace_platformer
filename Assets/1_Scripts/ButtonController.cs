@@ -63,6 +63,8 @@ public class ButtonController : StageMechanicsController
         {
             Trigger();
         }
+
+        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ButtonPressed);
     }
 
     private void OnTriggerExit(Collider col)
@@ -83,8 +85,6 @@ public class ButtonController : StageMechanicsController
 
     public override void Trigger()
     {
-        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ButtonPressed);
-
         //트리거 오브젝트 작동시키기
         foreach (StageMechanicsController tObj in triggerObject) {
             if(tObj != null) {
@@ -109,7 +109,7 @@ public class ButtonController : StageMechanicsController
     {
         //throw new System.NotImplementedException();
 
-        AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ButtonPressed);
+        //AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ButtonPressed);
 
         //오브젝트 작동 해제
         foreach (StageMechanicsController tObj in triggerObject) {

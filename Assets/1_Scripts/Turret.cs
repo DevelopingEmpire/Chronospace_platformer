@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class Turret : MonoBehaviour
     private float fireTimer = 0f;
     public Vector3 fireOffset;
     public Vector3 direction;
-
+    public Vector3 directionOffset = Vector3.up * 1.25f;
 
     // Update is called once per frame
     void Update()
@@ -45,7 +46,7 @@ public class Turret : MonoBehaviour
     private void DetectPlayer()
     {
         MeshCollisionDetector detector = detectionRangeObj.GetComponent<MeshCollisionDetector>();
-        isPlayerDetected = false;
+        //isPlayerDetected = false;
         nearestPlayer = null;
 
         if (detector != null)
@@ -59,13 +60,16 @@ public class Turret : MonoBehaviour
             //Debug.Log("Is Player Detected: " + isDetected);
             if (nearestPlayer != null)
             {
-                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DetectionSound);
-
-                isPlayerDetected = true;
-                //Debug.Log("Nearest Player: " + nearestPlayer.name);
+                if(!isPlayerDetected){
+                    AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DetectionSound);
+                    Debug.Log("Nearest Player: " + nearestPlayer.name);
+                    isPlayerDetected = true;
+                }
             }
             if (nearestPlayer == null){
-                isPlayerDetected = false;
+                if(isPlayerDetected){
+                    isPlayerDetected = false;
+                }
             }
             //Debug.Log("Players in Range Count: " + players.Count);
         }
@@ -74,6 +78,7 @@ public class Turret : MonoBehaviour
             Debug.LogError("MeshCollisionDetector 컴포넌트를 찾을 수 없습니다!");
         }
     }
+
     void StareAtPlayer()
     {
         if (nearestPlayer != null)
@@ -86,7 +91,7 @@ public class Turret : MonoBehaviour
             if (direction != Vector3.zero)
             {
                 // 지정된 방향으로 회전하도록 회전값 계산
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                Quaternion targetRotation = Quaternion.LookRotation(direction + directionOffset);
 
                 // 현재 회전값에서 목표 회전값으로 부드럽게 회전
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeedPatrol);
@@ -110,7 +115,7 @@ public class Turret : MonoBehaviour
     {
         if (nearestPlayer != null) {
             // 타겟 방향 계산 (y축 고정을 위해 y축 값은 무시)
-            direction = nearestPlayer.transform.position - transform.position - fireOffset;
+            direction = nearestPlayer.transform.position - transform.position - fireOffset + directionOffset;
             return direction;
         }
         else {

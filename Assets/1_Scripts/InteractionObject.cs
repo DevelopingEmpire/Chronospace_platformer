@@ -32,6 +32,9 @@ public class InteractionObject : StageMechanicsController
     private Material importedMaterial; //스위치 오브젝트에서 받아온 머티리얼을 저장
     private Material importedMaterialGlow; //스위치 오브젝트에서 받아온 발광 머티리얼을 저장
 
+    private bool isSounded; //레이저로 버튼을 누를 때 버튼이 프렘임 단위로 눌리는 상황에서 소리가 여러 번 울리는 것을 방지함
+    [SerializeField] bool isSoundable = true;
+
     //other vars are granted from switch
 
     public override int Idx { get; set; }
@@ -58,7 +61,12 @@ public class InteractionObject : StageMechanicsController
 
     public override void Trigger()
     {
-        //AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DoorOpen);
+        if(!isSounded){
+            isSounded = true;
+            if(isSoundable){
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DoorOpen);
+            }
+        }
 
         //Debug.Log("Trigger");
         for (int i = 0; i < targetObjects.Length; i++)
@@ -82,6 +90,7 @@ public class InteractionObject : StageMechanicsController
 
     public override void Exit()
     {
+        isSounded = false;
         AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_DoorOpen);
 
         for (int i = 0; i < targetObjects.Length; i++)

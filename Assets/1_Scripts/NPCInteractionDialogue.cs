@@ -42,6 +42,12 @@ public class NPCInteractionDialogue : MonoBehaviour
 
         dialogueUI.SetActive(false);
         dialogueUIContentInitialVal = dialogueUIExt.text;
+
+        // 제외시킬 컴포넌트도 캐싱하기
+        excludedUI = new GameObject[2];
+        excludedUI[0] = CanvasScripts.instance.transform.Find("MainScreen").GetChild(0).gameObject;
+        excludedUI[1] = extUI;
+
         if(dialogueSource != null)
         {
             dialogueList = dialogueSource.text.Split('\n'); // Split text into lines
