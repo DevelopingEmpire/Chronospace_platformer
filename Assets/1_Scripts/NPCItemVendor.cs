@@ -87,6 +87,8 @@ public class NPCItemVendor : MonoBehaviour
         if (isPlayerDetected){
             if (Input.GetButtonDown("Interaction"))
             {
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_SwitchPressed);
+                
                 if(objectSpawnPos){
                     GameObject VendedObjectPos = new GameObject("VendedObject");
                     VendedObjectPos.transform.position = objSpawnOffset + objectSpawnPos.transform.position;
