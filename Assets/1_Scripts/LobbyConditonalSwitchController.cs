@@ -46,10 +46,10 @@ public class LobbyConditonalSwitchController : MonoBehaviour
         targetObjectNoncondition.Trigger();
 
         for(int i = 0; i < stageRequiredLevels.Count; i++){
-            Debug.Log(i + " - Stage " + stageRequiredLevels[i] + ", affects: " + targetObjects[i] + ", clear status of " + stageRequiredLevels[i] + " is: " + saveData.stageClearStatus[stageRequiredLevels[i]]);
+            //Debug.Log(i + " - Stage " + stageRequiredLevels[i] + ", affects: " + targetObjects[i] + ", clear status of " + stageRequiredLevels[i] + " is: " + saveData.stageClearStatus[stageRequiredLevels[i]]);
             if(saveData.stageClearStatus[stageRequiredLevels[i]]){
                 targetObjects[i].Trigger();
-                Debug.Log(targetObjects[i] + " has Activated.");
+                //Debug.Log(targetObjects[i] + " has Activated.");
             }
         }
     }
