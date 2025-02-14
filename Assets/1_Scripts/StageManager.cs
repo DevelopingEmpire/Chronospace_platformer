@@ -144,10 +144,26 @@ public class StageManager : MonoBehaviour
         }
         else
         {
-            // 게임 stage로 가는거면? 
-            // 기본 스폰 포인트로 설정
-            GameObject respawnPoint = GameObject.FindGameObjectWithTag("StartPosition");
-            Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
+            if(sceneName == "Title")
+            {
+                // title 씬으로 간다면? 
+
+                // UI 정리 
+                UIManager.instance.SetCaptionBoxActive(false);
+                UIManager.instance.TitleScreenObj.SetActive(true);
+
+                // 캐릭터 삭제 
+                Destroy(GameObject.FindGameObjectWithTag("Player"));
+
+            }
+            else
+            {
+                // 게임 stage로 가는거면? 
+                // 기본 스폰 포인트로 설정
+                GameObject respawnPoint = GameObject.FindGameObjectWithTag("StartPosition");
+                Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
+            }
+            
         }
 
 

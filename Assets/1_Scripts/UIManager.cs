@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     [Header("Main UI")]
+    public GameObject mainScreenObj; // 메인스크린 적힌거. 아래것들 부모임. 함 정리하고싶다...
     public GameObject pauseScreen; // 일시 정지 창
     public GameObject battleHUDScreen; // HUD - 아이템, 시간초 
 
@@ -50,6 +51,9 @@ public class UIManager : MonoBehaviour
     private GameObject itemLayOut; // 아이템 가진 현황 
     private Image itemFrame;
     private GameObject itemIcons;
+
+    public GameObject CaptionBoxObj; // 엔딩 씬에서 쓰는 캡션박스 
+    public GameObject TitleScreenObj; // 타이틀 씬에서만 씀 
 
     private void Start()
     {
@@ -131,12 +135,11 @@ public class UIManager : MonoBehaviour
             battleHUDScreen.SetActive(true);
 
 
-
-
             // UIManager.instance.OnClickBattleButton();
             // UIManager.instance.pickUpScreen.SetActive(true);
             // UIManager.instance.selectedStageName = preStageName;
         }
+
     }
 
     // 화면 암전
@@ -192,5 +195,22 @@ public class UIManager : MonoBehaviour
 
         damageFX.DOFade(0, 0.25f);
         
+    }
+
+    // main화면 모두 끄기. 엔딩에서 씀
+    public void SetMainUIActive(bool set)
+    {
+        mainScreenObj.SetActive(set);
+    }
+    
+    // 엔딩씬에서만 씀 
+    public void SetCaptionBoxActive(bool set)
+    {
+        CaptionBoxObj.SetActive(set);
+    }
+
+    public GameObject GetCaptionBox()
+    {
+        return CaptionBoxObj;
     }
 }

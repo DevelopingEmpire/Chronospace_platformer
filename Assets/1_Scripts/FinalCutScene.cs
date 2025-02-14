@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening; // DoTween 네임스페이스 추가
 using Cinemachine; // 시네머신 넴스페이스 
+using UnityEngine.Playables;
 
 public class FinalCutScene : MonoBehaviour
 {
+    public PlayableDirector timeline; // Timeline 연결
+
     public RectTransform topBox;
     public RectTransform bottomBox;
     public float animationDuration = 1.0f; // 애니메이션 시간
@@ -16,8 +19,16 @@ public class FinalCutScene : MonoBehaviour
     public Transform centerPosition; // 중간 위치
     public float moveDuration = 1.0f; // 각 이동에 걸리는 시간
 
+ 
     // 컷씬 시네 캠 
     public CinemachineVirtualCamera cutSceneCamera;
+
+    private void Start()
+    {
+        UIManager.instance.SetCaptionBoxActive(true);
+        topBox = UIManager.instance.GetCaptionBox().transform.GetChild(0).GetComponent<RectTransform>();
+        bottomBox = UIManager.instance.GetCaptionBox().transform.GetChild(1).GetComponent<RectTransform>();
+    }
 
     void AnimateBlackBoxes()
     {
@@ -28,6 +39,17 @@ public class FinalCutScene : MonoBehaviour
 
         // 아래 박스 이동
         bottomBox.DOAnchorPos(new Vector2(0, -840), animationDuration).SetEase(Ease.InOutQuad);
+    }
+
+    void AnimateBlackBoxesClose()
+    {
+
+        // UI 패널을 아래로 이동 (DOTween 사용)
+        // 위 박스 이동
+        topBox.DOAnchorPos(new Vector2(0, 0), animationDuration).SetEase(Ease.InOutQuad);
+
+        // 아래 박스 이동
+        bottomBox.DOAnchorPos(new Vector2(0, 0), animationDuration).SetEase(Ease.InOutQuad);
     }
 
 
@@ -53,19 +75,30 @@ public class FinalCutScene : MonoBehaviour
         sequence.OnComplete(() =>
         {
             Debug.Log("Camera movement finished.");
+
+            // 카메라 이동 후 Timeline 실행
+            timeline.time = 0;
+            timeline.Play();
+
+            // Caption Box를 내려서 완전 암전 만들기
+
+            // 8초 후에 암전 애니메이션 실행
+            StartCoroutine(WaitAndAnimateBlackout(8f));
+
+            // 대기 후 타이틀로 돌아가기 
+            StartCoroutine(LoadTitleDelay(18f));          
+            
         });
     }
 
-    void EndCutScene()
-    {
-        // 엔딩 처리 (씬 전환 또는 페이드 아웃)
-        Debug.Log("Cut Scene Finished");
-    }
-
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player")) // Player 태그가 도착하면 
         {
+
+            // UI 끔
+            UIManager.instance.SetMainUIActive(false);
+
             // caption box가 위아래를 채움 
             AnimateBlackBoxes();
 
@@ -75,6 +108,27 @@ public class FinalCutScene : MonoBehaviour
             // 타겟 오브젝트 이동 -> 카메라 이동 
             StartCameraMovement();
 
+
         }
     }
+
+    // 10초 기다린 후 Caption Box 암전 애니메이션 실행
+    IEnumerator WaitAndAnimateBlackout(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Debug.Log("Executing blackout animation...");
+
+        // Caption Box를 내려서 완전 암전 만들기
+        AnimateBlackBoxesClose();
+    }
+
+    IEnumerator LoadTitleDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // title로 돌아가기 
+        GameManager.Instance.LoadSceneCall("Title");
+    }
+
 }

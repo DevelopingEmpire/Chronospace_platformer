@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.EventSystems;
 using Cinemachine;
+using DG.Tweening;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -288,6 +289,7 @@ public class Player : MonoBehaviour, IGravityControl
 
 
     }
+
 
 
     //아이템 사용 함수
@@ -679,4 +681,5 @@ public class Player : MonoBehaviour, IGravityControl
     }
 
     #endregion
+
 }
