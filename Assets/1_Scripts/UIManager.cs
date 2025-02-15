@@ -166,6 +166,7 @@ public class UIManager : MonoBehaviour
 
     }
 
+    /*
     public void PortalImpossible(int stage)
     {
 
@@ -175,6 +176,7 @@ public class UIManager : MonoBehaviour
      
 
     }
+    */
 
     private IEnumerator PortalInfoTextFade()
     {

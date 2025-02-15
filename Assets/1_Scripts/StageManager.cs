@@ -86,6 +86,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    /*
     public bool CanEnterStage(string stageName)
     {
         // 첫 스테이지는 그냥 들어가게 해야하고 그 뒤 스테이지는 체크가 필요하다. 
@@ -104,6 +105,7 @@ public class StageManager : MonoBehaviour
         
         return false; // 기본적으로는 진입 불가능
     }
+    */
 
     // 게임 클리어 하면 이 함수를 실행.
     public void SetStageCleared()
