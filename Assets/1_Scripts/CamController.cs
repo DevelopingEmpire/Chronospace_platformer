@@ -46,4 +46,5 @@ public class CamController : MonoBehaviour
         // 피격시 흔들림 생성 
         _source.GenerateImpulse();
     }
+
 }
