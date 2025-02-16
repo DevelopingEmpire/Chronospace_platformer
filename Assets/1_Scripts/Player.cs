@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine.EventSystems;
 using Cinemachine;
 using DG.Tweening;
+using System;
 
 public class Player : MonoBehaviour, IGravityControl
 {
@@ -22,7 +23,8 @@ public class Player : MonoBehaviour, IGravityControl
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
     public Vector3 respawnPosition; // 리스폰 위치
-    public Vector3 respawnPositionOrignal; // 리스폰 위치 
+    public Vector3 respawnPositionOrignal; // 리스폰 위치
+    [SerializeField] StageItemManager sim;
 
     [Header("UI")] //플레이어 외부 컴포넌트 변수
     public CamController camController; // CamController 참조
@@ -33,6 +35,7 @@ public class Player : MonoBehaviour, IGravityControl
     public float movSpeed = 5f;
     public float rotSpeed = 300f;
     public float pushPower = 0.03f;
+    private float respawnCooltime = 4f;
 
     [Header("InputValue")] //플레이어 이동 사용 변수
     Vector3 moveDirection;
@@ -108,6 +111,12 @@ public class Player : MonoBehaviour, IGravityControl
         Instance = this;
 
         respawnPositionOrignal = respawnPosition;
+
+        // Set StageItemManager
+        GameObject simObj = GameObject.Find("StageItemManager");
+        if(simObj){
+            sim = simObj.GetComponent<StageItemManager>();
+        }
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -118,6 +127,11 @@ public class Player : MonoBehaviour, IGravityControl
         camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
         inventory = new Item.Type[] { Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3
         AntiGravityEnd();
+    }
+
+    internal void SetSim(StageItemManager stageItemManager)
+    {
+        sim = stageItemManager;
     }
 
     public void AntiGravity() // 중력 반전 함수 
@@ -266,13 +280,20 @@ public class Player : MonoBehaviour, IGravityControl
         anim.SetBool("isDie", true);
 
         // 사망 후 일정 시간 후에 시작 위치로 이동
+        if(sim){
+            Invoke(nameof(RequestRespawnItem), respawnCooltime);
+        }
         StartCoroutine(Respawn());
+    }
+
+    void RequestRespawnItem(){
+        sim.ReInstanciateDestroyedItem();
     }
 
     // 저장 위치에서 부활 
     public IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(4f); // 사망 후 4초 대기 (옵션)
+        yield return new WaitForSeconds(respawnCooltime); // 사망 후 4초 대기 (옵션)
 
         // 플레이어 위치 초기화
         PlayerInit();
