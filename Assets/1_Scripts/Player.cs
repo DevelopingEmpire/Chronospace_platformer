@@ -82,6 +82,7 @@ public class Player : MonoBehaviour, IGravityControl
     public TextMeshProUGUI interactionText; // interaction 안내 UI 
     public string interactionTextStringItem = "[E]키로 아이템을 획득하십시오.";
     public string interactionTextStringSwitch = "[E]키로 장치와의 상호작용을 수행하십시오.";
+    public string interactionTextStringCheckpoint = "체크포인트 도달. 쓰러질 경우 해당 위치에서 재시작합니다.";
 
     public GameObject[] equipItems; // 손에 드는 아이템들 
     public bool[] hasItems; // 아이템 가졌는지
@@ -617,7 +618,7 @@ public class Player : MonoBehaviour, IGravityControl
             if (interactionText != null)
             {
                 interactionText.text = interactionTextStringItem;
-                interactionText.enabled = true; // ui 끄기 
+                interactionText.enabled = true;
             }
         }
         else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
@@ -625,20 +626,24 @@ public class Player : MonoBehaviour, IGravityControl
             if (interactionText != null)
             {
                 interactionText.text = interactionTextStringSwitch;
-                interactionText.enabled = true; // ui 끄기 
+                interactionText.enabled = true;
             }
         }
 
-        /*
         if (other.CompareTag("CheckPoint"))
         {
-            respawnPosition = other.transform.position;
-
-            timer.SetCheckPointTime();
-
-            Debug.Log("Checkpoint reached: " + respawnPosition);
+            if (interactionText != null)
+            {
+                interactionText.text = interactionTextStringCheckpoint;
+                interactionText.enabled = true;
+                Invoke(nameof(OffText), 4f);
+            }
         }
-        */
+    }
+
+    private void OffText()
+    {
+        interactionText.enabled = false;
     }
 
     private void OnTriggerStay(Collider other) 
