@@ -118,6 +118,9 @@ public class Player : MonoBehaviour, IGravityControl
         if(simObj){
             sim = simObj.GetComponent<StageItemManager>();
         }
+        // Set interactionText
+        interactionText = CanvasScripts.instance.transform.Find("MainScreen").GetChild(1).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
         DontDestroyOnLoad(this.gameObject);
     }
 
