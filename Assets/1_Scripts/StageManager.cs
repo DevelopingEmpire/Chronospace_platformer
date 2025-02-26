@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StageManager : MonoBehaviour
 {
@@ -47,10 +48,7 @@ public class StageManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape)) // esc 눌림! 
         {
-
             isPause = !isPause;
-
-            
             if (isPause) // 일시 정지된 상황이면 
             {
                 //timeScale = Time.timeScale; // 현재 timeScale 을 임시 저장 
@@ -61,12 +59,14 @@ public class StageManager : MonoBehaviour
                 //Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
                 Time.timeScale = 1;
             }
-            
-
             UIManager.instance.OnClickEscButton(isPause);
-
         }
+    }
 
+    public void ResetStatus()
+    {
+        Time.timeScale = 1;
+        isPause = false;
     }
 
     public void UnPause()
@@ -171,7 +171,6 @@ public class StageManager : MonoBehaviour
             
         }
 
-
         // 현재 씬 이름 변경 
         currentStageName = sceneName;
 
@@ -182,5 +181,15 @@ public class StageManager : MonoBehaviour
         UnPause();
     }
 
+    public void ReloadCurrentScene()
+    {
+        // 현재 활성화된 씬의 이름을 가져옵니다.
+        string currentSceneName = SceneManager.GetActiveScene().name;
 
+        Debug.Log("씬 재로딩 중");
+
+        // 현재 씬을 다시 로드합니다.
+        SceneManager.LoadScene(currentSceneName);
+        StageInit(currentSceneName);
+    }
 }
