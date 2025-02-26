@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 173764844}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0.00323}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -153,7 +153,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 854055899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2363445e-12, y: 1.07, z: -0.00000018200933}
+  m_LocalPosition: {x: 0, y: 1.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -268,7 +268,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1086546274}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.2363445e-12, y: 1.07, z: -0.00000018200956}
+  m_LocalPosition: {x: 0, y: 1.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -741,7 +741,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941559934671314049}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1869,6 +1869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 5360781344219856064}
+  playerAvatar: {fileID: 1632045815503989543}
   controller: {fileID: 5360781343035164252}
   windKey: {fileID: 6193106206675415697}
   gravityPrefebs:
@@ -1881,6 +1882,7 @@ MonoBehaviour:
   timer: {fileID: 5360781343035164255}
   respawnPosition: {x: 0, y: 1.3, z: 0}
   respawnPositionOrignal: {x: 0, y: 0, z: 0}
+  sim: {fileID: 0}
   camController: {fileID: 1086546280}
   damageFX: {fileID: 0}
   jumpForce: 8
@@ -1899,6 +1901,8 @@ MonoBehaviour:
   interactionTextStringItem: "[E]\uD0A4\uB85C \uC544\uC774\uD15C\uC744 \uD68D\uB4DD\uD558\uC2ED\uC2DC\uC624."
   interactionTextStringSwitch: "[E]\uD0A4\uB85C \uC7A5\uCE58\uC640\uC758 \uC0C1\uD638\uC791\uC6A9\uC744
     \uC218\uD589\uD558\uC2ED\uC2DC\uC624."
+  interactionTextStringCheckpoint: "\uCCB4\uD06C\uD3EC\uC778\uD2B8 \uB3C4\uB2EC.
+    \uC4F0\uB7EC\uC9C8 \uACBD\uC6B0 \uD574\uB2F9 \uC704\uCE58\uC5D0\uC11C \uC7AC\uC2DC\uC791\uD569\uB2C8\uB2E4."
   equipItems:
   - {fileID: 6646543734136774451, guid: 836c19e6ec32c0f4d92496643de4ca98, type: 3}
   - {fileID: 3062250969172818651, guid: 3a59cf13e127a8f4bb7955d40647cb5f, type: 3}

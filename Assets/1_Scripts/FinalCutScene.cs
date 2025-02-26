@@ -4,10 +4,14 @@ using UnityEngine;
 using DG.Tweening; // DoTween 네임스페이스 추가
 using Cinemachine; // 시네머신 넴스페이스 
 using UnityEngine.Playables;
+using Unity.VisualScripting;
+using Sequence = DG.Tweening.Sequence;
 
 public class FinalCutScene : MonoBehaviour
 {
     public PlayableDirector timeline; // Timeline 연결
+    private GameObject playerOnScene;
+    //[SerializeField]
 
     public RectTransform topBox;
     public RectTransform bottomBox;
@@ -93,6 +97,9 @@ public class FinalCutScene : MonoBehaviour
     {
         if (other.CompareTag("Player")) // Player 태그가 도착하면 
         {
+            // 플레이어의 메시를 활성화시킴
+            playerOnScene = other.gameObject;
+            Invoke(nameof(ShowPlayer), 4f);
 
             // UI 끔
             UIManager.instance.SetMainUIActive(false);
@@ -110,6 +117,10 @@ public class FinalCutScene : MonoBehaviour
         }
     }
 
+    private void ShowPlayer(){
+        playerOnScene.GetComponent<Player>().ShowAvatar();
+    }
+
     // 10초 기다린 후 Caption Box 암전 애니메이션 실행
     IEnumerator WaitAndAnimateBlackout(float delay)
     {
@@ -125,7 +136,7 @@ public class FinalCutScene : MonoBehaviour
         // 10초 후에 엔딩 크레딧 실행
         UIManager.instance.EndingCreditStart(); // 20초 소요 
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(30f);
 
         // title로 돌아가기 
         GameManager.Instance.LoadSceneCall("Title");

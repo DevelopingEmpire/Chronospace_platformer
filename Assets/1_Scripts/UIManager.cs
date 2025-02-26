@@ -237,10 +237,10 @@ public class UIManager : MonoBehaviour
 
         // 초기 위치 설정 (화면 아래에서 시작)
         RectTransform creditTransform = creditObj.GetComponent<RectTransform>();
-        creditTransform.anchoredPosition = new Vector2(0, -Screen.height);
+        creditTransform.anchoredPosition = new Vector2(0, -Screen.height * 1.5f);
 
         // 크레딧 스크롤 애니메이션 (위로 이동)
-        creditTransform.DOAnchorPosY(Screen.height, creditScrollDuration).SetEase(Ease.Linear);
+        creditTransform.DOAnchorPosY(Screen.height * 2.5f, creditScrollDuration).SetEase(Ease.Linear);
 
     }
 

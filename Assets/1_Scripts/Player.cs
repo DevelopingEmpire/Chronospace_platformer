@@ -120,7 +120,7 @@ public class Player : MonoBehaviour, IGravityControl
             sim = simObj.GetComponent<StageItemManager>();
         }
         // Set interactionText
-        interactionText = CanvasScripts.instance.transform.Find("MainScreen").GetChild(1).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        //interactionText = CanvasScripts.instance.transform.Find("MainScreen").GetChild(1).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
         DontDestroyOnLoad(this.gameObject);
     }
@@ -320,6 +320,10 @@ public class Player : MonoBehaviour, IGravityControl
         AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_RespawnSound);
 
 
+    }
+
+    internal void ShowAvatar(){
+        playerAvatar.enabled = true;
     }
 
 
