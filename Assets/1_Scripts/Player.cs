@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, IGravityControl
     #region Variables
     [Header("Component")] //플레이어 외부 컴포넌트 변수
     public Animator anim;
+    [SerializeField] SkinnedMeshRenderer playerAvatar;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽
     public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장
@@ -131,6 +132,8 @@ public class Player : MonoBehaviour, IGravityControl
         camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
         inventory = new Item.Type[] { Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3
         AntiGravityEnd();
+
+        playerAvatar.enabled = false;
     }
 
     internal void SetSim(StageItemManager stageItemManager)
@@ -278,6 +281,7 @@ public class Player : MonoBehaviour, IGravityControl
         isAlive = false;
 
         // 3인칭 전환
+        playerAvatar.enabled = true;
         camController.ToggleCamera(3);
 
         // 죽음 애니메이션 설정 
@@ -308,7 +312,8 @@ public class Player : MonoBehaviour, IGravityControl
         // 플레이어 상태 초기화
         isAlive = true;
 
-        // 3인칭 전환
+        // 1인칭 전환
+        playerAvatar.enabled = false;
         camController.ToggleCamera(1);
 
         //

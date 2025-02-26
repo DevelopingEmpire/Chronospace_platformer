@@ -105,6 +105,8 @@ public class NPCInteractionDialogue : MonoBehaviour
         if (isPlayerDetected){
             if (Input.GetButtonDown("Interaction"))
             {
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound); 
+                
                 if(excludedUI != null) {
                     for(int i = 0; i < excludedUI.Length; i++) {
                         if(excludedUI[i] && excludedUI[i].activeSelf == true){
