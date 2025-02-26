@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI dialogueUIName;
     private TextMeshProUGUI dialogueUIContent;
     public GameObject extUI;
-    private TextMeshProUGUI dialogueUIExt; 
+    private TextMeshProUGUI dialogueUIExt;
 
     [Header("Item")]
     // 아이템 관련
@@ -52,8 +52,18 @@ public class UIManager : MonoBehaviour
     private Image itemFrame;
     private GameObject itemIcons;
 
+    [Header("EndingScene")]
     public GameObject CaptionBoxObj; // 엔딩 씬에서 쓰는 캡션박스 
     public GameObject TitleScreenObj; // 타이틀 씬에서만 씀 
+
+    public GameObject creditObj; // 엔딩 크레딧 글자 
+    public float creditScrollDuration = 20f; // 크레딧 스크롤 시간
+    public float creditHoldTime = 3f; // 크레딧 끝에서 멈추는 시간
+
+    [Header("팀원 닉네임")]
+    [SerializeField] private string seoName = "서주민"; 
+    [SerializeField] private string rohName = "노윤상";
+    [SerializeField] private string parkName = "박강";
 
     private void Start()
     {
@@ -70,7 +80,7 @@ public class UIManager : MonoBehaviour
     }
     public void OnClickEscButton(bool isPause)
     {
-        if(pauseScreen){
+        if (pauseScreen) {
             AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound);
 
             pauseScreen.SetActive(isPause);
@@ -101,12 +111,12 @@ public class UIManager : MonoBehaviour
             itemIcon.color = new Color(itemIcon.color.r, itemIcon.color.g, itemIcon.color.b, 0f); // 투명
         }
 
-        Debug.Log("useItem: " + useItem + ", has:"+ has+", slot: " + slot);
+        Debug.Log("useItem: " + useItem + ", has:" + has + ", slot: " + slot);
 
     }
 
     // 몇 번째 위치가 선택되었는가? 
-    public void equipItemUI(Item.Type useItem, int slot) 
+    public void equipItemUI(Item.Type useItem, int slot)
     {
         Debug.Log("equipItem 실행");
 
@@ -118,9 +128,9 @@ public class UIManager : MonoBehaviour
         {
             itemFrame.color = new Color(itemFrame.color.r, itemFrame.color.g, itemFrame.color.b, 1f); // 보임
             itemFrame.transform.position = itemLayOut.transform.GetChild(slot).GetComponent<Image>().transform.position; // 0중력, 1시간, 2 태엽
-            
+
         }
-        
+
     }
     #endregion
 
@@ -186,19 +196,19 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2f); // 2초 대기 
 
         // fade 
-        portalInpoText.SetActive(false ); // 끈다 
+        portalInpoText.SetActive(false); // 끈다 
     }
 
     // 피격 화면 
     public IEnumerator DmgFX()
     {
-        
+
         damageFX.color = new Color(damageFX.color.r, damageFX.color.g, damageFX.color.b, 1f); // 보임
-            
+
         yield return new WaitForSeconds(0.25f);
 
         damageFX.DOFade(0, 0.25f);
-        
+
     }
 
     // main화면 모두 끄기. 엔딩에서 씀
@@ -206,7 +216,7 @@ public class UIManager : MonoBehaviour
     {
         mainScreenObj.SetActive(set);
     }
-    
+
     // 엔딩씬에서만 씀 
     public void SetCaptionBoxActive(bool set)
     {
@@ -216,5 +226,86 @@ public class UIManager : MonoBehaviour
     public GameObject GetCaptionBox()
     {
         return CaptionBoxObj;
+    }
+
+    // 엔딩 크레딧 설정 밑 올리기 
+    public void EndingCreditStart()
+    {
+        // 크레딧 텍스트 설정
+        TextMeshProUGUI creditText = creditObj.GetComponent<TextMeshProUGUI>();
+        creditText.text = GetCreditText();
+
+        // 초기 위치 설정 (화면 아래에서 시작)
+        RectTransform creditTransform = creditObj.GetComponent<RectTransform>();
+        creditTransform.anchoredPosition = new Vector2(0, -Screen.height);
+
+        // 크레딧 스크롤 애니메이션 (위로 이동)
+        creditTransform.DOAnchorPosY(Screen.height, creditScrollDuration).SetEase(Ease.Linear);
+
+    }
+
+    // 크레딧 텍스트를 동적으로 설정
+    private string GetCreditText()
+    {
+        return $@"
+        <b>Credit</b>
+
+        <b>Project Leader</b>
+        {rohName}
+
+
+        <b>Programming Development</b>
+        {parkName}
+        {seoName}
+
+
+        <b>Design</b>
+        {parkName}
+        {seoName}
+        {rohName}
+
+        <b>Modeling</b>
+        {parkName}
+
+
+        <b>Level Design</b>
+        {parkName}
+        {seoName}
+
+
+        <b>Art works</b>
+        {seoName}
+
+
+        <b>BGM</b>
+        {parkName}
+
+
+        <b>Doll Landing Sound</b>
+        {seoName}’s Pillow
+
+
+        <b>Story</b>
+        {parkName}
+
+
+        <b>Quality Assurance / Testing</b>
+        {parkName}
+        {seoName}
+
+
+        <b>Publishing & Marketing</b>
+        {parkName}
+        {seoName}
+
+
+        <b>Lost in Time</b>
+        {rohName}
+
+
+        <b>Development Period : Dec 2023 - Mar 2025 </b>
+
+        <b>Team DevelopingEmpire</b>
+        ";
     }
 }

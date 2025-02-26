@@ -23,6 +23,7 @@ public class FinalCutScene : MonoBehaviour
     // 컷씬 시네 캠 
     public CinemachineVirtualCamera cutSceneCamera;
 
+
     private void Start()
     {
         UIManager.instance.SetCaptionBoxActive(true);
@@ -85,9 +86,6 @@ public class FinalCutScene : MonoBehaviour
             // 8초 후에 암전 애니메이션 실행
             StartCoroutine(WaitAndAnimateBlackout(8f));
 
-            // 대기 후 타이틀로 돌아가기 
-            StartCoroutine(LoadTitleDelay(18f));          
-            
         });
     }
 
@@ -121,14 +119,17 @@ public class FinalCutScene : MonoBehaviour
 
         // Caption Box를 내려서 완전 암전 만들기
         AnimateBlackBoxesClose();
-    }
 
-    IEnumerator LoadTitleDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(2f);
+
+        // 10초 후에 엔딩 크레딧 실행
+        UIManager.instance.EndingCreditStart(); // 20초 소요 
+
+        yield return new WaitForSeconds(5f);
 
         // title로 돌아가기 
         GameManager.Instance.LoadSceneCall("Title");
     }
+
 
 }
