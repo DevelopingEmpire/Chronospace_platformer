@@ -261,7 +261,8 @@ public class UIManager : MonoBehaviour
 
         <b>Design</b>
         {parkName}
-
+        {seoName}
+        {rohName}
 
         <b>Modeling</b>
         {parkName}
@@ -269,6 +270,7 @@ public class UIManager : MonoBehaviour
 
         <b>Level Design</b>
         {parkName}
+        {seoName}
 
 
         <b>Art works</b>
