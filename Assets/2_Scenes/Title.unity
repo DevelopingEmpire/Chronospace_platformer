@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.088
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.011203939, g: 0.011804986, b: 0.010654925, a: 0.088}
+  m_IndirectSpecularColor: {r: 0.100512795, g: 0.10328097, b: 0.0952849, a: 0.088}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4620,6 +4620,22 @@ PrefabInstance:
     - target: {fileID: 8878511224305139291, guid: a3f1040af8ad95243ad8d199c8bf3b10, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878511224329641569, guid: a3f1040af8ad95243ad8d199c8bf3b10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 900887107}
+    - target: {fileID: 8878511224329641569, guid: a3f1040af8ad95243ad8d199c8bf3b10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878511224329641569, guid: a3f1040af8ad95243ad8d199c8bf3b10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878511224329641569, guid: a3f1040af8ad95243ad8d199c8bf3b10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8878511224504100200, guid: a3f1040af8ad95243ad8d199c8bf3b10, type: 3}
       propertyPath: m_AnchorMax.y
