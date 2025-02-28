@@ -7,7 +7,9 @@ public class PlayerCamera : MonoBehaviour
     public float rotationSpeed = 5.0f;
     public GameObject target;
     private Vector3 originalPos;
+    private StageManager stageManager;
 
+    private bool isActive = true;
     private float mouseY;
     private float rotationY = 0f; // Added to store the accumulated vertical rotation
     public float minY = -60f; // Minimum vertical angle
@@ -20,23 +22,31 @@ public class PlayerCamera : MonoBehaviour
         Vector3 angles = transform.eulerAngles;
         rotationY = angles.x;
         originalPos = transform.localPosition;
+
+        stageManager = GameObject.Find("StageManager").GetComponent<StageManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            ToggleActivation();
+        }
 
-        // Calculate new rotation, clamping in the process
-        rotationY += mouseY;
-        rotationY = Mathf.Clamp(rotationY, minY, maxY);
+        if(!stageManager.isPause){
+            mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
 
-        // Apply the calculated and clamped rotation along the X axis for vertical tilt,
-        // while keeping the current Y (horizontal) and Z (roll) angles the same.
-        transform.rotation = Quaternion.Euler(-rotationY, target.transform.eulerAngles.y, 0);
+            // Calculate new rotation, clamping in the process
+            rotationY += mouseY;
+            rotationY = Mathf.Clamp(rotationY, minY, maxY);
+
+            // Apply the calculated and clamped rotation along the X axis for vertical tilt,
+            // while keeping the current Y (horizontal) and Z (roll) angles the same.
+            transform.rotation = Quaternion.Euler(-rotationY, target.transform.eulerAngles.y, 0);
+        }
     }
 
-
-
+    internal void ToggleActivation(){
+        isActive = !isActive;
+    }
 }

@@ -33,6 +33,7 @@ public class FinalCutScene : MonoBehaviour
         UIManager.instance.SetCaptionBoxActive(true);
         topBox = UIManager.instance.GetCaptionBox().transform.GetChild(0).GetComponent<RectTransform>();
         bottomBox = UIManager.instance.GetCaptionBox().transform.GetChild(1).GetComponent<RectTransform>();
+        timeline = GameObject.Find("CutSceneTimeline").GetComponent<PlayableDirector>();
     }
 
     void AnimateBlackBoxes()
@@ -61,6 +62,7 @@ public class FinalCutScene : MonoBehaviour
     void CutSceneCameraSet()
     {
         // 컷 씬 카메라 활성화
+        cutSceneCamera.gameObject.SetActive(true);
         cutSceneCamera.Priority = 10; // 더 높은 우선순위로 설정
     }
 
@@ -131,7 +133,7 @@ public class FinalCutScene : MonoBehaviour
         // Caption Box를 내려서 완전 암전 만들기
         AnimateBlackBoxesClose();
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
 
         // 10초 후에 엔딩 크레딧 실행
         UIManager.instance.EndingCreditStart(); // 20초 소요 

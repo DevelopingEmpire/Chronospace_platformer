@@ -7,6 +7,7 @@ public class StageManager : MonoBehaviour
 {
     #region SingleTon Pattern
     public static StageManager Instance { get; private set; }
+
     private void Awake()
     {
         // If an instance already exists and it's not this one, destroy this one
@@ -34,6 +35,7 @@ public class StageManager : MonoBehaviour
     [SerializeField]
     public Vector3 spawnCharacterOffset; 
     public GameObject npcDialogueUI;
+    //private new PlayerCamera camera;
 
     public bool isPause = true; // 일시정지 상태를 나타낸다 
     public float timeScale; // 타임 스케일 임시저장할 변수 
@@ -42,24 +44,30 @@ public class StageManager : MonoBehaviour
     void Start()
     {
         npcDialogueUI.SetActive(false);
+        TogglePauseStatus();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) // esc 눌림! 
         {
-            isPause = !isPause;
-            if (isPause) // 일시 정지된 상황이면 
-            {
-                //timeScale = Time.timeScale; // 현재 timeScale 을 임시 저장 
-                Time.timeScale = 0f; // 일시정지 
-            }
-            else // 일시정지가 해제된 상황이면 
-            {
-                //Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
-                Time.timeScale = 1;
-            }
-            UIManager.instance.OnClickEscButton(isPause);
+            TogglePauseStatus();
+        }
+    }
+
+    private void TogglePauseStatus(){
+        isPause = !isPause;
+        if (isPause) // 일시 정지된 상황이면 
+        {
+            //timeScale = Time.timeScale; // 현재 timeScale 을 임시 저장 
+            Time.timeScale = 0f; // 일시정지
+            UIManager.instance.OnClickEscButton(true);
+        }
+        else // 일시정지가 해제된 상황이면 
+        {
+            //Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
+            Time.timeScale = 1;
+            UIManager.instance.OnClickEscButton(false);
         }
     }
 
@@ -159,14 +167,15 @@ public class StageManager : MonoBehaviour
 
                 // 캐릭터 삭제 
                 Destroy(GameObject.FindGameObjectWithTag("Player"));
-
             }
             else
             {
                 // 게임 stage로 가는거면? 
                 // 기본 스폰 포인트로 설정
                 GameObject respawnPoint = GameObject.FindGameObjectWithTag("StartPosition");
-                Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
+                if(respawnPoint){
+                    Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
+                }
             }
             
         }

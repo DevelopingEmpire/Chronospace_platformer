@@ -29,8 +29,8 @@ public class UIManager : MonoBehaviour
     public GameObject mainScreenObj; // 메인스크린 적힌거. 아래것들 부모임. 함 정리하고싶다...
     public GameObject pauseScreen; // 일시 정지 창
     public GameObject battleHUDScreen; // HUD - 아이템, 시간초 
-
-    public GameObject portalInpoText; // 포탈 입장 불가 텍스트 
+    public GameObject settingsScreen; // 설정 회면
+    public GameObject portalInfoText; // 포탈 입장 불가 텍스트 
 
     public Image fadeImg; // 암전 화면 
     public Image damageFX; // 피격 화면 
@@ -63,7 +63,7 @@ public class UIManager : MonoBehaviour
     [Header("팀원 닉네임")]
     [SerializeField] private string seoName = "서주민"; 
     [SerializeField] private string rohName = "노윤상";
-    [SerializeField] private string parkName = "박강";
+    [SerializeField] private string parkName = "박강 - Urbanmaid";
 
     private void Start()
     {
@@ -84,6 +84,9 @@ public class UIManager : MonoBehaviour
             AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound);
 
             pauseScreen.SetActive(isPause);
+            if(!isPause){
+                settingsScreen.SetActive(isPause);
+            }
         }
     }
 
@@ -196,7 +199,7 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2f); // 2초 대기 
 
         // fade 
-        portalInpoText.SetActive(false); // 끈다 
+        portalInfoText.SetActive(false); // 끈다 
     }
 
     // 피격 화면 
@@ -237,10 +240,10 @@ public class UIManager : MonoBehaviour
 
         // 초기 위치 설정 (화면 아래에서 시작)
         RectTransform creditTransform = creditObj.GetComponent<RectTransform>();
-        creditTransform.anchoredPosition = new Vector2(0, -Screen.height * 1.5f);
+        creditTransform.anchoredPosition = new Vector2(0, -1440);
 
         // 크레딧 스크롤 애니메이션 (위로 이동)
-        creditTransform.DOAnchorPosY(Screen.height * 2.5f, creditScrollDuration).SetEase(Ease.Linear);
+        creditTransform.DOAnchorPosY(2880, creditScrollDuration).SetEase(Ease.Linear);
 
     }
 
