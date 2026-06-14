@@ -75,7 +75,7 @@ public class Bullet : MonoBehaviour, IGravityControl
 
     void MoveBullet() //moves the bullet into player
     {
-        rb.velocity = initialDirection * speed * timeDilation;
+        rb.linearVelocity = initialDirection * speed * timeDilation;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -91,18 +91,18 @@ public class Bullet : MonoBehaviour, IGravityControl
     public void AntiGravity() // 중력 반전 함수 
     {
         IsInRange = true;
-        rb.velocity = initialDirection * speed * timeDilation;
+        rb.linearVelocity = initialDirection * speed * timeDilation;
     }
     public void AntiGravityEnd()
     {
         IsInRange = false;
-        rb.velocity = initialDirection * speed * timeDilation;
+        rb.linearVelocity = initialDirection * speed * timeDilation;
     }
 
     public void BlackHole(Vector3 fieldCenter)
     {
         Vector3 direction = fieldCenter - transform.position;
         direction = Vector3.Normalize(direction); // 방향만 구함 
-        rb.velocity = speed * timeDilation * direction;
+        rb.linearVelocity = speed * timeDilation * direction;
     }
 }

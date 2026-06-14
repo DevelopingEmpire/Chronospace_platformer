@@ -43,7 +43,7 @@ public class BlackHoleItem : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // 잠시 대기 
 
         // 물리적인 속도들 모두 0으로 해줌 
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
         rb.useGravity = false; // 리지드의 중력 끄기
@@ -96,7 +96,7 @@ public class BlackHoleItem : MonoBehaviour
         lastRotation = transform.rotation;
 
         // Rigidbody의 움직임을 중지시킴
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true; // 물리적인 상호작용을 종료하고 물체를 고정
 

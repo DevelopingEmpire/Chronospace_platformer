@@ -33,7 +33,7 @@ public class GravityItem : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // 1초 길어서 줄임  
 
         // 물리적인 속도들 모두 0으로 해줌 
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
         rb.useGravity = false; // 리지드의 중력 끄기 

@@ -226,7 +226,7 @@ public class Player : MonoBehaviour, IGravityControl
 
             if (footstepTimer >= footstepInterval)
             {
-                Debug.Log("발소리 ");
+                //Debug.Log("발소리 ");
 
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerWalkSound);
                 footstepTimer = 0f; // 타이머 리셋

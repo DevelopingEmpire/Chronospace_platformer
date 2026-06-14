@@ -45,7 +45,7 @@ public class BulletDirectionDefined : MonoBehaviour
 
     void MoveBullet() //moves the bullet into player
     {
-        rb.velocity = initialDirection * speed * timeDilation;
+        rb.linearVelocity = initialDirection * speed * timeDilation;
     }
 
     private void OnTriggerEnter(Collider other)
