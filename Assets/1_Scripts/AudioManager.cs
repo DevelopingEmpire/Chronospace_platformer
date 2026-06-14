@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using static AudioManager;
+using System;
 
 public class AudioManager : MonoBehaviour
 {
@@ -167,7 +168,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBgm(BGM bgm)
     {
-        if (bgmPlayer == null) return;
+        if (bgmPlayer == null || (int)bgm > Enum.GetValues(typeof(BGM)).Length) return;
         bgmPlayer.clip = bgmClips[(int)bgm];
         bgmPlayer.Play();
     }
