@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StageManager : MonoBehaviour
 {
     #region SingleTon Pattern
     public static StageManager Instance { get; private set; }
+
     private void Awake()
     {
         // If an instance already exists and it's not this one, destroy this one
@@ -28,9 +31,11 @@ public class StageManager : MonoBehaviour
     [SerializeField]
     public Dictionary<string, bool> stageClearStatus;
     public string currentStageName; // 이 변수에 꼭 현재 진행중인 스테이지를 넣어줘야한다. 
-    public int idx = 0; // 인덱스 끝 번을 넣어준다. 해당 인덱스가 해결되면 스테이지 클리어 
-    public Vector3 spawnCharacterOffset; // 인덱스 끝 번을 넣어준다. 해당 인덱스가 해결되면 스테이지 클리어 
+    public int lastClearedStageIndex = 0; // 클리어 한 stage num 널어준다. 0으로 시작
+    [SerializeField]
+    public Vector3 spawnCharacterOffset; 
     public GameObject npcDialogueUI;
+    //private new PlayerCamera camera;
 
     public bool isPause = true; // 일시정지 상태를 나타낸다 
     public float timeScale; // 타임 스케일 임시저장할 변수 
@@ -39,32 +44,37 @@ public class StageManager : MonoBehaviour
     void Start()
     {
         npcDialogueUI.SetActive(false);
+        TogglePauseStatus();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) // esc 눌림! 
         {
-
-            isPause = !isPause;
-
-            
-            if (isPause) // 일시 정지된 상황이면 
-            {
-                //timeScale = Time.timeScale; // 현재 timeScale 을 임시 저장 
-                Time.timeScale = 0f; // 일시정지 
-            }
-            else // 일시정지가 해제된 상황이면 
-            {
-                //Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
-                Time.timeScale = 1;
-            }
-            
-
-            UIManager.instance.OnClickEscButton(isPause);
-
+            TogglePauseStatus();
         }
+    }
 
+    private void TogglePauseStatus(){
+        isPause = !isPause;
+        if (isPause) // 일시 정지된 상황이면 
+        {
+            //timeScale = Time.timeScale; // 현재 timeScale 을 임시 저장 
+            Time.timeScale = 0f; // 일시정지
+            UIManager.instance.OnClickEscButton(true);
+        }
+        else // 일시정지가 해제된 상황이면 
+        {
+            //Time.timeScale = timeScale; // 값 복원 ( 1이 아닐수도 있으므로) 
+            Time.timeScale = 1;
+            UIManager.instance.OnClickEscButton(false);
+        }
+    }
+
+    public void ResetStatus()
+    {
+        Time.timeScale = 1;
+        isPause = false;
     }
 
     public void UnPause()
@@ -84,6 +94,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    /*
     public bool CanEnterStage(string stageName)
     {
         // 첫 스테이지는 그냥 들어가게 해야하고 그 뒤 스테이지는 체크가 필요하다. 
@@ -102,12 +113,15 @@ public class StageManager : MonoBehaviour
         
         return false; // 기본적으로는 진입 불가능
     }
+    */
 
     // 게임 클리어 하면 이 함수를 실행.
     public void SetStageCleared()
     {
         stageClearStatus[currentStageName] = true;
-        DataManager.Instance.SaveJson();
+        //DataManager.Instance.SaveJsonInitialized();
+        DataManager.Instance.SaveJson(int.Parse(new string(currentStageName.Where(char.IsDigit).ToArray())));
+        lastClearedStageIndex++; // 클리어한 stage index 증가 
     }
 
     public bool IsStageCleared(string stageName)
@@ -118,10 +132,56 @@ public class StageManager : MonoBehaviour
     // stage 첫 시작시 init()
     public void StageInit(string sceneName)
     {
+        // 로비로 가는거면... 
+        if (sceneName == "Stage0")
+        {
+            // StartPosition 태그를 가진 모든 오브젝트들을 가져옴
+            GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("StartPosition");
+
+            // lastClearedStageIndex에 해당하는 스폰 포인트를 찾음
+            foreach (GameObject spawnPoint in spawnPoints)
+            {
+                if (spawnPoint.name.StartsWith("Spawn_"))
+                {
+                    string[] parts = spawnPoint.name.Split('_');
+                    if (parts.Length == 2 && int.TryParse(parts[1], out int index))
+                    {
+                        if (index == lastClearedStageIndex)
+                        {
+                            Player.Instance.SetCheckpoint(spawnPoint.transform.position + spawnCharacterOffset);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(sceneName == "Title")
+            {
+                // title 씬으로 간다면? 
+
+                // UI 정리 
+                UIManager.instance.SetCaptionBoxActive(false);
+                UIManager.instance.TitleScreenObj.SetActive(true);
+
+                // 캐릭터 삭제 
+                Destroy(GameObject.FindGameObjectWithTag("Player"));
+            }
+            else
+            {
+                // 게임 stage로 가는거면? 
+                // 기본 스폰 포인트로 설정
+                GameObject respawnPoint = GameObject.FindGameObjectWithTag("StartPosition");
+                if(respawnPoint){
+                    Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
+                }
+            }
+            
+        }
+
         // 현재 씬 이름 변경 
         currentStageName = sceneName;
-        GameObject respawnPoint = GameObject.FindGameObjectWithTag("StartPosition");
-        Player.Instance.SetCheckpoint(respawnPoint.transform.position + spawnCharacterOffset);
 
         // 캐릭터 스폰 
         Player.Instance.PlayerInit();
@@ -130,5 +190,15 @@ public class StageManager : MonoBehaviour
         UnPause();
     }
 
+    public void ReloadCurrentScene()
+    {
+        // 현재 활성화된 씬의 이름을 가져옵니다.
+        string currentSceneName = SceneManager.GetActiveScene().name;
 
+        Debug.Log("씬 재로딩 중");
+
+        // 현재 씬을 다시 로드합니다.
+        SceneManager.LoadScene(currentSceneName);
+        StageInit(currentSceneName);
+    }
 }

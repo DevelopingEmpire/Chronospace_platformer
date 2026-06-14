@@ -11,7 +11,8 @@ public class SaveData
 
 public class DataManager : MonoBehaviour
 {
-    public static DataManager Instance { get; private set; }  
+    public static DataManager Instance { get; private set; }
+    public SaveData saveData; 
     private void Awake()
     {
         // If an instance already exists and it's not this one, destroy this one
@@ -33,6 +34,7 @@ public class DataManager : MonoBehaviour
     {
         // 안드로이드나 다른 플랫폼에 배포할 때를 고려하여 persistentDataPath 사용
         path = Path.Combine(Application.persistentDataPath, "StageData.json");
+        Debug.Log("Saving in " + path);
         JsonLoad(); // 게임 시작 시 데이터 불러오기
     }
 
@@ -42,13 +44,13 @@ public class DataManager : MonoBehaviour
         {
             
             StageManager.Instance.InitializeStageClearStatus();
-            SaveJson(); // 초기 데이터를 파일에 저장
+            SaveJsonInitialized(); // 초기 데이터를 파일에 저장
             Debug.Log("stagedata.json 생성됨");
         }
         else
         {
             string loadJson = File.ReadAllText(path);
-            SaveData saveData = JsonUtility.FromJson<SaveData>(loadJson);
+            saveData = JsonUtility.FromJson<SaveData>(loadJson);
 
             if (saveData != null)
             {
@@ -66,9 +68,9 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public void SaveJson()
+    public void SaveJsonInitialized()
     {
-        SaveData saveData = new SaveData{};
+        saveData = new SaveData{};
 
         foreach (var stage in StageManager.Instance.stageClearStatus)
         {
@@ -80,11 +82,21 @@ public class DataManager : MonoBehaviour
         File.WriteAllText(path, json);
     }
 
+    public void SaveJson(int stageIndex){
+        string loadJson = File.ReadAllText(path);
+        saveData = JsonUtility.FromJson<SaveData>(loadJson);
+
+        saveData.stageClearStatus[stageIndex] = true;
+
+        string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(path, json);
+    }
+
     // 데이터 초기화. 새 게임 생성시
     public void InitJson()
     {
         StageManager.Instance.InitializeStageClearStatus();
-        SaveJson(); // 초기 데이터를 파일에 저장
+        SaveJsonInitialized(); // 초기 데이터를 파일에 저장
         Debug.Log("stagedata.json 생성됨");
     }
 }

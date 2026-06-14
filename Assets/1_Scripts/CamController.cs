@@ -13,6 +13,7 @@ public class CamController : MonoBehaviour
     private CinemachineImpulseSource _source;
 
     // Update is called once per frame
+    /*
     void Update()
     {
         if (Input.GetButtonDown("SwitchCamera"))// alpha5 
@@ -20,6 +21,7 @@ public class CamController : MonoBehaviour
             ToggleCamera(); // 매개변수 없이 호출하면 토글
         }
     }
+    */
 
     // 카메라 전환 메서드
     public void ToggleCamera(int viewMode = -1)
@@ -46,4 +48,5 @@ public class CamController : MonoBehaviour
         // 피격시 흔들림 생성 
         _source.GenerateImpulse();
     }
+
 }

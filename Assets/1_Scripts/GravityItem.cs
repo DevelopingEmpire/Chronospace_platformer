@@ -15,7 +15,7 @@ public class GravityItem : MonoBehaviour
     public float effectDuration = 5f;
 
     // colliderRange 내의 col 들 모아두는 list 
-    private List<Collider> colInRange = new List<Collider>();
+    public List<Collider> colInRange = new List<Collider>();
 
 
     private void Awake()
@@ -51,6 +51,7 @@ public class GravityItem : MonoBehaviour
             if (iGravityControl != null)
             {
                 iGravityControl.AntiGravityEnd();
+                Debug.Log(col + "의 Antigravity 해제");
             }
         }
 
@@ -65,7 +66,7 @@ public class GravityItem : MonoBehaviour
         if (iGravityControl != null && iGravityControl.IsInRange == false)
         {
             //해당 스크립트가 있고 또한 이미 범위에 추가된 것이 아니라면
-            Debug.Log("IGravityControl 있음");
+            Debug.Log(col + "은 IGravityControl 있음");
             colInRange.Add(col); // 추가함 
             iGravityControl.AntiGravity();
         }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1486400011}
   m_Layer: 0
   m_Name: Guard_Sight
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,7 +73,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f84e702ef71aa694985e620e15dc577a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayerDetected: 0
+  isDetected: 0
+  target: Player
   nearestPlayer: {fileID: 0}
 --- !u!1 &621278534067018043
 GameObject:
@@ -386,13 +387,14 @@ MonoBehaviour:
   travelDistance: 2.5
   chaseRange: 10
   chaseRangeErratum: 1
+  chaseRangeExtension: 2.25
   patrolDelay: 2
   detectionRangeObj: {fileID: 594351123460640692}
   detectionInterval: 0.5
   anim: {fileID: 1538759538}
   bullet: {fileID: 2486424465529188360, guid: 9aef785a68712ec4d848fd2750c63810, type: 3}
   fireRange: 15
-  fireDelay: 1
+  fireDelay: 0.7
   fireOffset: {x: 0, y: 1.11, z: 0}
   bulletAmount: 20
   bulletReloadTime: 2
@@ -1221,7 +1223,7 @@ GameObject:
   - component: {fileID: 1538759538}
   m_Layer: 0
   m_Name: Doll_guard
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

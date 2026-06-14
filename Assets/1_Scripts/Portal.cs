@@ -62,7 +62,8 @@ public class Portal : StageMechanicsController
         if(other.CompareTag("Player")) {
             Debug.Log("활성화 확인");
             if(isActivated) {
-                if(targetScene == "Stage0" || targetScene == "Stage1")
+                if(targetScene == "Stage0")
+                // || targetScene == "Stage1"
                 {
                     StageManager.Instance.SetStageCleared(); // 현재 스테이지 클리어 됨 
                 }
@@ -81,7 +82,8 @@ public class Portal : StageMechanicsController
         }
 
 
-        // 스테이지 입장 가능한 상태인지 확인 
+        // 스테이지 입장 가능한 상태인지 확인
+        /*
         if (!StageManager.Instance.CanEnterStage(targetScene))
         {
             Debug.Log("스테이지 입장불가 ");
@@ -92,7 +94,7 @@ public class Portal : StageMechanicsController
             return;
         }
         Debug.Log("스테이지 입장가능 ");
-        
+        */
 
         // 스테이지 이동 가즈아 
 

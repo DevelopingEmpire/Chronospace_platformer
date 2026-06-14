@@ -53,14 +53,18 @@ public class BlackHoleItem : MonoBehaviour
 
         yield return new WaitForSeconds(duration); // 4초간 지속
 
+        RemoveAllRelatedObject();
+
+        Destroy(transform.parent.gameObject); // 아이템 clone 삭제 
+    }
+
+    public void RemoveAllRelatedObject(){
         foreach(GameObject obj in objInBlackHoleRange){
             iGravityControl = obj.GetComponent<IGravityControl>();
             if(iGravityControl != null) {
                 iGravityControl.AntiGravityEnd();
             }
         }
-
-        Destroy(transform.parent.gameObject); // 아이템 clone 삭제 
     }
 
     private void OnTriggerStay(Collider col) // 매 프레임 실행되도록 이렇게 해줘봄 

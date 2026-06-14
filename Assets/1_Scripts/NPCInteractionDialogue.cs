@@ -9,6 +9,7 @@ public class NPCInteractionDialogue : MonoBehaviour
 {
     [Header("NPC & Dialogue Content")]
     public string npcName = "NPC";
+    public string npcInteractionDesc = "와/과의 대화를 위해 [E]를 누르십시오.";
     public TextAsset dialogueSource;
 
     [Header("Content Display")]
@@ -41,6 +42,12 @@ public class NPCInteractionDialogue : MonoBehaviour
 
         dialogueUI.SetActive(false);
         dialogueUIContentInitialVal = dialogueUIExt.text;
+
+        // 제외시킬 컴포넌트도 캐싱하기
+        excludedUI = new GameObject[2];
+        excludedUI[0] = CanvasScripts.instance.transform.Find("MainScreen").GetChild(0).gameObject;
+        excludedUI[1] = extUI;
+
         if(dialogueSource != null)
         {
             dialogueList = dialogueSource.text.Split('\n'); // Split text into lines
@@ -55,7 +62,7 @@ public class NPCInteractionDialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        showDialogue();
+        if (dialogueSource) showDialogue();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -67,7 +74,7 @@ public class NPCInteractionDialogue : MonoBehaviour
             Debug.Log("Interaction with NPC will be started.");
 
             dialogueUIName.text = npcName;
-            dialogueUIExt.text = npcName + "와/과의 대화를 위해 [E]를 누르십시오.";
+            dialogueUIExt.text = npcName + npcInteractionDesc;
             dialogueUIExt.enabled = true;
         }
     }
@@ -98,6 +105,8 @@ public class NPCInteractionDialogue : MonoBehaviour
         if (isPlayerDetected){
             if (Input.GetButtonDown("Interaction"))
             {
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_UI_ClickSound); 
+                
                 if(excludedUI != null) {
                     for(int i = 0; i < excludedUI.Length; i++) {
                         if(excludedUI[i] && excludedUI[i].activeSelf == true){
@@ -112,17 +121,15 @@ public class NPCInteractionDialogue : MonoBehaviour
                         }
                         dialogueUI.SetActive(true);
                     }
-                    dialogueUIContent.text = dialogueList[dialogueLnNumber];
-                    //Debug.Log(dialogueList[dialogueLnNumber]);
+                    dialogueUIContent.text = dialogueList[dialogueLnNumber].Replace("\\n", "\n");
+                    //줄바꿈 문자 지원하기
                     dialogueLnNumber++;
                 }
                 else {
                     dialogueLnNumber = 0;
-                    dialogueUIContent.text = dialogueList[dialogueLnNumber];
-                    //dialogueUIContent.enabled = false; // ui 끄기 
+                    dialogueUIContent.text = dialogueList[dialogueLnNumber].Replace("\\n", "\n");
                 }
             }
         }
     }
-
 }

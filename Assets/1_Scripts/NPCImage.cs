@@ -9,6 +9,8 @@ public class NPCImage : MonoBehaviour
     public int[] selfRecoloredMaterials; // 머티리얼 인덱스 배열
     public Texture2D targetImage; // 적용할 텍스처
 
+    public float brightness = 1f;
+
     // Start is called before the first frame update
     void Start()
     {

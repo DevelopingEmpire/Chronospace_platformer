@@ -13,20 +13,24 @@ public class Guards : MonoBehaviour, IGravityControl
     public Vector3 initialPosition; // 초기 위치
     public float rotationSpeedPatrol = 5f;
     public float rotationSpeedFire = 1f;
-    public float travelDistance = 5f;
+    public float travelDistance = 5f; //정찰 거리
     public float chaseRange = 5f; //플레이어 추격 거리
     public float chaseRangeErratum = 1f; //플레이어 추격 거리의 이동시 오차
+    public float chaseRangeExtension = 2.35f; //플레이어 추적 시 추적 범위 확대 수준
+    private Vector3 chaseRangeScaleOriginal;
     public float patrolDelay = 2f; //순찰 텀
     public GameObject detectionRangeObj;
+
     public float detectionInterval = 0.5f; //순찰 때 플레이어를 찾는 판단 시간
-    float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임 
+    float detectionTimer = 0; // 0.5초에 1번씩만 detection 할거임
+
 
     [Header("Animation")]
     public Animator anim;
 
     [Header("Bullet")]
-    public GameObject bullet; // 총알 
-    public float fireRange = 8f;
+    public GameObject bullet; // 총알
+    public float fireRange = 0f;
     public float fireDelay = 1f;
     private float fireTimer = 0f;
     public Vector3 fireOffset;
@@ -45,7 +49,6 @@ public class Guards : MonoBehaviour, IGravityControl
 
     private float nextPatrolTime;
     public CharacterController _controller; // 컨트롤러
-
 
     [Header("Gravity")]
     // 중력 관련 변수들 
@@ -101,6 +104,10 @@ public class Guards : MonoBehaviour, IGravityControl
         isGroundChecker = _controller.isGrounded;
         //_controller.detectCollisions = false;
         Gravity = -9.81f;
+        bulletAmountCurrent = bulletAmount;
+
+        //경계 범위 저장하기
+        chaseRangeScaleOriginal = detectionRangeObj.transform.localScale;
     }
 
     // Update is called once per frame
@@ -108,6 +115,9 @@ public class Guards : MonoBehaviour, IGravityControl
     {
         // detectionTimer의 주기적인 초기화
         detectionTimer += Time.deltaTime;
+
+        //장애물 탐지는 NavMeshObstacle로 대체
+
         if (detectionTimer >= detectionInterval)
         {
             // 탐지 실행
@@ -133,12 +143,14 @@ public class Guards : MonoBehaviour, IGravityControl
             // If the player is in sight, set the target position to the player's position
             if (isPlayerDetected) // 범위 안이면 
             {
+                //플레이어 추적 범위를 확장하기
+                detectionRangeObj.transform.localScale = chaseRangeScaleOriginal * chaseRangeExtension;
 
                 // Move towards the target position using NavMeshAgent
                 targetPosition = nearestPlayer.transform.position;
-                anim.SetBool("isDetected", true); // 발견! 공격 
+                if(anim) anim.SetBool("isDetected", true); // 발견! 공격 
 
-                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면 공격
+                if (PlayerInFireRange() && bullet) // 사거리 내 + 장전수가 남아 있고 총알이 정의되어 있다면 공격
                 {
                     // 목표 회전 계산
                     StareAtPlayer();
@@ -155,28 +167,31 @@ public class Guards : MonoBehaviour, IGravityControl
                     isPlayerInAttackRange = false;
 
                     MoveTowardsTarget(); // 움직이면서 사격 
-                    anim.SetBool("isInAttackRange", false);
+                    if(anim) anim.SetBool("isInAttackRange", false);
                 }
                 else 
                 {
                     // 고정사격 거리보다 작다면 멈춰서 사격 
                     navMeshAgent.ResetPath();
                     isPlayerInAttackRange = true;
-                    anim.SetBool("isDetected", true);
-                    anim.SetBool("isInAttackRange", true);
+                    if(anim) anim.SetBool("isDetected", true);
+                    if(anim) anim.SetBool("isInAttackRange", true);
                 }
 
             }
             else // 평화로운 상태. idle
             {
+                //경계 범위 원상태로 되돌리기
+                detectionRangeObj.transform.localScale = chaseRangeScaleOriginal;
+
                 if (Time.time >= nextPatrolTime)
                 {
                     Patrol();
                     // Set the next patrol time
                     nextPatrolTime = Time.time + patrolDelay;
                     MoveTowardsTarget();
-                    anim.SetBool("isDetected", false);
-                    anim.SetBool("isInAttackRange", false);
+                    if(anim) anim.SetBool("isDetected", false);
+                    if(anim) anim.SetBool("isInAttackRange", false);
 
                 }
             }
@@ -186,7 +201,7 @@ public class Guards : MonoBehaviour, IGravityControl
             ApplyGravity();
             if (isPlayerDetected) // 범위 안이면 
             {
-                if (PlayerInFireRange()) // 사거리 내 + 장전수가 남아 있다면
+                if (PlayerInFireRange() && bullet) // 사거리 내 + 장전수가 남아 있고 총알이 정의되어 있다면 공격
                 {
                     // 목표 회전 계산
                     StareAtPlayer();
@@ -213,14 +228,13 @@ public class Guards : MonoBehaviour, IGravityControl
     void Patrol()
     {
         //범위내에서 랜덤하게 patrol
-        anim.SetBool("isDetected", false);
-        anim.SetBool("isInAttackRange", true); //isInAttackWithRunning
+        if(anim) anim.SetBool("isDetected", false);
+        if(anim) anim.SetBool("isInAttackRange", true); //isInAttackWithRunning
         Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * travelDistance;
         targetPosition = initialPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
     }
 
     // 탐지 범위 내, 가장 가까운 플레이어를 탐색해 냄 ( 추적 대상 nearestPlayer) 
-    ///*
     private void DetectPlayer()
     {
         MeshCollisionDetector detector = detectionRangeObj.GetComponent<MeshCollisionDetector>();
@@ -230,7 +244,7 @@ public class Guards : MonoBehaviour, IGravityControl
         if (detector != null)
         {
             // MeshCollisionDetector의 변수에 접근
-            isPlayerDetected = detector.isPlayerDetected;
+            isPlayerDetected = detector.isDetected;
             nearestPlayer = detector.nearestPlayer;
 
         }
@@ -239,15 +253,14 @@ public class Guards : MonoBehaviour, IGravityControl
             Debug.LogError("MeshCollisionDetector 컴포넌트를 찾을 수 없습니다!");
         }
     }
-    //*/
 
     // Move the opponent towards the target position using NavMeshAgent
     void MoveTowardsTarget()
     {
-        // Set the destination for the NavMeshAgent
         navMeshAgent.SetDestination(targetPosition);
-        anim.SetBool("isDetected", true);
-        anim.SetBool("isInAttackRange", false); 
+        navMeshAgent.isStopped = false;
+        if (anim) anim.SetBool("isDetected", true);
+        if (anim) anim.SetBool("isInAttackRange", false);
     }
 
     bool PlayerOutOfChaseRange()

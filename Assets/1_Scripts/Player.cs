@@ -6,18 +6,26 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.EventSystems;
 using Cinemachine;
+using DG.Tweening;
+using System;
 
 public class Player : MonoBehaviour, IGravityControl
 {
+    #region Variables
     [Header("Component")] //플레이어 외부 컴포넌트 변수
     public Animator anim;
+    [SerializeField] SkinnedMeshRenderer playerAvatar;
     public CharacterController controller; // 이건  IGravityControl 에 있음 
     public GameObject windKey; // 내 태엽
-    public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장  
+    public GameObject[] gravityPrefebs;  // 던질 중력반전, // 던질 중력장
+    public float duration = 6f;
+    public float windupDuration = 120f;  
     public float timeScaleMultiplier = 0.005f; // 시간 계수. 거의 멈춤 
     public Transform itemPointTransform; // 탬 생성 위치
     public PlayerTimer timer;
-    public Vector3 respawnPosition; // 리스폰 위치 
+    public Vector3 respawnPosition; // 리스폰 위치
+    public Vector3 respawnPositionOrignal; // 리스폰 위치
+    [SerializeField] StageItemManager sim;
 
     [Header("UI")] //플레이어 외부 컴포넌트 변수
     public CamController camController; // CamController 참조
@@ -28,6 +36,7 @@ public class Player : MonoBehaviour, IGravityControl
     public float movSpeed = 5f;
     public float rotSpeed = 300f;
     public float pushPower = 0.03f;
+    private float respawnCooltime = 4f;
 
     [Header("InputValue")] //플레이어 이동 사용 변수
     Vector3 moveDirection;
@@ -52,33 +61,38 @@ public class Player : MonoBehaviour, IGravityControl
     bool isSwaping = false; //사용하고 있는 변수. Console에 사용하지 않는다고 뜬다. 
 
     //플레이어 애니메이션 작동 변수
-    #region animValue
     //character status
     bool isJumping = false;
     bool isDodging = false;
     bool isWinding = false;
-    #endregion
 
     //플레이어 상태 변수
     public bool isAlive = true;
-    public bool isBlackHoling; // 블랙홀에 잡혀있는 중 
+    public bool isBlackHoling; // 블랙홀에 잡혀있는 중
+    public bool isInShield = false;
 
     //주변 아이템 변수
     [SerializeField]
     public GameObject nearObject;
     public GameObject equipItem; // 현재 손에 들고있는 아이템 
     public int equipItemIndex = -1; // 현재 선택된 템 번호 
+    
+    public float shieldDuration = 12f;
 
     // 아이템 습득 UI 관련  
     public TextMeshProUGUI interactionText; // interaction 안내 UI 
+    public string interactionTextStringItem = "[E]키로 아이템을 획득하십시오.";
+    public string interactionTextStringSwitch = "[E]키로 장치와의 상호작용을 수행하십시오.";
+    public string interactionTextStringCheckpoint = "체크포인트 도달. 쓰러질 경우 해당 위치에서 재시작합니다.";
+
     public GameObject[] equipItems; // 손에 드는 아이템들 
     public bool[] hasItems; // 아이템 가졌는지
     public Item.Type[] inventory; // 가진 아이템 목록
 
-
     private Vector3 blackholeVector = Vector3.zero; // 블랙홀 힘 저장 
-    /// <summary>
-    /// 중력 인터페이스 구현부 
+
+    #endregion
+
     public bool IsInRange { get; set; }
 
     public float Gravity { get; set; }
@@ -97,8 +111,18 @@ public class Player : MonoBehaviour, IGravityControl
 
         // Set this as the instance and ensure it persists across scenes
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
 
+        respawnPositionOrignal = respawnPosition;
+
+        // Set StageItemManager
+        GameObject simObj = GameObject.Find("StageItemManager");
+        if(simObj){
+            sim = simObj.GetComponent<StageItemManager>();
+        }
+        // Set interactionText
+        //interactionText = CanvasScripts.instance.transform.Find("MainScreen").GetChild(1).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     #endregion
@@ -108,6 +132,13 @@ public class Player : MonoBehaviour, IGravityControl
         camController = GameObject.FindWithTag("MainCamera").transform.GetComponent<CamController>();
         inventory = new Item.Type[] { Item.Type.Null, Item.Type.Null, Item.Type.Null }; // 인벤토리 용량이 3
         AntiGravityEnd();
+
+        playerAvatar.enabled = false;
+    }
+
+    internal void SetSim(StageItemManager stageItemManager)
+    {
+        sim = stageItemManager;
     }
 
     public void AntiGravity() // 중력 반전 함수 
@@ -227,7 +258,6 @@ public class Player : MonoBehaviour, IGravityControl
             if (footstepTimer >= footstepInterval)
             {
                 //Debug.Log("발소리 ");
-
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerWalkSound);
                 footstepTimer = 0f; // 타이머 리셋
             }
@@ -251,19 +281,27 @@ public class Player : MonoBehaviour, IGravityControl
         isAlive = false;
 
         // 3인칭 전환
+        playerAvatar.enabled = true;
         camController.ToggleCamera(3);
 
         // 죽음 애니메이션 설정 
         anim.SetBool("isDie", true);
 
         // 사망 후 일정 시간 후에 시작 위치로 이동
+        if(sim){
+            Invoke(nameof(RequestRespawnItem), respawnCooltime);
+        }
         StartCoroutine(Respawn());
+    }
+
+    void RequestRespawnItem(){
+        sim.ReInstanciateDestroyedItem();
     }
 
     // 저장 위치에서 부활 
     public IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(4f); // 사망 후 4초 대기 (옵션)
+        yield return new WaitForSeconds(respawnCooltime); // 사망 후 4초 대기 (옵션)
 
         // 플레이어 위치 초기화
         PlayerInit();
@@ -274,7 +312,8 @@ public class Player : MonoBehaviour, IGravityControl
         // 플레이어 상태 초기화
         isAlive = true;
 
-        // 3인칭 전환
+        // 1인칭 전환
+        playerAvatar.enabled = false;
         camController.ToggleCamera(1);
 
         //
@@ -282,6 +321,11 @@ public class Player : MonoBehaviour, IGravityControl
 
 
     }
+
+    internal void ShowAvatar(){
+        playerAvatar.enabled = true;
+    }
+
 
 
     //아이템 사용 함수
@@ -292,11 +336,13 @@ public class Player : MonoBehaviour, IGravityControl
         Debug.Log("스왑 눌림");
         AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemEquipSound);
 
-
         // 현재 장착된 아이템 비활성화
-        if (equipItem != null)
-            equipItem.SetActive(false);
-
+        if (equipItem != null) 
+        {
+            //equipItem.SetActive(false);
+            Debug.Log("아이템 없음");
+        }
+            
         // 각 키에 맞는 아이템 선택 및 활성화
         if (inputKeyButton1 && inventory[0] != Item.Type.Null)
         {
@@ -362,7 +408,8 @@ public class Player : MonoBehaviour, IGravityControl
 
     public void SetCheckpoint(Vector3 checkpointPosition)
     {
-        respawnPosition = checkpointPosition;
+        respawnPosition = checkpointPosition + respawnPositionOrignal;
+        Debug.Log(respawnPosition + " has set to new Spawning Location");
     }
 
     void Interaction() //아이템 줍기
@@ -409,6 +456,7 @@ public class Player : MonoBehaviour, IGravityControl
         {
             if (interactionText != null)
             {
+                interactionText.text = interactionTextStringSwitch;
                 interactionText.enabled = false; // ui 끄기 
             }
             SwitchTrigger targetSwitchScript = nearObject.GetComponent<SwitchTrigger>();
@@ -423,8 +471,11 @@ public class Player : MonoBehaviour, IGravityControl
         }
     }
 
-    void UseItem()
+    private void UseItem()
     {
+        GameObject itemObjResult;
+        float elapsedTime = 0f;
+
         if (equipItemIndex < 0 || equipItemIndex >= inventory.Length)
         {
             Debug.LogError("EquipItemIndex is out of range.");
@@ -437,44 +488,60 @@ public class Player : MonoBehaviour, IGravityControl
             case Item.Type.Gravity: //중력(중력 적용장치 인스턴스를 생성한 다음 정해진 방향으로 투척
                 
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+
                 if(itemPointTransform) {
-                    Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[0], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
                 }
                 else{
-                    Instantiate(gravityPrefebs[0], transform.position + transform.forward, transform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[0], transform.position + transform.forward, transform.rotation);
+                }
+                
+                //투척 후 시간 종료 시 아이템 삭제하기
+                elapsedTime += Time.deltaTime;
+                if (elapsedTime >= duration)
+                {
+                    Destroy(itemObjResult);
                 }
                 break;
 
             case Item.Type.TimeStop: //시간 정지(입력에 따라서 시간 속도를 조절함
                 
-
                 StartCoroutine(TweakTimeEffect(timeScaleMultiplier, 5));
                 Debug.Log("Time speed has changed into " + timeScaleMultiplier + "x.");
+                Debug.Log("Actual Time speed has changed into " + Time.timeScale + "x.");
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
 
                 break;
 
             case Item.Type.Shield:
 
+                Debug.Log("Using shield now");
                 timer.isPlaying = false;
-                StartCoroutine(WaitAndExecute(3.0f));
-                timer.isPlaying = true;
+                isInShield = true;
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
+
+                StartCoroutine(WaitAndExecute(shieldDuration));
 
                 break;
 
             case Item.Type.WindKey: //윈드 키
-                timer.TimeChange(30f); // 30초 추가 
+                timer.TimeChange(windupDuration); // 30초 추가 
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
                 break;
 
             case Item.Type.Magneticgrav: // 블랙홀
                 AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_ItemUseSound);
                 if (itemPointTransform) {
-                    Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[1], itemPointTransform.position + itemPointTransform.forward, itemPointTransform.rotation);
                 }
                 else{
-                    Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
+                    itemObjResult = Instantiate(gravityPrefebs[1], transform.position + transform.forward, transform.rotation);
+                }
+
+                elapsedTime += Time.deltaTime;
+                if (elapsedTime >= duration)
+                {
+                    Destroy(itemObjResult);
                 }
                 break;
             
@@ -498,11 +565,11 @@ public class Player : MonoBehaviour, IGravityControl
 
         UIManager.instance.equipItemUI(inventory[equipItemIndex], equipItemIndex); // itemFrame 꺼진다 . 몇번째 슬롯인지 받아온다 
 
-        equipItem.SetActive(false);
-
+        //equipItem.SetActive(false);
     }
 
-
+    #endregion
+    #region Time Tweak
     IEnumerator TweakTimeEffect(float scale, float duration)
     {
         TweakTimeStart(scale); //지정된 값만큼 시간 속도를 조절
@@ -543,10 +610,13 @@ public class Player : MonoBehaviour, IGravityControl
 
     // 필수 조건 
     // 1. 둘 중에 하나에 무조건 rigidbody
-    // 2. 둘 중에 하나에 무조건 isTrigger 체크 
+    // 2. 둘 중에 하나에 무조건 isTrigger 체크
+
+    #endregion
+    #region Colli Interaction
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.CompareTag("Bullet")) 
+        if (other.CompareTag("Bullet") && !isInShield) 
         {
             // 피격 
             AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerDmgSound);
@@ -554,34 +624,58 @@ public class Player : MonoBehaviour, IGravityControl
             camController.ShakeCam();
             StartCoroutine(UIManager.instance.DmgFX());
         }
+        else if (other.CompareTag("Item"))
+        {
+            //UI 켜기
+            if (interactionText != null)
+            {
+                interactionText.text = interactionTextStringItem;
+                interactionText.enabled = true;
+            }
+        }
+        else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
+        {
+            if (interactionText != null)
+            {
+                interactionText.text = interactionTextStringSwitch;
+                interactionText.enabled = true;
+            }
+        }
+
+        if (other.CompareTag("CheckPoint"))
+        {
+            if (interactionText != null)
+            {
+                interactionText.text = interactionTextStringCheckpoint;
+                interactionText.enabled = true;
+                Invoke(nameof(OffText), 4f);
+            }
+        }
+    }
+
+    private void OffText()
+    {
+        interactionText.enabled = false;
     }
 
     private void OnTriggerStay(Collider other) 
     {
         if (other.CompareTag("Item"))
         {
-            //UI 켜기
-            if (interactionText != null)
-            {
-                interactionText.enabled = true; // ui 끄기 
-            }
             nearObject = other.gameObject;
         }
         else if (other.CompareTag("Switch")) //스위치이면 활성화 준비
         {
-            if (interactionText != null)
-            {
-                interactionText.enabled = true; // ui 끄기 
-            }
             nearObject = other.gameObject;
         }
-        if (other.CompareTag("CheckPoint"))
+        else if (other.CompareTag("Bullet") && !isInShield) //총알이면 대미지 입기
         {
-            respawnPosition = other.transform.position;
+            if (Time.time % 1 == 0){
+                AudioManager.instance.PlaySfx(AudioManager.SFX.SFX_PlayerDmgSound);
 
-            timer.SetCheckPointTime();
-
-            Debug.Log("Checkpoint reached: " + respawnPosition);
+                camController.ShakeCam();
+                StartCoroutine(UIManager.instance.DmgFX());
+            }
         }
     }
 
@@ -629,8 +723,12 @@ public class Player : MonoBehaviour, IGravityControl
     private IEnumerator WaitAndExecute(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
+
+        Debug.Log("Stopped using shield");
+        isInShield = false;
         timer.isPlaying = true;
     }
 
     #endregion
+
 }

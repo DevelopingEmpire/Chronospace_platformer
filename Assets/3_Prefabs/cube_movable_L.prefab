@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7584580829979291557}
   - component: {fileID: 3852650425553813164}
   - component: {fileID: 2961335244483259126}
+  - component: {fileID: 8423623578411236277}
   m_Layer: 0
   m_Name: cobe_movable_L
   m_TagString: Untagged
@@ -84,6 +85,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!208 &8423623578411236277
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377773533475676095}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 1, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 1}
+  m_TimeToStationary: 0.5
 --- !u!1 &4739690057312797906
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,6 +114,7 @@ GameObject:
   - component: {fileID: 4739690057312797917}
   - component: {fileID: 4739690057312797913}
   - component: {fileID: 4739690057312797912}
+  - component: {fileID: 6802960209159341599}
   m_Layer: 0
   m_Name: cube_movable_L
   m_TagString: Untagged
@@ -173,3 +191,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 4739690057312797913}
   gravityVector: {x: 0, y: 0, z: 0}
+  savedTimeScale: 1
+  forceSavedVector: {x: 0, y: 0, z: 0}
+  hadTouchWhenTimeStopped: 0
+--- !u!65 &6802960209159341599
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739690057312797906}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.5, y: 2, z: 2.5}
+  m_Center: {x: 0, y: 1, z: 0}

@@ -93,9 +93,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4651536089923872320}
   - component: {fileID: 2324022085370369147}
+  - component: {fileID: 2118077777618980761}
   - component: {fileID: 4651536089923872327}
   - component: {fileID: 4651536089923872326}
-  - component: {fileID: 2118077777618980761}
   m_Layer: 0
   m_Name: cube_movable_L_Mi
   m_TagString: mirror
@@ -128,6 +128,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4651536089923872332}
   m_Mesh: {fileID: -2294567959350739869, guid: 21798186390ce1d46b3382b5325397cd, type: 3}
+--- !u!64 &2118077777618980761
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4651536089923872332}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 664595993075797303, guid: 21798186390ce1d46b3382b5325397cd, type: 3}
 --- !u!143 &4651536089923872327
 CharacterController:
   m_ObjectHideFlags: 0
@@ -159,21 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 4651536089923872327}
-  gravityVector: {x: 0, y: 0, z: 0}
---- !u!64 &2118077777618980761
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4651536089923872332}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 664595993075797303, guid: 21798186390ce1d46b3382b5325397cd, type: 3}
+  gravityVector: {x: 0, y: -9.81, z: 0}
 --- !u!1 &5987851614509719313
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +185,6 @@ GameObject:
   - component: {fileID: 2439519216112420270}
   - component: {fileID: 5829549125544936529}
   - component: {fileID: 7649806541316889050}
-  - component: {fileID: 3667273450550802116}
   m_Layer: 0
   m_Name: mirror_inside
   m_TagString: Untagged
@@ -258,16 +257,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3667273450550802116
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5987851614509719313}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

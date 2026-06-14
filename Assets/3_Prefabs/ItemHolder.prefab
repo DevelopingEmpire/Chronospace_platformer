@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 1766865926175349245}
   - component: {fileID: 5120205195878371764}
   - component: {fileID: 7686773139059216836}
+  - component: {fileID: 7368125981724182070}
   m_Layer: 0
   m_Name: item_holder_standard
   m_TagString: Untagged
@@ -130,3 +131,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!208 &7368125981724182070
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8859924898320952367}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.2, y: 0.2, z: 0.30900002}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0.30900002}
+  m_TimeToStationary: 0.5
